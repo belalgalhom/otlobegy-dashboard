@@ -1,0 +1,216 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+
+// ignore_for_file: unused_element
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+
+part 'update_vendor_dto.g.dart';
+
+/// UpdateVendorDto
+///
+/// Properties:
+/// * [storeName] 
+/// * [storeNameAr] 
+/// * [description] 
+/// * [descriptionAr] 
+/// * [verticalId] 
+/// * [taxId] 
+/// * [commissionRate] 
+@BuiltValue()
+abstract class UpdateVendorDto implements Built<UpdateVendorDto, UpdateVendorDtoBuilder> {
+  @BuiltValueField(wireName: r'storeName')
+  String? get storeName;
+
+  @BuiltValueField(wireName: r'storeNameAr')
+  String? get storeNameAr;
+
+  @BuiltValueField(wireName: r'description')
+  String? get description;
+
+  @BuiltValueField(wireName: r'descriptionAr')
+  String? get descriptionAr;
+
+  @BuiltValueField(wireName: r'verticalId')
+  String? get verticalId;
+
+  @BuiltValueField(wireName: r'taxId')
+  String? get taxId;
+
+  @BuiltValueField(wireName: r'commissionRate')
+  num? get commissionRate;
+
+  UpdateVendorDto._();
+
+  factory UpdateVendorDto([void updates(UpdateVendorDtoBuilder b)]) = _$UpdateVendorDto;
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _defaults(UpdateVendorDtoBuilder b) => b;
+
+  @BuiltValueSerializer(custom: true)
+  static Serializer<UpdateVendorDto> get serializer => _$UpdateVendorDtoSerializer();
+}
+
+class _$UpdateVendorDtoSerializer implements PrimitiveSerializer<UpdateVendorDto> {
+  @override
+  final Iterable<Type> types = const [UpdateVendorDto, _$UpdateVendorDto];
+
+  @override
+  final String wireName = r'UpdateVendorDto';
+
+  Iterable<Object?> _serializeProperties(
+    Serializers serializers,
+    UpdateVendorDto object, {
+    FullType specifiedType = FullType.unspecified,
+  }) sync* {
+    if (object.storeName != null) {
+      yield r'storeName';
+      yield serializers.serialize(
+        object.storeName,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.storeNameAr != null) {
+      yield r'storeNameAr';
+      yield serializers.serialize(
+        object.storeNameAr,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.description != null) {
+      yield r'description';
+      yield serializers.serialize(
+        object.description,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.descriptionAr != null) {
+      yield r'descriptionAr';
+      yield serializers.serialize(
+        object.descriptionAr,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.verticalId != null) {
+      yield r'verticalId';
+      yield serializers.serialize(
+        object.verticalId,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.taxId != null) {
+      yield r'taxId';
+      yield serializers.serialize(
+        object.taxId,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.commissionRate != null) {
+      yield r'commissionRate';
+      yield serializers.serialize(
+        object.commissionRate,
+        specifiedType: const FullType(num),
+      );
+    }
+  }
+
+  @override
+  Object serialize(
+    Serializers serializers,
+    UpdateVendorDto object, {
+    FullType specifiedType = FullType.unspecified,
+  }) {
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+  }
+
+  void _deserializeProperties(
+    Serializers serializers,
+    Object serialized, {
+    FullType specifiedType = FullType.unspecified,
+    required List<Object?> serializedList,
+    required UpdateVendorDtoBuilder result,
+    required List<Object?> unhandled,
+  }) {
+    for (var i = 0; i < serializedList.length; i += 2) {
+      final key = serializedList[i] as String;
+      final value = serializedList[i + 1];
+      switch (key) {
+        case r'storeName':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.storeName = valueDes;
+          break;
+        case r'storeNameAr':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.storeNameAr = valueDes;
+          break;
+        case r'description':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.description = valueDes;
+          break;
+        case r'descriptionAr':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.descriptionAr = valueDes;
+          break;
+        case r'verticalId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.verticalId = valueDes;
+          break;
+        case r'taxId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.taxId = valueDes;
+          break;
+        case r'commissionRate':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(num),
+          ) as num;
+          result.commissionRate = valueDes;
+          break;
+        default:
+          unhandled.add(key);
+          unhandled.add(value);
+          break;
+      }
+    }
+  }
+
+  @override
+  UpdateVendorDto deserialize(
+    Serializers serializers,
+    Object serialized, {
+    FullType specifiedType = FullType.unspecified,
+  }) {
+    final result = UpdateVendorDtoBuilder();
+    final serializedList = (serialized as Iterable<Object?>).toList();
+    final unhandled = <Object?>[];
+    _deserializeProperties(
+      serializers,
+      serialized,
+      specifiedType: specifiedType,
+      serializedList: serializedList,
+      unhandled: unhandled,
+      result: result,
+    );
+    return result.build();
+  }
+}
+

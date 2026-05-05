@@ -1,0 +1,43 @@
+import 'package:get_it/get_it.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:otlob_admin/core/api/token_interceptor.dart';
+import 'package:otlob_api/otlob_api.dart';
+import 'package:otlob_admin/features/auth/data/auth_repository.dart';
+import 'package:otlob_admin/features/auth/presentation/auth_bloc.dart';
+import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
+import 'package:otlob_admin/features/vendors/presentation/vendor_bloc.dart';
+import 'package:otlob_admin/features/vendors/presentation/vertical_bloc.dart';
+import 'package:otlob_admin/features/users/data/users_repository.dart';
+import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
+import 'package:otlob_admin/features/zones/data/zones_repository.dart';
+import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
+
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  // External
+  sl.registerLazySingleton(() => const FlutterSecureStorage());
+  sl.registerLazySingleton(() {
+    final dio = Dio();
+    dio.options.baseUrl = 'https://api.otlob-egy.online';
+    dio.options.connectTimeout = const Duration(seconds: 15);
+    dio.options.receiveTimeout = const Duration(seconds: 15);
+    
+    dio.interceptors.add(TokenInterceptor(sl(), dio));
+    return OtlobApi(dio: dio, basePathOverride: 'https://api.otlob-egy.online');
+  });
+
+  // Repositories
+  sl.registerLazySingleton(() => AuthRepository(sl(), sl()));
+  sl.registerLazySingleton(() => VendorRepository(sl()));
+  sl.registerLazySingleton(() => UsersRepository(sl()));
+  sl.registerLazySingleton(() => ZonesRepository(sl()));
+
+  // Blocs
+  sl.registerFactory(() => AuthBloc(sl()));
+  sl.registerFactory(() => VendorBloc(sl()));
+  sl.registerFactory(() => UserBloc(sl()));
+  sl.registerFactory(() => ZoneBloc(sl()));
+  sl.registerFactory(() => VerticalBloc(sl()));
+}
