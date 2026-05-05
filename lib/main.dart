@@ -7,10 +7,24 @@ import 'package:otlob_admin/features/auth/presentation/login_screen.dart';
 import 'package:otlob_admin/features/auth/presentation/splash_screen.dart';
 import 'package:otlob_admin/features/dashboard/presentation/dashboard_screen.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/localization/language_cubit.dart';
+
+import 'package:otlob_admin/core/theme/theme_cubit.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-  runApp(const OtlobAdminApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => di.sl<LanguageCubit>(),),
+        BlocProvider(create: (context) => di.sl<ThemeCubit>(),),
+      ],
+      child: const OtlobAdminApp(),
+    ),
+  );
 }
 
 final _router = GoRouter(
@@ -36,11 +50,24 @@ class OtlobAdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Otlob Admin',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      routerConfig: _router,
+    return BlocBuilder<LanguageCubit, Locale>(
+      builder: (context, locale) {
+        return BlocBuilder<ThemeCubit, ThemeMode>(
+          builder: (context, themeMode) {
+            return MaterialApp.router(
+              title: 'Otlob Admin',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeMode,
+              routerConfig: _router,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              locale: locale,
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class AddVerticalDialog extends StatefulWidget {
   final dynamic vertical;
@@ -49,12 +50,12 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
       child: Container(
         constraints: BoxConstraints(maxWidth: isMobile ? size.width : 420),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
+              color: Colors.black.withOpacity(Theme.of(context).brightness == Brightness.dark ? 0.4 : 0.1),
               blurRadius: 30,
               offset: const Offset(0, 15),
             ),
@@ -75,7 +76,7 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.05))),
+                  border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05))),
                 ),
                 child: Row(
                   children: [
@@ -93,7 +94,7 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isEdit ? 'Edit Business Type' : 'Add Business Type',
+                            isEdit ? AppLocalizations.of(context)!.editBusinessType : AppLocalizations.of(context)!.addBusinessType,
                             style: TextStyle(
                               fontSize: isMobile ? 18 : 20,
                               fontWeight: FontWeight.w800,
@@ -126,15 +127,15 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                       children: [
                         _buildTextField(
                           controller: _nameController,
-                          label: 'Name (EN)',
+                          label: AppLocalizations.of(context)!.nameEn,
                           hint: 'e.g. Restaurants',
                           icon: LucideIcons.type,
-                          validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                          validator: (v) => v?.isEmpty ?? true ? AppLocalizations.of(context)!.fieldRequired : null,
                         ),
                         const SizedBox(height: 12),
                         _buildTextField(
                           controller: _nameArController,
-                          label: 'Name (AR)',
+                          label: AppLocalizations.of(context)!.nameAr,
                           hint: 'مثال: مطاعم',
                           icon: LucideIcons.languages,
                           textAlign: TextAlign.right,
@@ -142,22 +143,22 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                         const SizedBox(height: 12),
                         _buildTextField(
                           controller: _iconUrlController,
-                          label: 'Icon URL (Optional)',
+                          label: AppLocalizations.of(context)!.iconUrlOptional,
                           hint: 'https://...',
                           icon: LucideIcons.image,
                         ),
                         const SizedBox(height: 12),
                         _buildTextField(
                           controller: _sortOrderController,
-                          label: 'Sort Order',
+                          label: AppLocalizations.of(context)!.sortOrder,
                           hint: '0',
                           icon: LucideIcons.listOrdered,
                           keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: 16),
                         _buildSwitchTile(
-                          label: 'Active Status',
-                          subtitle: 'Visibility for vendors',
+                          label: AppLocalizations.of(context)!.activeStatus,
+                          subtitle: AppLocalizations.of(context)!.visibilityForVendors,
                           value: _isActive,
                           onChanged: (v) => setState(() => _isActive = v),
                         ),
@@ -183,7 +184,7 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                         foregroundColor: AppColors.textSecondary,
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
@@ -196,7 +197,7 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         elevation: 0,
                       ),
-                      child: Text(isEdit ? 'Update' : 'Save'),
+                      child: Text(isEdit ? AppLocalizations.of(context)!.update : AppLocalizations.of(context)!.save),
                     ),
                   ],
                 ),

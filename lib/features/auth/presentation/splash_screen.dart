@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       child: BlocListener<AuthBloc, AuthState>(
         listener: _onAuthStateChanged,
         child: Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -72,21 +72,21 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'OTLOB ADMIN',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 4,
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
               const SizedBox(height: 16),
-              const SizedBox(
+              SizedBox(
                 width: 40,
                 child: LinearProgressIndicator(
-                  backgroundColor: AppColors.surface,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               ),
             ],

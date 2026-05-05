@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/presentation/vertical_bloc.dart';
 import 'package:otlob_admin/features/vendors/presentation/widgets/add_vertical_dialog.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class VerticalsScreen extends StatefulWidget {
   const VerticalsScreen({super.key});
@@ -39,23 +40,23 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Business Types',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    AppLocalizations.of(context)!.businessTypes,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onBackground),
                   ),
                   Text(
-                    'Manage vertical categories for vendors',
-                    style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+                    AppLocalizations.of(context)!.manageVerticalsDescription,
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
                   ),
                 ],
               ),
               ElevatedButton.icon(
                 onPressed: () => _showAddVerticalDialog(context),
                 icon: const Icon(LucideIcons.plus, size: 18),
-                label: const Text('Add Business Type'),
+                label: Text(AppLocalizations.of(context)!.addBusinessType),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -104,15 +105,15 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withOpacity(0.05)),
+                  border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
                 ),
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: pagedItems.length,
-                  separatorBuilder: (context, index) => Divider(color: Colors.white.withOpacity(0.05), height: 1),
+                  separatorBuilder: (context, index) => Divider(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05), height: 1),
                   itemBuilder: (context, index) {
                     final v = pagedItems[index];
                     return Padding(
@@ -139,29 +140,28 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
                                 if (v['nameAr'] != null)
                                   Text(
                                     v['nameAr'],
-                                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13),
                                   ),
                               ],
                             ),
                           ),
                           _buildStatusBadge(v['isActive'] ?? true),
                           const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(LucideIcons.edit3, size: 18, color: AppColors.primary),
+                          const SizedBox(width: 12),
+                          _buildActionItem(
+                            context: context,
+                            icon: LucideIcons.edit3,
+                            color: AppColors.primary,
+                            label: AppLocalizations.of(context)!.edit,
                             onPressed: () => _showEditVerticalDialog(context, v),
-                            style: IconButton.styleFrom(
-                              backgroundColor: AppColors.primary.withOpacity(0.1),
-                              padding: const EdgeInsets.all(8),
-                            ),
                           ),
                           const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(LucideIcons.trash2, size: 18, color: Colors.redAccent),
+                          _buildActionItem(
+                            context: context,
+                            icon: LucideIcons.trash2,
+                            color: Colors.redAccent,
+                            label: AppLocalizations.of(context)!.delete,
                             onPressed: () => _confirmDelete(context, v),
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.redAccent.withOpacity(0.1),
-                              padding: const EdgeInsets.all(8),
-                            ),
                           ),
                         ],
                       ),
@@ -198,14 +198,14 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.surface,
+                color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: isSelected ? AppColors.primary : Colors.white.withOpacity(0.1)),
+                border: Border.all(color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.onSurface.withOpacity(0.1)),
               ),
               child: Text(
                 '${index + 1}',
                 style: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.textSecondary,
+                  color: isSelected ? Colors.white : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -224,7 +224,7 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        isActive ? 'Active' : 'Inactive',
+        isActive ? AppLocalizations.of(context)!.activeStatus : AppLocalizations.of(context)!.inactiveStatus,
         style: TextStyle(
           color: isActive ? AppColors.success : AppColors.textMuted,
           fontSize: 11,
@@ -235,14 +235,14 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
   }
 
   Widget _buildEmptyState() {
-    return const Padding(
-      padding: EdgeInsets.all(60),
+    return Padding(
+      padding: const EdgeInsets.all(60),
       child: Center(
         child: Column(
           children: [
-            Icon(LucideIcons.layers, size: 48, color: AppColors.textMuted),
-            SizedBox(height: 16),
-            Text('No business types found', style: TextStyle(color: AppColors.textSecondary)),
+            const Icon(LucideIcons.layers, size: 48, color: AppColors.textMuted),
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.noBusinessTypesFound, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
           ],
         ),
       ),
@@ -279,16 +279,51 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Delete Business Type'),
-        content: Text('Are you sure you want to delete "${vertical['name']}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteBusinessType),
+        content: Text(AppLocalizations.of(context)!.deleteBusinessTypeConfirm(vertical['name'] ?? AppLocalizations.of(context)!.unknown)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               bloc.add(DeleteVertical(vertical['id']));
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionItem({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: color),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/core/widgets/stat_card.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -19,21 +20,21 @@ class OrdersScreen extends StatelessWidget {
               runSpacing: 12,
               children: [
                 StatCard(
-                  title: 'New Orders',
+                  title: AppLocalizations.of(context)!.newOrders,
                   value: '0',
                   icon: LucideIcons.bell,
                   color: AppColors.warning,
                   isMobile: isMobile,
                 ),
                 StatCard(
-                  title: 'In Delivery',
+                  title: AppLocalizations.of(context)!.inDelivery,
                   value: '0',
                   icon: LucideIcons.truck,
                   color: AppColors.primary,
                   isMobile: isMobile,
                 ),
                 StatCard(
-                  title: 'Cancelled',
+                  title: AppLocalizations.of(context)!.cancelled,
                   value: '0',
                   icon: LucideIcons.xCircle,
                   color: AppColors.error,
@@ -46,22 +47,22 @@ class OrdersScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(40),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(LucideIcons.packageSearch, size: 56, color: AppColors.textMuted),
+                  Icon(LucideIcons.packageSearch, size: 56, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
                   SizedBox(height: 20),
                   Text(
-                    'No Orders Found',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    AppLocalizations.of(context)!.noOrdersFound,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'The Orders API is currently not connected.',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                    AppLocalizations.of(context)!.ordersApiNotConnected,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13),
                     textAlign: TextAlign.center,
                   ),
                 ],

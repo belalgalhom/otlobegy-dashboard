@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/core/widgets/stat_card.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class TicketsScreen extends StatelessWidget {
   const TicketsScreen({super.key});
@@ -19,21 +20,21 @@ class TicketsScreen extends StatelessWidget {
               runSpacing: 12,
               children: [
                 StatCard(
-                  title: 'Open Tickets',
+                  title: AppLocalizations.of(context)!.openTickets,
                   value: '0',
                   icon: LucideIcons.inbox,
                   color: AppColors.error,
                   isMobile: isMobile,
                 ),
                 StatCard(
-                  title: 'In Progress',
+                  title: AppLocalizations.of(context)!.inProgress,
                   value: '0',
                   icon: LucideIcons.clock,
                   color: AppColors.warning,
                   isMobile: isMobile,
                 ),
                 StatCard(
-                  title: 'Resolved',
+                  title: AppLocalizations.of(context)!.resolved,
                   value: '0',
                   icon: LucideIcons.checkCircle,
                   color: AppColors.success,
@@ -46,22 +47,22 @@ class TicketsScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(40),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(LucideIcons.ticket, size: 56, color: AppColors.textMuted),
+                  Icon(LucideIcons.ticket, size: 56, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
                   SizedBox(height: 20),
-                  const Text(
-                    'No Support Tickets',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                  Text(
+                    AppLocalizations.of(context)!.noSupportTickets,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                   ),
-                  SizedBox(height: 8),
-                  const Text(
-                    'All customer inquiries have been resolved.',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                  const SizedBox(height: 8),
+                  Text(
+                    AppLocalizations.of(context)!.allInquiriesResolved,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13),
                     textAlign: TextAlign.center,
                   ),
                 ],

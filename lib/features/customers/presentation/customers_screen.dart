@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class CustomersScreen extends StatelessWidget {
   const CustomersScreen({super.key});
@@ -12,26 +13,26 @@ class CustomersScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            _buildQuickStat('Total Customers', '1,240', LucideIcons.users),
+            _buildQuickStat(context, AppLocalizations.of(context)!.totalCustomers, '1,240', LucideIcons.users),
             const SizedBox(width: 24),
-            _buildQuickStat('Active This Month', '850', LucideIcons.trendingUp),
+            _buildQuickStat(context, AppLocalizations.of(context)!.activeThisMonth, '850', LucideIcons.trendingUp),
             const SizedBox(width: 24),
-            _buildQuickStat('Banned', '12', LucideIcons.userX),
+            _buildQuickStat(context, AppLocalizations.of(context)!.banned, '12', LucideIcons.userX),
           ],
         ),
         const SizedBox(height: 32),
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Customer Directory', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations.of(context)!.customerDirectory, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 24),
-              _buildCustomerTable(),
+              _buildCustomerTable(context),
             ],
           ),
         ),
@@ -39,12 +40,12 @@ class CustomersScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStat(String title, String value, IconData icon) {
+  Widget _buildQuickStat(BuildContext context, String title, String value, IconData icon) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -54,7 +55,7 @@ class CustomersScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+                Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 14)),
                 Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ],
             ),
@@ -64,7 +65,8 @@ class CustomersScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomerTable() {
+  Widget _buildCustomerTable(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(2),
@@ -75,9 +77,9 @@ class CustomersScreen extends StatelessWidget {
       },
       children: [
         TableRow(
-          children: ['Name', 'Email/Phone', 'Orders', 'Joined Date', 'Actions'].map((h) => Padding(
+          children: [l10n.name, l10n.emailPhone, l10n.orders, l10n.joinedDate, l10n.actions].map((h) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(h, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
+            child: Text(h, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontWeight: FontWeight.bold)),
           )).toList(),
         ),
         _buildCustomerRow('John Doe', 'john@example.com', '15', 'May 01, 2026'),

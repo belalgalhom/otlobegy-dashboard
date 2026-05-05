@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class AddProductDialog extends StatefulWidget {
   final String vendorId;
@@ -94,9 +95,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
     } catch (e) {
       print('Error picking image: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to pick image')),
-        );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocalizations.of(context)!.failedToPickImage)),
+          );
       }
     } finally {
       if (mounted) {
@@ -117,12 +118,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
       child: Container(
         constraints: BoxConstraints(maxWidth: isMobile ? size.width : 550),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
+              color: Colors.black.withOpacity(Theme.of(context).brightness == Brightness.dark ? 0.4 : 0.1),
               blurRadius: 30,
               offset: const Offset(0, 15),
             ),
@@ -143,7 +144,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.05))),
+                  border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05))),
                 ),
                 child: Row(
                   children: [
@@ -161,7 +162,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isEdit ? 'Edit Product' : 'Add Product',
+                            isEdit ? AppLocalizations.of(context)!.editProduct : AppLocalizations.of(context)!.addProduct,
                             style: TextStyle(
                               fontSize: isMobile ? 20 : 22,
                               fontWeight: FontWeight.w800,
@@ -170,7 +171,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Vendor: ${widget.vendorName}',
+                            AppLocalizations.of(context)!.vendor(widget.vendorName),
                             style: TextStyle(
                               fontSize: isMobile ? 12 : 13,
                               color: AppColors.textSecondary,
@@ -204,33 +205,33 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         _buildCategoryDropdown(),
                         const SizedBox(height: 24),
 
-                        _buildSectionHeader('Product Image'),
+                        _buildSectionHeader(AppLocalizations.of(context)!.productImage),
                         const SizedBox(height: 12),
                         _buildImagePicker(),
                         const SizedBox(height: 24),
 
-                        _buildSectionHeader('Basic Info'),
+                        _buildSectionHeader(AppLocalizations.of(context)!.basicInfo),
                         const SizedBox(height: 12),
                         _buildTextField(
                           controller: _nameController,
-                          label: 'Product Name (EN)',
+                          label: AppLocalizations.of(context)!.productNameEn,
                           hint: 'e.g. Classic Cheeseburger',
                           icon: LucideIcons.type,
-                          validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                          validator: (v) => v?.isEmpty ?? true ? AppLocalizations.of(context)!.fieldRequired : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextField(
                           controller: _nameArController,
-                          label: 'Product Name (AR)',
+                          label: AppLocalizations.of(context)!.productNameAr,
                           hint: 'مثال: تشيز برجر كلاسيك',
                           icon: LucideIcons.languages,
                           textAlign: TextAlign.right,
-                          validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                          validator: (v) => v?.isEmpty ?? true ? AppLocalizations.of(context)!.fieldRequired : null,
                         ),
                         const SizedBox(height: 16),
                         _buildTextField(
                           controller: _descriptionController,
-                          label: 'Description (EN)',
+                          label: AppLocalizations.of(context)!.descriptionEn,
                           hint: 'Detailed product description...',
                           icon: LucideIcons.alignLeft,
                           maxLines: 3,
@@ -238,7 +239,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         const SizedBox(height: 16),
                         _buildTextField(
                           controller: _descriptionArController,
-                          label: 'Description (AR)',
+                          label: AppLocalizations.of(context)!.descriptionAr,
                           hint: 'وصف المنتج بالتفصيل...',
                           icon: LucideIcons.alignRight,
                           maxLines: 3,
@@ -246,25 +247,25 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         ),
                         
                         const SizedBox(height: 24),
-                        _buildSectionHeader('Pricing & Inventory'),
+                        _buildSectionHeader(AppLocalizations.of(context)!.pricingInventory),
                         const SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
                               child: _buildTextField(
                                 controller: _priceController,
-                                label: 'Base Price',
+                                label: AppLocalizations.of(context)!.basePrice,
                                 hint: '0.00',
                                 icon: LucideIcons.dollarSign,
                                 keyboardType: TextInputType.number,
-                                validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                                validator: (v) => v?.isEmpty ?? true ? AppLocalizations.of(context)!.fieldRequired : null,
                               ),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: _buildTextField(
                                 controller: _comparePriceController,
-                                label: 'Compare Price',
+                                label: AppLocalizations.of(context)!.comparePrice,
                                 hint: '0.00',
                                 icon: LucideIcons.tag,
                                 keyboardType: TextInputType.number,
@@ -278,7 +279,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                             Expanded(
                               child: _buildTextField(
                                 controller: _skuController,
-                                label: 'SKU',
+                                label: AppLocalizations.of(context)!.sku,
                                 hint: 'Stock unit',
                                 icon: LucideIcons.shoppingBag,
                               ),
@@ -287,7 +288,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                             Expanded(
                               child: _buildTextField(
                                 controller: _stockController,
-                                label: 'Initial Stock',
+                                label: AppLocalizations.of(context)!.initialStock,
                                 hint: '0',
                                 icon: LucideIcons.box,
                                 keyboardType: TextInputType.number,
@@ -297,7 +298,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         ),
                         
                         const SizedBox(height: 24),
-                        _buildSectionHeader('Settings'),
+                        _buildSectionHeader(AppLocalizations.of(context)!.settings),
                         const SizedBox(height: 12),
                         Container(
                           padding: const EdgeInsets.all(8),
@@ -309,16 +310,16 @@ class _AddProductDialogState extends State<AddProductDialog> {
                           child: Column(
                             children: [
                               _buildSwitchTile(
-                                title: 'Active Status',
-                                subtitle: 'Product will be visible to customers',
+                                title: AppLocalizations.of(context)!.productActiveStatus,
+                                subtitle: AppLocalizations.of(context)!.productVisibleToCustomers,
                                 value: _isActive,
                                 onChanged: (v) => setState(() => _isActive = v),
                                 icon: LucideIcons.eye,
                               ),
                               Divider(color: Colors.white.withOpacity(0.05), height: 1, indent: 48),
                               _buildSwitchTile(
-                                title: 'Featured Product',
-                                subtitle: 'Show at the top of the menu',
+                                title: AppLocalizations.of(context)!.featuredProduct,
+                                subtitle: AppLocalizations.of(context)!.showAtTopOfMenu,
                                 value: _isFeatured,
                                 onChanged: (v) => setState(() => _isFeatured = v),
                                 icon: LucideIcons.star,
@@ -345,7 +346,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
@@ -359,7 +360,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                       ),
                       child: _isLoading 
                         ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : Text(isEdit ? 'Update Product' : 'Add Product'),
+                        : Text(isEdit ? AppLocalizations.of(context)!.updateProduct : AppLocalizations.of(context)!.addProduct),
                     ),
                   ],
                 ),
@@ -387,11 +388,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Menu Category', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+        Text(AppLocalizations.of(context)!.menuCategory, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: _selectedCategoryId,
-          hint: Text(_isLoadingCategories ? 'Loading categories...' : 'Select Menu Category', style: const TextStyle(color: AppColors.textMuted, fontSize: 14)),
+          hint: Text(_isLoadingCategories ? AppLocalizations.of(context)!.loadingCategories : AppLocalizations.of(context)!.selectMenuCategory, style: const TextStyle(color: AppColors.textMuted, fontSize: 14)),
           isExpanded: true,
           dropdownColor: AppColors.surface,
           icon: const Icon(LucideIcons.chevronDown, size: 16, color: AppColors.textSecondary),
@@ -403,7 +404,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             );
           }).toList(),
           onChanged: (v) => setState(() => _selectedCategoryId = v),
-          validator: (v) => v == null ? 'Please select a category' : null,
+          validator: (v) => v == null ? AppLocalizations.of(context)!.pleaseSelectCategory : null,
           decoration: InputDecoration(
             prefixIcon: const Icon(LucideIcons.list, size: 18, color: AppColors.textMuted),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -492,9 +493,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
                                 child: const Icon(LucideIcons.image, color: AppColors.primary, size: 32),
                               ),
                               const SizedBox(height: 12),
-                              const Text('Upload Product Image', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text(AppLocalizations.of(context)!.uploadProductImage, style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 14)),
                               const SizedBox(height: 4),
-                              const Text('PNG, JPG up to 5MB', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                              Text(AppLocalizations.of(context)!.imageFormatSupport, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
                             ],
                           ),
               ),
@@ -508,7 +509,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     _buildImageActionButton(
                       icon: LucideIcons.camera,
                       onTap: _pickImage,
-                      tooltip: 'Change Image',
+                      tooltip: AppLocalizations.of(context)!.changeImage,
                     ),
                     const SizedBox(width: 8),
                     _buildImageActionButton(
@@ -522,7 +523,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         });
                       },
                       color: AppColors.error,
-                      tooltip: 'Remove Image',
+                      tooltip: AppLocalizations.of(context)!.removeImage,
                     ),
                   ],
                 ),

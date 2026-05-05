@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/core/widgets/stat_card.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class DriversScreen extends StatelessWidget {
   const DriversScreen({super.key});
@@ -19,24 +20,24 @@ class DriversScreen extends StatelessWidget {
               runSpacing: 12,
               children: [
                 StatCard(
-                  title: 'Total Drivers',
+                  title: AppLocalizations.of(context)!.totalDrivers,
                   value: '0',
                   icon: LucideIcons.users,
                   color: AppColors.primary,
                   isMobile: isMobile,
                 ),
                 StatCard(
-                  title: 'Active Now',
+                  title: AppLocalizations.of(context)!.activeNow,
                   value: '0',
                   icon: LucideIcons.navigation,
                   color: AppColors.success,
                   isMobile: isMobile,
                 ),
                 StatCard(
-                  title: 'Offline',
+                  title: AppLocalizations.of(context)!.offline,
                   value: '0',
                   icon: LucideIcons.moon,
-                  color: AppColors.textMuted,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                   isMobile: isMobile,
                 ),
               ],
@@ -46,22 +47,22 @@ class DriversScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(40),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(LucideIcons.mapPin, size: 56, color: AppColors.textMuted),
+                  Icon(LucideIcons.mapPin, size: 56, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
                   SizedBox(height: 20),
                   Text(
-                    'Driver Tracking Offline',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    AppLocalizations.of(context)!.driverTrackingOffline,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'Wait for backend implementation of Driver GPS.',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                    AppLocalizations.of(context)!.waitBackendDriverGps,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13),
                     textAlign: TextAlign.center,
                   ),
                 ],

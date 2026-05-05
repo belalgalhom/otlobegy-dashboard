@@ -4,6 +4,7 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/features/vendors/presentation/widgets/add_product_dialog.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -51,7 +52,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     final isMobile = size.width < 600;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
@@ -74,7 +75,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textPrimary),
+                      icon: Icon(LucideIcons.arrowLeft, color: Theme.of(context).colorScheme.onSurface),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -86,17 +87,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Products',
+                            AppLocalizations.of(context)!.products,
                             style: TextStyle(
                               fontSize: isMobile ? 20 : 24,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                               letterSpacing: -0.5,
                             ),
                           ),
                           Text(
-                            '${widget.vendorName} • $_total items',
-                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                            '${widget.vendorName} • ${AppLocalizations.of(context)!.itemsCount(_total)}',
+                            style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
@@ -104,7 +105,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ElevatedButton.icon(
                       onPressed: () => _showAddProductDialog(),
                       icon: const Icon(LucideIcons.plus, size: 18),
-                      label: isMobile ? const Text('Add') : const Text('Add Product'),
+                      label: isMobile ? Text(AppLocalizations.of(context)!.addVendor.split(' ')[0]) : Text(AppLocalizations.of(context)!.addProduct),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -147,21 +148,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
+              border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
             ),
             child: const Icon(LucideIcons.package, size: 48, color: AppColors.textMuted),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'No Products Found',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+          Text(
+            AppLocalizations.of(context)!.noProductsFound,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'This vendor doesn\'t have any products yet.',
-            style: TextStyle(color: AppColors.textSecondary),
+          Text(
+            AppLocalizations.of(context)!.noProductsDescription,
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -177,7 +178,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -215,8 +216,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
             ),
             title: Text(
-              product['name'] ?? 'Unnamed Product',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary),
+              product['name'] ?? AppLocalizations.of(context)!.unnamedProduct,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +237,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        isActive ? 'Active' : 'Inactive',
+                        isActive ? AppLocalizations.of(context)!.activeStatus : AppLocalizations.of(context)!.inactiveStatus,
                         style: TextStyle(
                           color: isActive ? AppColors.success : AppColors.error,
                           fontSize: 10,
@@ -247,7 +248,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     if (product['stock'] != null) ...[
                       const SizedBox(width: 8),
                       Text(
-                        'Stock: ${product['stock']}',
+                        '${AppLocalizations.of(context)!.stock}: ${product['stock']}',
                         style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
                       ),
                     ],
@@ -258,15 +259,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildActionIconButton(
+                _buildActionItem(
+                  context: context,
                   icon: LucideIcons.edit3,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  label: AppLocalizations.of(context)!.edit,
                   onPressed: () => _showAddProductDialog(product: product),
                 ),
                 const SizedBox(width: 8),
-                _buildActionIconButton(
+                _buildActionItem(
+                  context: context,
                   icon: LucideIcons.trash2,
                   color: AppColors.error,
+                  label: AppLocalizations.of(context)!.delete,
                   onPressed: () => _confirmDelete(product),
                 ),
               ],
@@ -277,17 +282,37 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _buildActionIconButton({required IconData icon, required Color color, required VoidCallback onPressed}) {
+  Widget _buildActionItem({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 18, color: color),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: color),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -328,7 +353,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(product != null ? 'Product updated' : 'Product added'),
+              content: Text(product != null ? AppLocalizations.of(context)!.productUpdated : AppLocalizations.of(context)!.productAdded),
               backgroundColor: AppColors.success,
               behavior: SnackBarBehavior.floating,
             ),
@@ -356,15 +381,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
             children: [
               const Icon(LucideIcons.alertTriangle, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
-              const Text(
-                'Delete Product?',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              Text(
+                AppLocalizations.of(context)!.deleteProduct,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               const SizedBox(height: 12),
               Text(
-                'Are you sure you want to delete "${product['name']}"? This cannot be undone.',
+                AppLocalizations.of(context)!.deleteProductConfirm(product['name'] ?? AppLocalizations.of(context)!.unnamedProduct),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
               ),
               const SizedBox(height: 24),
               Row(
@@ -372,7 +397,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                      child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppColors.textSecondary)),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -385,8 +410,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           if (success) {
                             _fetchProducts();
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Product deleted'),
+                              SnackBar(
+                                content: Text(AppLocalizations.of(context)!.productDeleted),
                                 backgroundColor: AppColors.success,
                                 behavior: SnackBarBehavior.floating,
                               ),
@@ -400,7 +425,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         minimumSize: const Size(double.infinity, 48),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('Delete'),
+                      child: Text(AppLocalizations.of(context)!.delete),
                     ),
                   ),
                 ],

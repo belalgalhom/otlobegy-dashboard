@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class BranchesScreen extends StatefulWidget {
   final String vendorId;
@@ -45,7 +46,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
     final isMobile = size.width < 600;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
@@ -67,7 +68,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textPrimary),
+                      icon: Icon(LucideIcons.arrowLeft, color: Theme.of(context).colorScheme.onSurface),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -79,17 +80,17 @@ class _BranchesScreenState extends State<BranchesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Store Branches',
+                            AppLocalizations.of(context)!.storeBranches,
                             style: TextStyle(
                               fontSize: isMobile ? 16 : 20,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                               letterSpacing: -0.5,
                             ),
                           ),
                           Text(
                             widget.vendorName,
-                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                            style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
@@ -97,7 +98,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                     ElevatedButton.icon(
                       onPressed: () => _showAddBranchDialog(),
                       icon: const Icon(LucideIcons.plus, size: 18),
-                      label: const Text('Add Branch'),
+                      label: Text(AppLocalizations.of(context)!.addBranch),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -138,21 +139,21 @@ class _BranchesScreenState extends State<BranchesScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
+              border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
             ),
             child: const Icon(LucideIcons.mapPin, size: 48, color: AppColors.textMuted),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'No Branches Found',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+           Text(
+            AppLocalizations.of(context)!.noBranchesFound,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'This vendor doesn\'t have any branches registered yet.',
-            style: TextStyle(color: AppColors.textSecondary),
+          Text(
+            AppLocalizations.of(context)!.noBranchesDescription,
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -163,9 +164,9 @@ class _BranchesScreenState extends State<BranchesScreen> {
   Widget _buildBranchCard(dynamic branch) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -178,13 +179,13 @@ class _BranchesScreenState extends State<BranchesScreen> {
           child: const Icon(LucideIcons.mapPin, color: AppColors.success, size: 20),
         ),
         title: Text(
-          branch['name'] ?? 'Unnamed Branch',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary),
+          branch['name'] ?? AppLocalizations.of(context)!.unnamedBranch,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Theme.of(context).colorScheme.onSurface),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(branch['address'] ?? 'No address provided', style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+            Text(branch['address'] ?? AppLocalizations.of(context)!.noAddressProvided, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13)),
             if (branch['phoneNumber'] != null && branch['phoneNumber'].isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
@@ -201,15 +202,19 @@ class _BranchesScreenState extends State<BranchesScreen> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildActionIconButton(
+            _buildActionItem(
+              context: context,
               icon: LucideIcons.edit3,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              label: AppLocalizations.of(context)!.edit,
               onPressed: () => _showAddBranchDialog(branch: branch),
             ),
             const SizedBox(width: 8),
-            _buildActionIconButton(
+            _buildActionItem(
+              context: context,
               icon: LucideIcons.trash2,
               color: AppColors.error,
+              label: AppLocalizations.of(context)!.delete,
               onPressed: () => _confirmDelete(branch),
             ),
           ],
@@ -218,17 +223,37 @@ class _BranchesScreenState extends State<BranchesScreen> {
     );
   }
 
-  Widget _buildActionIconButton({required IconData icon, required Color color, required VoidCallback onPressed}) {
+  Widget _buildActionItem({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 18, color: color),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: color),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -247,7 +272,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
         child: Container(
           constraints: const BoxConstraints(maxWidth: 450),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
           ),
           child: SingleChildScrollView(
@@ -264,7 +289,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       Icon(isEdit ? LucideIcons.edit3 : LucideIcons.mapPin, color: AppColors.primary),
                       const SizedBox(width: 12),
                       Text(
-                        isEdit ? 'Edit Branch' : 'New Branch',
+                        isEdit ? AppLocalizations.of(context)!.editBranch : AppLocalizations.of(context)!.newBranch,
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                       ),
                     ],
@@ -274,13 +299,13 @@ class _BranchesScreenState extends State<BranchesScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      _buildDialogTextField(controller: nameController, label: 'Branch Name', hint: 'e.g. Downtown Branch', icon: LucideIcons.type),
+                      _buildDialogTextField(controller: nameController, label: AppLocalizations.of(context)!.branchName, hint: 'e.g. Downtown Branch', icon: LucideIcons.type),
                       const SizedBox(height: 16),
-                      _buildDialogTextField(controller: nameArController, label: 'Branch Name (AR)', hint: 'اسم الفرع', icon: LucideIcons.languages, textAlign: TextAlign.right),
+                      _buildDialogTextField(controller: nameArController, label: AppLocalizations.of(context)!.branchNameAr, hint: 'اسم الفرع', icon: LucideIcons.languages, textAlign: TextAlign.right),
                       const SizedBox(height: 16),
-                      _buildDialogTextField(controller: addressController, label: 'Address', hint: 'Full address', icon: LucideIcons.mapPin),
+                      _buildDialogTextField(controller: addressController, label: AppLocalizations.of(context)!.address, hint: 'Full address', icon: LucideIcons.mapPin),
                       const SizedBox(height: 16),
-                      _buildDialogTextField(controller: phoneController, label: 'Phone', hint: '+123...', icon: LucideIcons.phone, keyboardType: TextInputType.phone),
+                      _buildDialogTextField(controller: phoneController, label: AppLocalizations.of(context)!.phone, hint: '+123...', icon: LucideIcons.phone, keyboardType: TextInputType.phone),
                     ],
                   ),
                 ),
@@ -293,7 +318,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary))),
+                      TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppColors.textSecondary))),
                       const SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () async {
@@ -311,7 +336,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                           }
                           if (mounted) Navigator.pop(context, success);
                         },
-                        child: Text(isEdit ? 'Update' : 'Add'),
+                        child: Text(isEdit ? AppLocalizations.of(context)!.update : AppLocalizations.of(context)!.create),
                       ),
                     ],
                   ),
@@ -368,13 +393,13 @@ class _BranchesScreenState extends State<BranchesScreen> {
             children: [
               const Icon(LucideIcons.alertTriangle, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
-              const Text('Delete Branch?', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              Text(AppLocalizations.of(context)!.deleteBranch, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
               const SizedBox(height: 12),
-              Text('Are you sure you want to delete "${branch['name']}"?', textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
+              Text(AppLocalizations.of(context)!.deleteBranchConfirm(branch['name'] ?? AppLocalizations.of(context)!.unnamedBranch), textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
               const SizedBox(height: 24),
               Row(
                 children: [
-                  Expanded(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)))),
+                  Expanded(child: TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppColors.textSecondary)))),
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
@@ -386,7 +411,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-                      child: const Text('Delete'),
+                      child: Text(AppLocalizations.of(context)!.delete),
                     ),
                   ),
                 ],

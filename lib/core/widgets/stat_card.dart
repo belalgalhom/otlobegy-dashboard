@@ -28,9 +28,9 @@ class StatCard extends StatelessWidget {
       width: cardWidth,
       padding: const EdgeInsets.all(16), // Reduced from 24
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20), // Slightly smaller radius
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
         boxShadow: [
           BoxShadow(
             color: color.withOpacity(0.03),
@@ -53,8 +53,8 @@ class StatCard extends StatelessWidget {
           const SizedBox(height: 16), // Reduced from 24
           Text(
             title,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               fontSize: 12, // Reduced from 14
               fontWeight: FontWeight.w500,
             ),
@@ -64,8 +64,8 @@ class StatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 20, // Reduced from 26
               fontWeight: FontWeight.bold,
               letterSpacing: -0.5,

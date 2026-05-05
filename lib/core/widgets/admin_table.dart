@@ -20,9 +20,9 @@ class AdminTable extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,7 @@ class AdminTable extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
               ),
               if (actions != null) Row(children: actions!),
             ],
@@ -42,11 +42,11 @@ class AdminTable extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columnSpacing: 40,
-              headingRowColor: MaterialStateProperty.all(AppColors.background.withOpacity(0.5)),
+              headingRowColor: MaterialStateProperty.all(Theme.of(context).colorScheme.background.withOpacity(0.5)),
               columns: columns.map((col) => DataColumn(
                 label: Text(
                   col,
-                  style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontWeight: FontWeight.bold),
                 ),
               )).toList(),
               rows: rows.map((row) => DataRow(cells: _buildCells(row))).toList(),

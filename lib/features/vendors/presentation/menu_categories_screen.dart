@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class MenuCategoriesScreen extends StatefulWidget {
   final String vendorId;
@@ -45,7 +46,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
     final isMobile = size.width < 600;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
@@ -68,7 +69,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textPrimary),
+                      icon: Icon(LucideIcons.arrowLeft, color: Theme.of(context).colorScheme.onSurface),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.05),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -80,17 +81,17 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Menu Categories',
+                            AppLocalizations.of(context)!.menuCategories,
                             style: TextStyle(
                               fontSize: isMobile ? 16 : 20,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                               letterSpacing: -0.5,
                             ),
                           ),
                           Text(
                             widget.vendorName,
-                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                            style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
@@ -98,7 +99,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                     ElevatedButton.icon(
                       onPressed: () => _showAddCategoryDialog(),
                       icon: const Icon(LucideIcons.plus, size: 18),
-                      label: const Text('Add Category'),
+                      label: Text(AppLocalizations.of(context)!.add),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -141,21 +142,21 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
+              border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
             ),
             child: const Icon(LucideIcons.list, size: 48, color: AppColors.textMuted),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'No Categories Found',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+          Text(
+            AppLocalizations.of(context)!.noCategoriesFound,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Start by adding a new menu category for this vendor.',
-            style: TextStyle(color: AppColors.textSecondary),
+          Text(
+            AppLocalizations.of(context)!.menuCategoriesDescription,
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -166,9 +167,9 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
   Widget _buildCategoryCard(dynamic category) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -192,28 +193,32 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
               child: const Icon(LucideIcons.layers, color: AppColors.primary, size: 20),
             ),
             title: Text(
-              category['name'] ?? 'Unnamed Category',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary),
+              category['name'] ?? AppLocalizations.of(context)!.unnamedCategory,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
             ),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
                 category['nameAr'] ?? '',
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 14),
               ),
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildActionIconButton(
+                _buildActionItem(
+                  context: context,
                   icon: LucideIcons.edit3,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  label: AppLocalizations.of(context)!.edit,
                   onPressed: () => _showAddCategoryDialog(category: category),
                 ),
                 const SizedBox(width: 8),
-                _buildActionIconButton(
+                _buildActionItem(
+                  context: context,
                   icon: LucideIcons.trash2,
                   color: AppColors.error,
+                  label: AppLocalizations.of(context)!.delete,
                   onPressed: () => _confirmDelete(category),
                 ),
               ],
@@ -224,17 +229,37 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
     );
   }
 
-  Widget _buildActionIconButton({required IconData icon, required Color color, required VoidCallback onPressed}) {
+  Widget _buildActionItem({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 18, color: color),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: color),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -251,7 +276,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: Colors.white.withOpacity(0.08)),
           ),
@@ -268,7 +293,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                     Icon(isEdit ? LucideIcons.edit3 : LucideIcons.plusCircle, color: AppColors.primary),
                     const SizedBox(width: 12),
                     Text(
-                      isEdit ? 'Edit Category' : 'New Category',
+                      isEdit ? AppLocalizations.of(context)!.editCategory : AppLocalizations.of(context)!.newCategory,
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                     ),
                   ],
@@ -280,14 +305,14 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                   children: [
                     _buildDialogTextField(
                       controller: nameController,
-                      label: 'Name (EN)',
+                      label: AppLocalizations.of(context)!.nameEn,
                       hint: 'e.g. Main Dishes',
                       icon: LucideIcons.type,
                     ),
                     const SizedBox(height: 20),
                     _buildDialogTextField(
                       controller: nameArController,
-                      label: 'Name (AR)',
+                      label: AppLocalizations.of(context)!.nameAr,
                       hint: 'مثال: الأطباق الرئيسية',
                       icon: LucideIcons.languages,
                       textAlign: TextAlign.right,
@@ -306,7 +331,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                      child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppColors.textSecondary)),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
@@ -329,7 +354,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                         minimumSize: const Size(100, 48),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: Text(isEdit ? 'Update' : 'Add'),
+                      child: Text(isEdit ? AppLocalizations.of(context)!.update : AppLocalizations.of(context)!.add),
                     ),
                   ],
                 ),
@@ -378,7 +403,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
           constraints: const BoxConstraints(maxWidth: 400),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: Colors.white.withOpacity(0.08)),
           ),
@@ -387,15 +412,15 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
             children: [
               const Icon(LucideIcons.alertTriangle, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
-              const Text(
-                'Delete Category?',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              Text(
+                AppLocalizations.of(context)!.deleteCategory,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               const SizedBox(height: 12),
               Text(
-                'Are you sure you want to delete "${category['name']}"? This action cannot be undone.',
+                AppLocalizations.of(context)!.deleteCategoryConfirm(category['name'] ?? AppLocalizations.of(context)!.unnamedCategory),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
               ),
               const SizedBox(height: 24),
               Row(
@@ -422,7 +447,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                         minimumSize: const Size(double.infinity, 48),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('Delete'),
+                      child: Text(AppLocalizations.of(context)!.delete),
                     ),
                   ),
                 ],

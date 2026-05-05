@@ -18,6 +18,9 @@ import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otlob_admin/features/auth/data/auth_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/localization/language_cubit.dart';
+import 'package:otlob_admin/core/theme/theme_cubit.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -51,7 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 if (!isMobile) _buildSidebar(isMobile: false),
                 Expanded(
                   child: Container(
-                    color: AppColors.background,
+                    color: Theme.of(context).colorScheme.background,
                     child: Column(
                       children: [
                         Padding(
@@ -60,17 +63,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               if (isMobile) 
                                 IconButton(
-                                  icon: const Icon(LucideIcons.menu, color: AppColors.textPrimary),
+                                  icon: Icon(LucideIcons.menu, color: Theme.of(context).colorScheme.onBackground),
                                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                                 ),
                               if (isMobile) const SizedBox(width: 8),
                               Expanded(
-                                child: Text(
-                                  _getMenuTitle(_selectedIndex),
-                                  style: TextStyle(
-                                    fontSize: isMobile ? 20 : 28,
+                                  child: Text(
+                                    _getMenuTitle(context, _selectedIndex),
+                                    style: TextStyle(
+                                      fontSize: isMobile ? 20 : 28,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.textPrimary,
+                                    color: Theme.of(context).colorScheme.onBackground,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -80,7 +83,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               if (!isMobile) const SizedBox(width: 16),
                               _buildHeaderAction(LucideIcons.bell),
                               const SizedBox(width: 8),
-                              _buildHeaderAction(LucideIcons.moon),
+                              _buildThemeToggle(),
+                              const SizedBox(width: 8),
+                              _buildLanguageToggle(),
                             ],
                           ),
                         ),
@@ -105,7 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildSidebar({required bool isMobile}) {
     return Container(
       width: 280,
-      color: AppColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       child: Column(
         children: [
           const SizedBox(height: 40),
@@ -122,10 +127,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: const Icon(LucideIcons.package, color: Colors.white, size: 24),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Otlob Admin',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    AppLocalizations.of(context)!.appTitle,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ),
               ],
@@ -136,15 +141,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildMenuItem(0, LucideIcons.layoutDashboard, 'Dashboard', isMobile),
-                  _buildMenuItem(1, LucideIcons.shoppingBag, 'Orders', isMobile),
-                  _buildMenuItem(2, LucideIcons.store, 'Vendors', isMobile),
-                  _buildMenuItem(9, LucideIcons.layers, 'Business Types', isMobile),
-                  _buildMenuItem(3, LucideIcons.truck, 'Drivers', isMobile),
-                  _buildMenuItem(4, LucideIcons.userPlus, 'Users', isMobile),
-                  _buildMenuItem(8, LucideIcons.map, 'Zones', isMobile), // Added Zones
-                  _buildMenuItem(5, LucideIcons.helpCircle, 'Tickets', isMobile),
-                  _buildMenuItem(6, LucideIcons.messageSquare, 'Inbox', isMobile),
+                  _buildMenuItem(0, LucideIcons.layoutDashboard, AppLocalizations.of(context)!.dashboard, isMobile),
+                  _buildMenuItem(1, LucideIcons.shoppingBag, AppLocalizations.of(context)!.orders, isMobile),
+                  _buildMenuItem(2, LucideIcons.store, AppLocalizations.of(context)!.vendors, isMobile),
+                  _buildMenuItem(9, LucideIcons.layers, AppLocalizations.of(context)!.businessTypes, isMobile),
+                  _buildMenuItem(3, LucideIcons.truck, AppLocalizations.of(context)!.drivers, isMobile),
+                  _buildMenuItem(4, LucideIcons.userPlus, AppLocalizations.of(context)!.users, isMobile),
+                  _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile), // Added Zones
+                  _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
+                  _buildMenuItem(6, LucideIcons.messageSquare, AppLocalizations.of(context)!.inbox, isMobile),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -153,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Column(
             children: [
               const Divider(color: Colors.white10),
-              _buildMenuItem(7, LucideIcons.settings, 'Settings', isMobile),
+              _buildMenuItem(7, LucideIcons.settings, AppLocalizations.of(context)!.settings, isMobile),
               _buildUserProfile(context),
               const SizedBox(height: 16),
             ],
@@ -168,7 +173,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.background.withOpacity(0.5),
+        color: Theme.of(context).colorScheme.background.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -179,13 +184,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Text('AD', style: TextStyle(fontSize: 12)),
           ),
           const SizedBox(width: 8),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Admin', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                Text('Super Admin', style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                Text(AppLocalizations.of(context)!.admin, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                Text(AppLocalizations.of(context)!.superAdmin, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11)),
               ],
             ),
           ),
@@ -207,17 +212,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       width: 200,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const TextField(
+      child: TextField(
         decoration: InputDecoration(
-          hintText: 'Search...',
-          prefixIcon: Icon(LucideIcons.search, size: 18),
+          hintText: AppLocalizations.of(context)!.searchHint,
+          prefixIcon: const Icon(LucideIcons.search, size: 18),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
         ),
       ),
     );
@@ -246,7 +251,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             const Icon(LucideIcons.construction, size: 64, color: AppColors.textMuted),
             const SizedBox(height: 16),
-            Text('${_getMenuTitle(_selectedIndex)} Page Coming Soon', style: const TextStyle(fontSize: 20, color: AppColors.textSecondary)),
+            Text('${_getMenuTitle(context, _selectedIndex)} ${AppLocalizations.of(context)!.comingSoon}', style: const TextStyle(fontSize: 20, color: AppColors.textSecondary)),
           ],
         ),
       ),
@@ -265,18 +270,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
               builder: (context, state) {
                 String count = '...';
                 if (state is VendorsLoaded) count = state.total.toString();
-                return StatCard(title: 'Total Vendors', value: count, icon: LucideIcons.store, color: AppColors.primary, isMobile: isMobile);
+                return StatCard(title: AppLocalizations.of(context)!.totalVendors, value: count, icon: LucideIcons.store, color: AppColors.primary, isMobile: isMobile);
               },
             ),
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 String count = '...';
                 if (state is UsersLoaded) count = state.total.toString();
-                return StatCard(title: 'System Users', value: count, icon: LucideIcons.users, color: AppColors.info, isMobile: isMobile);
+                return StatCard(title: AppLocalizations.of(context)!.systemUsers, value: count, icon: LucideIcons.users, color: AppColors.info, isMobile: isMobile);
               },
             ),
-            StatCard(title: 'Revenue', value: 'N/A', icon: LucideIcons.dollarSign, color: AppColors.success, isMobile: isMobile),
-            StatCard(title: 'Orders', value: 'N/A', icon: LucideIcons.shoppingBag, color: AppColors.warning, isMobile: isMobile),
+            StatCard(title: AppLocalizations.of(context)!.revenue, value: 'N/A', icon: LucideIcons.dollarSign, color: AppColors.success, isMobile: isMobile),
+            StatCard(title: AppLocalizations.of(context)!.orders, value: 'N/A', icon: LucideIcons.shoppingBag, color: AppColors.warning, isMobile: isMobile),
           ],
         ),
         const SizedBox(height: 32),
@@ -284,17 +289,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(flex: 2, child: _buildRealDataPlaceholder('Live Orders', 'Orders API not implemented')),
+              Expanded(flex: 2, child: _buildRealDataPlaceholder(AppLocalizations.of(context)!.liveOrders, AppLocalizations.of(context)!.ordersApiNotImplemented)),
               const SizedBox(width: 24),
-              Expanded(child: _buildRealDataPlaceholder('System Logs', 'Audit logs API not implemented')),
+              Expanded(child: _buildRealDataPlaceholder(AppLocalizations.of(context)!.systemLogs, AppLocalizations.of(context)!.auditLogsApiNotImplemented)),
             ],
           )
         else
           Column(
             children: [
-              _buildRealDataPlaceholder('Live Orders', 'Orders API not implemented'),
+              _buildRealDataPlaceholder(AppLocalizations.of(context)!.liveOrders, AppLocalizations.of(context)!.ordersApiNotImplemented),
               const SizedBox(height: 24),
-              _buildRealDataPlaceholder('System Logs', 'Audit logs API not implemented'),
+              _buildRealDataPlaceholder(AppLocalizations.of(context)!.systemLogs, AppLocalizations.of(context)!.auditLogsApiNotImplemented),
             ],
           ),
         const SizedBox(height: 32),
@@ -307,7 +312,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
@@ -371,7 +376,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
@@ -379,19 +384,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  String _getMenuTitle(int index) {
+  Widget _buildThemeToggle() {
+    return BlocBuilder<ThemeCubit, ThemeMode>(
+      builder: (context, themeMode) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return InkWell(
+          onTap: () => context.read<ThemeCubit>().toggleTheme(),
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
+            ),
+            child: Icon(
+              isDark ? LucideIcons.sun : LucideIcons.moon,
+              size: 16,
+              color: Colors.amber,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageToggle() {
+    return BlocBuilder<LanguageCubit, Locale>(
+      builder: (context, locale) {
+        final isArabic = locale.languageCode == 'ar';
+        return InkWell(
+          onTap: () => context.read<LanguageCubit>().toggleLanguage(),
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white.withOpacity(0.05)),
+            ),
+            child: Row(
+              children: [
+                const Icon(LucideIcons.languages, size: 16, color: AppColors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  isArabic ? 'EN' : 'AR',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _getMenuTitle(BuildContext context, int index) {
+    final l10n = AppLocalizations.of(context)!;
     switch (index) {
-      case 0: return 'Dashboard';
-      case 1: return 'Orders';
-      case 2: return 'Vendors';
-      case 3: return 'Drivers';
-      case 4: return 'Users';
-      case 5: return 'Support Tickets';
-      case 6: return 'Inbox';
-      case 7: return 'Settings';
-      case 8: return 'Delivery Zones';
-      case 9: return 'Business Types';
-      default: return 'Dashboard';
+      case 0: return l10n.dashboard;
+      case 1: return l10n.orders;
+      case 2: return l10n.vendors;
+      case 3: return l10n.drivers;
+      case 4: return l10n.users;
+      case 5: return l10n.tickets;
+      case 6: return l10n.inbox;
+      case 7: return l10n.settings;
+      case 8: return l10n.deliveryZones;
+      case 9: return l10n.businessTypes;
+      default: return l10n.dashboard;
     }
   }
 }

@@ -12,6 +12,8 @@ import 'package:otlob_admin/features/users/data/users_repository.dart';
 import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
 import 'package:otlob_admin/features/zones/data/zones_repository.dart';
 import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
+import 'package:otlob_admin/core/localization/language_cubit.dart';
+import 'package:otlob_admin/core/theme/theme_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -40,4 +42,6 @@ Future<void> init() async {
   sl.registerFactory(() => UserBloc(sl()));
   sl.registerFactory(() => ZoneBloc(sl()));
   sl.registerFactory(() => VerticalBloc(sl()));
+  sl.registerLazySingleton(() => LanguageCubit(sl()));
+  sl.registerLazySingleton(() => ThemeCubit(sl()));
 }

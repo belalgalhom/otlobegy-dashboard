@@ -6,6 +6,7 @@ import 'package:otlob_admin/core/widgets/stat_card.dart';
 import 'package:otlob_admin/features/auth/data/auth_repository.dart';
 import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -69,21 +70,21 @@ class _UsersScreenState extends State<UsersScreen> {
                       runSpacing: 12,
                       children: [
                         StatCard(
-                          title: 'Total Users',
+                          title: AppLocalizations.of(context)!.totalUsers,
                           value: totalUsers.toString(),
                           icon: LucideIcons.users,
                           color: AppColors.primary,
                           isMobile: isMobile,
                         ),
                         StatCard(
-                          title: 'Platform Admins',
+                          title: AppLocalizations.of(context)!.platformAdmins,
                           value: totalAdmins.toString(),
                           icon: LucideIcons.shieldCheck,
                           color: AppColors.accent,
                           isMobile: isMobile,
                         ),
                         StatCard(
-                          title: 'Active Accounts',
+                          title: AppLocalizations.of(context)!.activeAccounts,
                           value: (totalUsers - bannedUsers).toString(),
                           icon: LucideIcons.checkCircle,
                           color: AppColors.success,
@@ -98,7 +99,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: AppColors.surface,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -107,17 +108,17 @@ class _UsersScreenState extends State<UsersScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Platform Users', 
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              AppLocalizations.of(context)!.platformUsers,
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           ElevatedButton.icon(
                             onPressed: () => _showUserFormDialog(context),
                             icon: const Icon(LucideIcons.userPlus, size: 14),
-                            label: const Text('Add User'),
+                            label: Text(AppLocalizations.of(context)!.addUser),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(110, 44),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -176,7 +177,7 @@ class _UsersScreenState extends State<UsersScreen> {
             : null,
         ),
         const SizedBox(width: 16),
-        Text('Page ${state.page} of $totalPages', style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(AppLocalizations.of(context)!.pageXofY(state.page, totalPages), style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(width: 16),
         IconButton(
           icon: const Icon(LucideIcons.chevronRight),
@@ -189,9 +190,9 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Widget _buildUserList(List<dynamic> users, BuildContext context) {
-    if (users.isEmpty) return const Center(child: Padding(
-      padding: EdgeInsets.all(40.0),
-      child: Text('No users found in the system.'),
+    if (users.isEmpty) return Center(child: Padding(
+      padding: const EdgeInsets.all(40.0),
+      child: Text(AppLocalizations.of(context)!.noUsersFound),
     ));
 
     return ListView.separated(
@@ -204,9 +205,9 @@ class _UsersScreenState extends State<UsersScreen> {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.background.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.background.withOpacity(0.3),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.05)),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
           ),
           child: Column(
             children: [
@@ -222,15 +223,15 @@ class _UsersScreenState extends State<UsersScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(u['name'] ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                        Text(u['email'] ?? 'No Email', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                        Text(u['name'] ?? AppLocalizations.of(context)!.unknown, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                        Text(u['email'] ?? AppLocalizations.of(context)!.noEmail, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 12)),
                       ],
                     ),
                   ),
-                  _buildStatusChip(u['isBanned'] == true),
+                  _buildStatusChip(context, u['isBanned'] == true),
                 ],
               ),
-              const Divider(height: 24, color: Colors.white10),
+              Divider(height: 24, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -240,34 +241,41 @@ class _UsersScreenState extends State<UsersScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Phone', style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
+                      Text(AppLocalizations.of(context)!.phone, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5), fontSize: 10)),
                       Text(u['phone'] ?? '-', style: const TextStyle(fontSize: 12)),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Role', style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
+                      Text(AppLocalizations.of(context)!.role, style: const TextStyle(color: AppColors.textMuted, fontSize: 10)),
                       _buildRoleChip(u['role'] ?? 'CUSTOMER'),
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          u['isBanned'] == true ? LucideIcons.unlock : LucideIcons.ban, 
-                          size: 18, 
-                          color: u['isBanned'] == true ? AppColors.success : AppColors.warning,
-                        ), 
+                      _buildActionItem(
+                        context: context,
+                        icon: u['isBanned'] == true ? LucideIcons.unlock : LucideIcons.ban, 
+                        color: u['isBanned'] == true ? AppColors.success : AppColors.warning,
+                        label: u['isBanned'] == true ? AppLocalizations.of(context)!.unban : AppLocalizations.of(context)!.ban,
                         onPressed: () => _handleBanToggle(context, u),
                       ),
-                      IconButton(
-                        icon: const Icon(LucideIcons.edit3, size: 18, color: AppColors.info), 
+                      const SizedBox(width: 8),
+                      _buildActionItem(
+                        context: context,
+                        icon: LucideIcons.edit3, 
+                        color: AppColors.info,
+                        label: AppLocalizations.of(context)!.edit,
                         onPressed: () => _showUserFormDialog(context, user: u),
                       ),
-                      IconButton(
-                        icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.error), 
+                      const SizedBox(width: 8),
+                      _buildActionItem(
+                        context: context,
+                        icon: LucideIcons.trash2, 
+                        color: AppColors.error,
+                        label: AppLocalizations.of(context)!.delete,
                         onPressed: () => _showDeleteConfirmation(context, u),
                       ),
                     ],
@@ -293,13 +301,13 @@ class _UsersScreenState extends State<UsersScreen> {
         horizontalMargin: 0,
         columnSpacing: 12,
         headingRowHeight: 48,
-        columns: const [
-          DataColumn(label: Text('User')),
-          DataColumn(label: Text('Email')),
-          DataColumn(label: Text('Phone')),
-          DataColumn(label: Text('Role')),
-          DataColumn(label: Text('Status')),
-          DataColumn(label: Text('Actions')),
+        columns: [
+          DataColumn(label: Text(AppLocalizations.of(context)!.name)),
+          DataColumn(label: Text(AppLocalizations.of(context)!.emailAddress)),
+          DataColumn(label: Text(AppLocalizations.of(context)!.phone)),
+          DataColumn(label: Text(AppLocalizations.of(context)!.role)),
+          DataColumn(label: Text(AppLocalizations.of(context)!.active)),
+          DataColumn(label: Text(AppLocalizations.of(context)!.actions)),
         ],
         rows: users.map((u) => DataRow(
           cells: [
@@ -313,41 +321,40 @@ class _UsersScreenState extends State<UsersScreen> {
                     child: Text((u['name'] ?? 'U')[0].toUpperCase(), style: const TextStyle(fontSize: 10, color: AppColors.primary)),
                   ),
                   const SizedBox(width: 12),
-                  Text(u['name'] ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  Text(u['name'] ?? AppLocalizations.of(context)!.unknown, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 ],
               ),
             ),
-            DataCell(Text(u['email'] ?? 'No Email', style: const TextStyle(fontSize: 13, color: AppColors.textSecondary))),
+            DataCell(Text(u['email'] ?? AppLocalizations.of(context)!.noEmail, style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)))),
             DataCell(Text(u['phone'] ?? '-', style: const TextStyle(fontSize: 13))),
             DataCell(_buildRoleChip(u['role'] ?? 'CUSTOMER')),
-            DataCell(_buildStatusChip(u['isBanned'] == true)),
+            DataCell(_buildStatusChip(context, u['isBanned'] == true)),
             DataCell(
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      u['isBanned'] == true ? LucideIcons.unlock : LucideIcons.ban, 
-                      size: 16, 
-                      color: u['isBanned'] == true ? AppColors.success : AppColors.warning,
-                    ), 
+                  _buildActionItem(
+                    context: context,
+                    icon: u['isBanned'] == true ? LucideIcons.unlock : LucideIcons.ban, 
+                    color: u['isBanned'] == true ? AppColors.success : AppColors.warning,
+                    label: u['isBanned'] == true ? AppLocalizations.of(context)!.unban : AppLocalizations.of(context)!.ban,
                     onPressed: () => _handleBanToggle(context, u),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
                   ),
-                  const SizedBox(width: 12),
-                  IconButton(
-                    icon: const Icon(LucideIcons.edit3, size: 16, color: AppColors.info), 
+                  const SizedBox(width: 8),
+                  _buildActionItem(
+                    context: context,
+                    icon: LucideIcons.edit3, 
+                    color: AppColors.info,
+                    label: AppLocalizations.of(context)!.edit,
                     onPressed: () => _showUserFormDialog(context, user: u),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
                   ),
-                  const SizedBox(width: 12),
-                  IconButton(
-                    icon: const Icon(LucideIcons.trash2, size: 16, color: AppColors.error), 
+                  const SizedBox(width: 8),
+                  _buildActionItem(
+                    context: context,
+                    icon: LucideIcons.trash2, 
+                    color: AppColors.error,
+                    label: AppLocalizations.of(context)!.delete,
                     onPressed: () => _showDeleteConfirmation(context, u),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
                   ),
                 ],
               ),
@@ -367,9 +374,9 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
-  Widget _buildStatusChip(bool isBanned) {
+  Widget _buildStatusChip(BuildContext context, bool isBanned) {
     Color color = isBanned ? AppColors.error : AppColors.success;
-    String label = isBanned ? 'BANNED' : 'ACTIVE';
+    String label = isBanned ? AppLocalizations.of(context)!.bannedStatus : AppLocalizations.of(context)!.activeStatus;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
@@ -387,7 +394,7 @@ class _UsersScreenState extends State<UsersScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => Dialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 500),
@@ -397,23 +404,23 @@ class _UsersScreenState extends State<UsersScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user == null ? 'Create New User' : 'Edit User Profile', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(user == null ? AppLocalizations.of(context)!.createNewUser : AppLocalizations.of(context)!.editUserProfile, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 24),
-                _buildField('Full Name', LucideIcons.user, nameController, 'e.g. Ahmed Ali'),
+                _buildField(AppLocalizations.of(context)!.fullName, LucideIcons.user, nameController, 'e.g. Ahmed Ali'),
                 const SizedBox(height: 16),
-                _buildField('Email Address', LucideIcons.mail, emailController, 'admin@otlob.com'),
+                _buildField(AppLocalizations.of(context)!.emailAddress, LucideIcons.mail, emailController, 'admin@otlob.com'),
                 const SizedBox(height: 16),
-                _buildField('Phone Number', LucideIcons.phone, phoneController, '+201100000000'),
+                _buildField(AppLocalizations.of(context)!.phone, LucideIcons.phone, phoneController, '+201100000000'),
                 if (user == null) ...[
                   const SizedBox(height: 16),
-                  _buildField('Password', LucideIcons.lock, passwordController, '••••••••', obscure: true),
+                  _buildField(AppLocalizations.of(context)!.password, LucideIcons.lock, passwordController, '••••••••', obscure: true),
                 ],
                 const SizedBox(height: 16),
-                const Text('Account Role', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                Text(AppLocalizations.of(context)!.accountRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: selectedRole,
-                  dropdownColor: AppColors.surface,
+                  dropdownColor: Theme.of(context).colorScheme.surface,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(LucideIcons.shield, size: 18),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -431,7 +438,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     Expanded(
                       child: TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: const Text('Cancel'),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -459,7 +466,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           }
                           Navigator.pop(dialogContext);
                         },
-                        child: Text(user == null ? 'Create' : 'Update'),
+                        child: Text(user == null ? AppLocalizations.of(context)!.create : AppLocalizations.of(context)!.update),
                       ),
                     ),
                   ],
@@ -475,7 +482,7 @@ class _UsersScreenState extends State<UsersScreen> {
   void _handleBanToggle(BuildContext context, dynamic user) {
     if (user['id'] == _currentUserId) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You cannot ban yourself!'), backgroundColor: AppColors.error),
+        SnackBar(content: Text(AppLocalizations.of(context)!.cannotBanSelf), backgroundColor: AppColors.error),
       );
       return;
     }
@@ -491,31 +498,31 @@ class _UsersScreenState extends State<UsersScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text('Ban User'),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(AppLocalizations.of(context)!.banUser),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Are you sure you want to ban this user? They will not be able to log in.'),
+            Text(AppLocalizations.of(context)!.banUserConfirm),
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
-              decoration: const InputDecoration(
-                hintText: 'Reason (Optional)',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.reasonOptional,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton(
             onPressed: () {
               context.read<UserBloc>().add(BanUserRequested(userId, reason: reasonController.text));
               Navigator.pop(dialogContext);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.warning),
-            child: const Text('Ban User'),
+            child: Text(AppLocalizations.of(context)!.banUser),
           ),
         ],
       ),
@@ -525,25 +532,25 @@ class _UsersScreenState extends State<UsersScreen> {
   void _showDeleteConfirmation(BuildContext context, dynamic user) {
     if (user['id'] == _currentUserId) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You cannot delete your own account!'), backgroundColor: AppColors.error),
+        SnackBar(content: Text(AppLocalizations.of(context)!.cannotDeleteSelf), backgroundColor: AppColors.error),
       );
       return;
     }
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text('Delete User'),
-        content: Text('Are you sure you want to delete ${user['name']}? This action cannot be undone.'),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(AppLocalizations.of(context)!.deleteUser),
+        content: Text(AppLocalizations.of(context)!.deleteUserConfirm(user['name'] ?? '')),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton(
             onPressed: () {
               context.read<UserBloc>().add(DeleteUserRequested(user['id']));
               Navigator.pop(dialogContext);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -567,6 +574,41 @@ class _UsersScreenState extends State<UsersScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildActionItem({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: color),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

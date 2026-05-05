@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class AddVendorDialog extends StatefulWidget {
   final dynamic vendor;
@@ -78,12 +79,12 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
       child: Container(
         constraints: BoxConstraints(maxWidth: isMobile ? size.width : 600),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
+              color: Colors.black.withOpacity(Theme.of(context).brightness == Brightness.dark ? 0.4 : 0.1),
               blurRadius: 30,
               offset: const Offset(0, 15),
             ),
@@ -122,11 +123,11 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isEdit ? 'Edit Vendor' : 'Add New Vendor',
+                            isEdit ? AppLocalizations.of(context)!.editVendor : AppLocalizations.of(context)!.addNewVendor,
                             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
                           ),
                           Text(
-                            isEdit ? 'Update vendor details' : 'Register a new store on the platform',
+                            isEdit ? AppLocalizations.of(context)!.updateVendorDetails : AppLocalizations.of(context)!.registerNewStore,
                             style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
                           ),
                         ],
@@ -149,20 +150,20 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSectionHeader(LucideIcons.info, 'General Information'),
+                        _buildSectionHeader(LucideIcons.info, AppLocalizations.of(context)!.generalInformation),
                         const SizedBox(height: 16),
                         if (isMobile) ...[
                           _buildTextField(
                             controller: _nameController,
-                            label: 'Store Name (EN)',
+                            label: AppLocalizations.of(context)!.storeNameEn,
                             hint: 'Enter store name',
                             icon: LucideIcons.type,
-                            validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                            validator: (v) => v?.isEmpty ?? true ? AppLocalizations.of(context)!.fieldRequired : null,
                           ),
                           const SizedBox(height: 16),
                           _buildTextField(
                             controller: _nameArController,
-                            label: 'Store Name (AR)',
+                            label: AppLocalizations.of(context)!.storeNameAr,
                             hint: 'اسم المتجر',
                             icon: LucideIcons.languages,
                             textAlign: TextAlign.right,
@@ -173,17 +174,17 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                               Expanded(
                                 child: _buildTextField(
                                   controller: _nameController,
-                                  label: 'Store Name (EN)',
+                                  label: AppLocalizations.of(context)!.storeNameEn,
                                   hint: 'Enter store name',
                                   icon: LucideIcons.type,
-                                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                                  validator: (v) => v?.isEmpty ?? true ? AppLocalizations.of(context)!.unknown : null,
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: _buildTextField(
                                   controller: _nameArController,
-                                  label: 'Store Name (AR)',
+                                  label: AppLocalizations.of(context)!.storeNameAr,
                                   hint: 'اسم المتجر',
                                   icon: LucideIcons.languages,
                                   textAlign: TextAlign.right,
@@ -194,7 +195,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                         const SizedBox(height: 16),
                         _buildTextField(
                           controller: _descriptionController,
-                          label: 'Description (EN)',
+                          label: AppLocalizations.of(context)!.descriptionEn,
                           hint: 'Short description about the store',
                           icon: LucideIcons.alignLeft,
                           maxLines: 2,
@@ -202,30 +203,30 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                         const SizedBox(height: 16),
                         _buildTextField(
                           controller: _descriptionArController,
-                          label: 'Description (AR)',
+                          label: AppLocalizations.of(context)!.descriptionAr,
                           hint: 'وصف المتجر',
                           icon: LucideIcons.languages,
                           maxLines: 2,
                           textAlign: TextAlign.right,
                         ),
                         const SizedBox(height: 24),
-                        _buildSectionHeader(LucideIcons.layers, 'Business Category'),
+                        _buildSectionHeader(LucideIcons.layers, AppLocalizations.of(context)!.businessCategory),
                         const SizedBox(height: 12),
                         _buildVerticalDropdown(),
                         const SizedBox(height: 24),
-                        _buildSectionHeader(LucideIcons.fileText, 'Financials'),
+                        _buildSectionHeader(LucideIcons.fileText, AppLocalizations.of(context)!.financials),
                         const SizedBox(height: 16),
                         if (isMobile) ...[
                           _buildTextField(
                             controller: _taxIdController,
-                            label: 'Tax ID',
+                            label: AppLocalizations.of(context)!.taxId,
                             hint: '123-456-789',
                             icon: LucideIcons.hash,
                           ),
                           const SizedBox(height: 16),
                           _buildTextField(
                             controller: _commissionController,
-                            label: 'Commission (%)',
+                            label: AppLocalizations.of(context)!.commissionPercent,
                             hint: '10',
                             icon: LucideIcons.percent,
                             keyboardType: TextInputType.number,
@@ -233,9 +234,9 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                         ] else
                           Row(
                             children: [
-                              Expanded(child: _buildTextField(controller: _taxIdController, label: 'Tax ID', hint: '123-456-789', icon: LucideIcons.hash)),
+                              Expanded(child: _buildTextField(controller: _taxIdController, label: AppLocalizations.of(context)!.taxId, hint: '123-456-789', icon: LucideIcons.hash)),
                               const SizedBox(width: 16),
-                              Expanded(child: _buildTextField(controller: _commissionController, label: 'Commission (%)', hint: '10', icon: LucideIcons.percent, keyboardType: TextInputType.number)),
+                              Expanded(child: _buildTextField(controller: _commissionController, label: AppLocalizations.of(context)!.commissionPercent, hint: '10', icon: LucideIcons.percent, keyboardType: TextInputType.number)),
                             ],
                           ),
                       ],
@@ -257,7 +258,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
@@ -270,7 +271,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 0,
                       ),
-                      child: Text(isEdit ? 'Update Vendor' : 'Register Store'),
+                      child: Text(isEdit ? AppLocalizations.of(context)!.updateVendor : AppLocalizations.of(context)!.registerStore),
                     ),
                   ],
                 ),
@@ -286,8 +287,8 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     return _isLoadingVerticals
         ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
         : _buildDropdownField(
-            label: 'Business Type',
-            hint: 'Select category',
+            label: AppLocalizations.of(context)!.businessType,
+            hint: AppLocalizations.of(context)!.selectCategory,
             icon: LucideIcons.layoutGrid,
             value: _selectedVerticalId,
             items: _verticals.map((v) => DropdownMenuItem<String>(
@@ -381,9 +382,9 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedVerticalId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a business type')),
-        );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectBusinessType)),
+          );
         return;
       }
       
