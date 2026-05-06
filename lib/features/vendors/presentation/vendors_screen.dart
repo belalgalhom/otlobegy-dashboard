@@ -246,8 +246,8 @@ class VendorsScreen extends StatelessWidget {
         }
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
@@ -259,12 +259,12 @@ class VendorsScreen extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(8), // Reduced from 10
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(LucideIcons.store, color: AppColors.primary, size: 20),
+                    child: const Icon(LucideIcons.store, color: AppColors.primary, size: 18), // Reduced from 20
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -275,7 +275,7 @@ class VendorsScreen extends StatelessWidget {
                           v['storeName'] ?? AppLocalizations.of(context)!.unnamedStore,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 16,
+                            fontSize: 14, // Reduced from 16
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                           maxLines: 1,
@@ -285,7 +285,7 @@ class VendorsScreen extends StatelessWidget {
                           v['vertical']?['name'] ?? AppLocalizations.of(context)!.restaurant,
                           style: TextStyle(
                             color: AppColors.textSecondary.withOpacity(0.7),
-                            fontSize: 13,
+                            fontSize: 11, // Reduced from 13
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -301,9 +301,9 @@ class VendorsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced from 16
               Divider(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05), height: 1),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8), // Reduced from 12
               _buildActions(context, v),
             ],
           ),
@@ -313,46 +313,53 @@ class VendorsScreen extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context, dynamic v) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children: [
-        _buildActionItem(
-          context: context,
-          icon: LucideIcons.mapPin,
-          color: AppColors.success,
-          label: AppLocalizations.of(context)!.branches,
-          onPressed: () => _viewBranches(context, v),
-        ),
-        _buildActionItem(
-          context: context,
-          icon: LucideIcons.list,
-          color: AppColors.primary,
-          label: AppLocalizations.of(context)!.menuCategories,
-          onPressed: () => _viewMenuCategories(context, v),
-        ),
-        _buildActionItem(
-          context: context,
-          icon: LucideIcons.package,
-          color: AppColors.primary,
-          label: AppLocalizations.of(context)!.products,
-          onPressed: () => _viewProducts(context, v),
-        ),
-        _buildActionItem(
-          context: context,
-          icon: LucideIcons.edit3,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-          label: AppLocalizations.of(context)!.editVendor,
-          onPressed: () => _showEditVendorDialog(context, v),
-        ),
-        _buildActionItem(
-          context: context,
-          icon: LucideIcons.trash2,
-          color: AppColors.error,
-          label: AppLocalizations.of(context)!.deleteVendor,
-          onPressed: () => _confirmDelete(context, v),
-        ),
-      ],
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildActionItem(
+            context: context,
+            icon: LucideIcons.mapPin,
+            color: AppColors.success,
+            label: AppLocalizations.of(context)!.branches,
+            onPressed: () => _viewBranches(context, v),
+          ),
+          const SizedBox(width: 12),
+          _buildActionItem(
+            context: context,
+            icon: LucideIcons.list,
+            color: AppColors.primary,
+            label: AppLocalizations.of(context)!.menuCategories,
+            onPressed: () => _viewMenuCategories(context, v),
+          ),
+          const SizedBox(width: 12),
+          _buildActionItem(
+            context: context,
+            icon: LucideIcons.package,
+            color: AppColors.primary,
+            label: AppLocalizations.of(context)!.products,
+            onPressed: () => _viewProducts(context, v),
+          ),
+          const SizedBox(width: 12),
+          _buildActionItem(
+            context: context,
+            icon: LucideIcons.edit3,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            label: AppLocalizations.of(context)!.editVendor,
+            onPressed: () => _showEditVendorDialog(context, v),
+          ),
+          const SizedBox(width: 12),
+          _buildActionItem(
+            context: context,
+            icon: LucideIcons.trash2,
+            color: AppColors.error,
+            label: AppLocalizations.of(context)!.deleteVendor,
+            onPressed: () => _confirmDelete(context, v),
+          ),
+        ],
+      ),
     );
   }
 
@@ -370,18 +377,18 @@ class VendorsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8), // Reduced from 10
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: 18, color: color),
+            child: Icon(icon, size: 16, color: color), // Reduced from 18
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 9, // Reduced from 10
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
             ),

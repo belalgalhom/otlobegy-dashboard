@@ -4,6 +4,8 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AddVendorDialog extends StatefulWidget {
   final dynamic vendor;
@@ -25,6 +27,8 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   String? _selectedVerticalId;
   List<dynamic> _verticals = [];
   bool _isLoadingVerticals = true;
+  XFile? _pickedImage;
+  final _picker = ImagePicker();
 
   @override
   void initState() {
@@ -66,6 +70,8 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
       if (mounted) setState(() => _isLoadingVerticals = false);
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +245,10 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                               Expanded(child: _buildTextField(controller: _commissionController, label: AppLocalizations.of(context)!.commissionPercent, hint: '10', icon: LucideIcons.percent, keyboardType: TextInputType.number)),
                             ],
                           ),
+                        const SizedBox(height: 24),
+                        _buildSectionHeader(LucideIcons.image, 'STORE APPEARANCE'),
+                        const SizedBox(height: 12),
+                        _buildImagePicker(),
                       ],
                     ),
                   ),
@@ -379,6 +389,81 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     );
   }
 
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(AppLocalizations.of(context)!.uploadCover, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: _pickImage,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            height: 140,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.03),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withOpacity(0.08)),
+            ),
+            child: _pickedImage != null
+                ? Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(File(_pickedImage!.path), height: 140, width: double.infinity, fit: BoxFit.cover),
+                      ),
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: IconButton(
+                          icon: const Icon(LucideIcons.trash2, color: AppColors.error, size: 18),
+                          onPressed: () => setState(() => _pickedImage = null),
+                          style: IconButton.styleFrom(backgroundColor: Colors.black26),
+                        ),
+                      ),
+                    ],
+                  )
+                : widget.vendor?['coverUrl'] != null
+                    ? Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(widget.vendor['coverUrl'], height: 140, width: double.infinity, fit: BoxFit.cover),
+                          ),
+                          Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(AppLocalizations.of(context)!.changeImage, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(LucideIcons.imagePlus, size: 32, color: AppColors.textMuted),
+                          const SizedBox(height: 8),
+                          Text(AppLocalizations.of(context)!.uploadCover, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                        ],
+                      ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() => _pickedImage = image);
+    }
+  }
+
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedVerticalId == null) {
@@ -396,6 +481,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
         'taxId': _taxIdController.text,
         'commissionRate': double.tryParse(_commissionController.text) ?? 10.0,
         'verticalId': _selectedVerticalId,
+        'coverImage': _pickedImage,
       };
 
       Navigator.pop(context, data);

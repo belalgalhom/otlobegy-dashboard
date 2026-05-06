@@ -5,6 +5,7 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/core/widgets/stat_card.dart';
 import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 
 class ZonesScreen extends StatelessWidget {
   const ZonesScreen({super.key});
@@ -37,21 +38,21 @@ class ZonesScreen extends StatelessWidget {
                   runSpacing: 12,
                   children: [
                     StatCard(
-                      title: 'Active Zones',
+                      title: AppLocalizations.of(context)!.activeZones,
                       value: '0',
                       icon: LucideIcons.map,
                       color: AppColors.primary,
                       isMobile: isMobile,
                     ),
                     StatCard(
-                      title: 'Busy Zones',
+                      title: AppLocalizations.of(context)!.busyZones,
                       value: '0',
                       icon: LucideIcons.activity,
                       color: AppColors.warning,
                       isMobile: isMobile,
                     ),
                     StatCard(
-                      title: 'Deliveries',
+                      title: AppLocalizations.of(context)!.deliveries,
                       value: '0',
                       icon: LucideIcons.navigation,
                       color: AppColors.success,
@@ -73,10 +74,10 @@ class ZonesScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Delivery Zones',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              AppLocalizations.of(context)!.deliveryZones,
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -84,7 +85,7 @@ class ZonesScreen extends StatelessWidget {
                           ElevatedButton.icon(
                             onPressed: () {},
                             icon: const Icon(LucideIcons.plus, size: 14),
-                            label: const Text('Add Zone'),
+                            label: Text(AppLocalizations.of(context)!.addZone),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(100, 44),
                               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -125,8 +126,8 @@ class ZonesScreen extends StatelessWidget {
           children: [
             const Icon(LucideIcons.mapPin, size: 48, color: AppColors.textMuted),
             const SizedBox(height: 12),
-            const Text('No zones defined yet.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-            TextButton(onPressed: () {}, child: const Text('Add Zone', style: TextStyle(fontSize: 13))),
+            Text(AppLocalizations.of(context)!.noZonesDefined, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+            TextButton(onPressed: () {}, child: Text(AppLocalizations.of(context)!.addZone, style: const TextStyle(fontSize: 13))),
           ],
         ),
       );
@@ -140,16 +141,16 @@ class ZonesScreen extends StatelessWidget {
           headingRowHeight: 48,
           dataRowMinHeight: 48,
           dataRowMaxHeight: 56,
-          columns: const [
-            DataColumn(label: Text('Name')),
-            DataColumn(label: Text('Status')),
-            DataColumn(label: Text('Points')),
-            DataColumn(label: Text('Actions')),
+          columns: [
+            DataColumn(label: Text(AppLocalizations.of(context)!.name)),
+            DataColumn(label: Text(AppLocalizations.of(context)!.activeStatus)),
+            DataColumn(label: Text(AppLocalizations.of(context)!.points)),
+            DataColumn(label: Text(AppLocalizations.of(context)!.actions)),
           ],
           rows: zones.map((z) => DataRow(
             cells: [
-              DataCell(Text(z['name'] ?? 'Unnamed', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
-              DataCell(_buildStatusChip(z['isActive'] ?? true)),
+              DataCell(Text(z['name'] ?? AppLocalizations.of(context)!.unknown, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
+              DataCell(_buildStatusChip(z['isActive'] ?? true, context)),
               DataCell(Text('${(z['coordinates'] as List?)?.length ?? 0}', style: const TextStyle(fontSize: 13))),
               DataCell(Row(
                 children: [
@@ -165,7 +166,7 @@ class ZonesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(bool isActive) {
+  Widget _buildStatusChip(bool isActive, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -173,7 +174,7 @@ class ZonesScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        isActive ? 'ACTIVE' : 'INACTIVE',
+        isActive ? AppLocalizations.of(context)!.activeStatus : AppLocalizations.of(context)!.inactiveStatus,
         style: TextStyle(
           color: isActive ? AppColors.success : AppColors.error,
           fontSize: 9,

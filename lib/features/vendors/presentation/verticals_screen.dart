@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -117,16 +118,22 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
                   itemBuilder: (context, index) {
                     final v = pagedItems[index];
                     return Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            width: 32,
+                            height: 32,
                             decoration: BoxDecoration(
                               color: AppColors.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(LucideIcons.layers, color: AppColors.primary, size: 18),
+                            child: v['iconUrl'] != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: _buildImage(v['iconUrl']),
+                                  )
+                                : const Icon(LucideIcons.layers, color: AppColors.primary, size: 16),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -135,12 +142,12 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
                               children: [
                                 Text(
                                   v['name'] ?? 'N/A',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                                 if (v['nameAr'] != null)
                                   Text(
                                     v['nameAr'],
-                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 12),
                                   ),
                               ],
                             ),
@@ -292,6 +299,32 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildImage(String url) {
+    if (url.isEmpty) {
+      return const Icon(LucideIcons.layers, color: AppColors.primary, size: 16);
+    }
+    
+    if (url.startsWith('file://') || url.startsWith('/data/user/') || url.startsWith('/storage/')) {
+      final path = url.replaceFirst('file://', '');
+      return Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.layers, color: AppColors.primary, size: 16),
+      );
+    }
+
+    // Prepend base URL for relative media paths from the server
+    final fullUrl = url.startsWith('/media/') 
+        ? 'https://api.otlob-egy.online$url' 
+        : url;
+
+    return Image.network(
+      fullUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.layers, color: AppColors.primary, size: 16),
     );
   }
 

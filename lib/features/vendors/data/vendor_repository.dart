@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:otlob_api/otlob_api.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:built_value/json_object.dart';
@@ -70,7 +71,7 @@ class VendorRepository {
     }
   }
 
-  Future<bool> createVertical(Map<String, dynamic> data) async {
+  Future<String?> createVertical(Map<String, dynamic> data) async {
     try {
       final dto = CreateVendorVerticalDto((b) => b
         ..name = data['name'] ?? ''
@@ -80,10 +81,66 @@ class VendorRepository {
         ..isActive = data['isActive'] ?? true
         ..sortOrder = data['sortOrder'] ?? 0
       );
-      await _apiClient.getVendorsVerticalsCategoriesApi().vendorVerticalsControllerCreate(createVendorVerticalDto: dto);
+      final response = await _apiClient.getVendorsVerticalsCategoriesApi().vendorVerticalsControllerCreate(createVendorVerticalDto: dto);
+      
+      final dynamic responseMap = (response as dynamic).data;
+      String? id;
+      if (responseMap is Map) {
+        id = responseMap['id']?.toString() ?? responseMap['data']?['id']?.toString();
+      }
+      
+      if (id != null && data['iconFile'] != null) {
+        final xFile = data['iconFile'] as XFile;
+        await uploadVerticalIcon(id, xFile.path, xFile.name);
+      }
+      
+      return id ?? 'success';
+    } catch (e) {
+      if (e is dio.DioException) {
+        print('VendorRepository createVertical Error: ${e.response?.statusCode} - ${e.response?.data}');
+      } else {
+        print('VendorRepository createVertical Error: $e');
+      }
+      return null;
+    }
+  }
+
+  Future<bool> uploadVerticalIcon(String id, String filePath, String fileName) async {
+    try {
+      // Create fresh FormData for the first attempt
+      final formData = dio.FormData.fromMap({
+        'file': await dio.MultipartFile.fromFile(filePath, filename: fileName),
+      });
+
+      // Trying admin path first as verticals for admin are at /vendor-verticals/admin
+      await _apiClient.dio.post(
+        '/vendor-verticals/admin/$id/icon',
+        data: formData,
+      );
       return true;
     } catch (e) {
-      print('VendorRepository createVertical Error: $e');
+      if (e is dio.DioException) {
+        print('VendorRepository uploadVerticalIcon Error: ${e.response?.statusCode} - ${e.response?.data}');
+        // Fallback to non-admin path if admin fails with 404
+        if (e.response?.statusCode == 404) {
+          try {
+            // Create fresh FormData for the fallback attempt
+            final fallbackFormData = dio.FormData.fromMap({
+              'file': await dio.MultipartFile.fromFile(filePath, filename: fileName),
+            });
+
+            await _apiClient.dio.post(
+              '/vendor-verticals/$id/icon',
+              data: fallbackFormData,
+            );
+            return true;
+          } catch (e2) {
+             print('VendorRepository uploadVerticalIcon Fallback Error: $e2');
+          }
+        }
+      } else {
+        print('VendorRepository uploadVerticalIcon Error: $e');
+      }
       return false;
     }
   }
@@ -99,6 +156,12 @@ class VendorRepository {
         ..sortOrder = data['sortOrder']
       );
       await _apiClient.getVendorsVerticalsCategoriesApi().vendorVerticalsControllerUpdate(id: id, updateVendorVerticalDto: dto);
+      
+      if (data['iconFile'] != null) {
+        final xFile = data['iconFile'] as XFile;
+        await uploadVerticalIcon(id, xFile.path, xFile.name);
+      }
+      
       return true;
     } catch (e) {
       print('VendorRepository updateVertical Error: $e');
@@ -127,10 +190,35 @@ class VendorRepository {
         ..taxId = data['taxId'] ?? ''
         ..commissionRate = data['commissionRate'] ?? 10
       );
-      await _apiClient.getVendorsCoreManagementApi().vendorsControllerCreate(createVendorDto: dto);
+      final response = await _apiClient.getVendorsCoreManagementApi().vendorsControllerCreate(createVendorDto: dto);
+      
+      // If we have a cover image, upload it
+      if (data['coverImage'] != null) {
+        final dynamic responseMap = (response as dynamic).data;
+        String? vendorId;
+        if (responseMap is Map) {
+          vendorId = responseMap['id']?.toString() ?? responseMap['data']?['id']?.toString();
+        }
+        
+        if (vendorId != null) {
+          final xFile = data['coverImage']; // This is XFile
+          final multipartFile = await dio.MultipartFile.fromFile(
+            xFile.path,
+            filename: xFile.name,
+          );
+          await _apiClient.getVendorsCoreManagementApi().vendorsControllerUploadCover(
+            vendorId: vendorId,
+            file: multipartFile,
+          );
+        }
+      }
       return true;
     } catch (e) {
-      print('VendorRepository createVendor Error: $e');
+      if (e is dio.DioException) {
+        print('VendorRepository createVendor Error: ${e.response?.statusCode} - ${e.response?.data}');
+      } else {
+        print('VendorRepository createVendor Error: $e');
+      }
       return false;
     }
   }
@@ -147,9 +235,26 @@ class VendorRepository {
         ..commissionRate = data['commissionRate']
       );
       await _apiClient.getVendorsCoreManagementApi().vendorsControllerUpdate(vendorId: id, updateVendorDto: dto);
+      
+      // If we have a cover image, upload it
+      if (data['coverImage'] != null) {
+        final xFile = data['coverImage'];
+        final multipartFile = await dio.MultipartFile.fromFile(
+          xFile.path,
+          filename: xFile.name,
+        );
+        await _apiClient.getVendorsCoreManagementApi().vendorsControllerUploadCover(
+          vendorId: id,
+          file: multipartFile,
+        );
+      }
       return true;
     } catch (e) {
-      print('VendorRepository updateVendor Error: $e');
+      if (e is dio.DioException) {
+        print('VendorRepository updateVendor Error: ${e.response?.statusCode} - ${e.response?.data}');
+      } else {
+        print('VendorRepository updateVendor Error: $e');
+      }
       return false;
     }
   }
@@ -179,6 +284,7 @@ class VendorRepository {
 
   Future<String?> createProduct(Map<String, dynamic> data) async {
     try {
+      print('VendorRepository: Creating product with data: $data');
       final dto = CreateProductDto((b) => b
         ..categoryId = data['categoryId']
         ..name = data['name'] ?? ''
@@ -192,18 +298,28 @@ class VendorRepository {
         ..isActive = data['isActive'] ?? true
         ..isFeatured = data['isFeatured'] ?? false
       );
+      
+      print('VendorRepository: DTO built: $dto');
+      
       final response = await _apiClient.getVendorsProductsApi().productsControllerAdminCreate(
         vendorId: data['vendorId'],
         createProductDto: dto,
       );
       
       final responseMap = (response as dynamic).data;
+      String? id;
       if (responseMap is Map) {
-        return responseMap['id']?.toString();
+        id = responseMap['id']?.toString() ?? responseMap['data']?['id']?.toString();
       }
-      return 'success'; // Fallback if ID is not returned but request succeeded
+      
+      print('VendorRepository: Product created successfully. ID: $id');
+      return id ?? 'success';
     } catch (e) {
-      print('VendorRepository createProduct Error: $e');
+      if (e is dio.DioException) {
+        print('VendorRepository createProduct Error: ${e.response?.statusCode} - ${e.response?.data}');
+      } else {
+        print('VendorRepository createProduct Error: $e');
+      }
       return null;
     }
   }
@@ -421,6 +537,91 @@ class VendorRepository {
       return true;
     } catch (e) {
       print('VendorRepository uploadProductImage Error: $e');
+      return false;
+    }
+  }
+
+  // --- Promotions ---
+
+  Future<List<dynamic>> getPromotions() async {
+    try {
+      final response = await _apiClient.dio.get('/promotions/admin');
+      final data = response.data;
+      if (data is List) return data;
+      if (data is Map && data['data'] != null) return data['data'] as List<dynamic>;
+      return [];
+    } catch (e) {
+      print('VendorRepository getPromotions Error: $e');
+      return [];
+    }
+  }
+
+  Future<String?> createPromotion(Map<String, dynamic> data) async {
+    try {
+      final response = await _apiClient.dio.post('/promotions/admin', data: {
+        'title': data['title'],
+        'titleAr': data['titleAr'],
+        'description': data['description'],
+        'descriptionAr': data['descriptionAr'],
+        'type': data['type'] ?? 'BANNER',
+        'vendorId': data['vendorId'],
+        'productId': data['productId'],
+        'externalUrl': data['externalUrl'],
+        'isActive': data['isActive'] ?? true,
+        'sortOrder': data['sortOrder'] ?? 0,
+      });
+      
+      final resData = response.data;
+      if (resData is Map) {
+        return resData['id']?.toString() ?? resData['data']?['id']?.toString();
+      }
+      return 'success';
+    } catch (e) {
+      print('VendorRepository createPromotion Error: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updatePromotion(String id, Map<String, dynamic> data) async {
+    try {
+      await _apiClient.dio.patch('/promotions/admin/$id', data: {
+        'title': data['title'],
+        'titleAr': data['titleAr'],
+        'description': data['description'],
+        'descriptionAr': data['descriptionAr'],
+        'type': data['type'],
+        'vendorId': data['vendorId'],
+        'productId': data['productId'],
+        'externalUrl': data['externalUrl'],
+        'isActive': data['isActive'],
+        'sortOrder': data['sortOrder'],
+      });
+      return true;
+    } catch (e) {
+      print('VendorRepository updatePromotion Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deletePromotion(String id) async {
+    try {
+      await _apiClient.dio.delete('/promotions/admin/$id');
+      return true;
+    } catch (e) {
+      print('VendorRepository deletePromotion Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> uploadPromotionImage(String id, dio.MultipartFile file) async {
+    try {
+      final formData = dio.FormData.fromMap({
+        'file': file,
+      });
+      await _apiClient.dio.post('/promotions/admin/$id/image', data: formData);
+      return true;
+    } catch (e) {
+      print('VendorRepository uploadPromotionImage Error: $e');
       return false;
     }
   }

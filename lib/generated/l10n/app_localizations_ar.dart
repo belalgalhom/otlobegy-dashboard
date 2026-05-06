@@ -144,10 +144,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get storeNameAr => 'اسم المتجر (AR)';
 
   @override
-  String get descriptionEn => 'الوصف (EN)';
+  String get descriptionEn => 'الوصف (بالإنجليزي)';
 
   @override
-  String get descriptionAr => 'الوصف (AR)';
+  String get descriptionAr => 'الوصف (بالعربي)';
 
   @override
   String get taxId => 'الرقم الضريبي';
@@ -442,6 +442,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get iconUrlOptional => 'رابط الأيقونة (اختياري)';
 
   @override
+  String get businessTypeIcon => 'أيقونة نوع العمل';
+
+  @override
+  String get uploadIcon => 'رفع أيقونة';
+
+  @override
+  String get uploadCover => 'رفع الغلاف';
+
+  @override
   String get sortOrder => 'ترتيب الفرز';
 
   @override
@@ -613,4 +622,64 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get inactiveStatus => 'غير نشط';
+
+  @override
+  String get promotions => 'العروض والترويج';
+
+  @override
+  String get manageBannersAndOffers =>
+      'إدارة بنرات الشاشة الرئيسية والعروض الخاصة';
+
+  @override
+  String get addPromotion => 'إضافة عرض';
+
+  @override
+  String get editPromotion => 'تعديل عرض';
+
+  @override
+  String get deletePromotion => 'حذف عرض';
+
+  @override
+  String get noPromotionsFound => 'لا توجد عروض ترويجية';
+
+  @override
+  String get startCreatingBanners => 'ابدأ في إنشاء بنرات لجذب عملائك';
+
+  @override
+  String deletePromotionConfirm(String name) {
+    return 'هل أنت متأكد أنك تريد حذف \"$name\"؟';
+  }
+
+  @override
+  String get promotionType => 'نوع العرض';
+
+  @override
+  String get bannerType => 'بنر بسيط';
+
+  @override
+  String get vendorType => 'رابط لمتجر';
+
+  @override
+  String get productType => 'رابط لمنتج';
+
+  @override
+  String get linkType => 'رابط خارجي';
+
+  @override
+  String get externalUrl => 'رابط خارجي';
+
+  @override
+  String get selectVendor => 'اختر المتجر';
+
+  @override
+  String get selectProduct => 'اختر المنتج';
+
+  @override
+  String get uploadBannerImage => 'رفع صورة البنر';
+
+  @override
+  String get titleEn => 'العنوان (بالإنجليزي)';
+
+  @override
+  String get titleAr => 'العنوان (بالعربي)';
 }

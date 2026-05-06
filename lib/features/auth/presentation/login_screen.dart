@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     : () {
                                         context.read<AuthBloc>().add(
                                               LoginSubmitted(
-                                                _emailController.text,
+                                                _emailController.text.trim().toLowerCase(),
                                                 _passwordController.text,
                                               ),
                                             );

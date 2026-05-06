@@ -13,6 +13,7 @@ import 'package:otlob_admin/features/zones/presentation/zones_screen.dart';
 import 'package:otlob_admin/features/vendors/presentation/vendor_bloc.dart';
 import 'package:otlob_admin/features/vendors/presentation/vertical_bloc.dart';
 import 'package:otlob_admin/features/vendors/presentation/verticals_screen.dart';
+import 'package:otlob_admin/features/promotions/presentation/promotions_screen.dart';
 import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
 import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -109,32 +110,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildSidebar({required bool isMobile}) {
     return Container(
-      width: 280,
+      width: isMobile ? 280 : 110,
       color: Theme.of(context).colorScheme.surface,
       child: Column(
         children: [
           const SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(LucideIcons.package, color: Colors.white, size: 24),
+            child: isMobile 
+              ? Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(LucideIcons.package, color: Colors.white, size: 24),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.appTitle,
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(LucideIcons.package, color: Colors.white, size: 24),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      AppLocalizations.of(context)!.appTitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    AppLocalizations.of(context)!.appTitle,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                ),
-              ],
-            ),
           ),
           const SizedBox(height: 48),
           Expanded(
@@ -147,10 +167,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   _buildMenuItem(9, LucideIcons.layers, AppLocalizations.of(context)!.businessTypes, isMobile),
                   _buildMenuItem(3, LucideIcons.truck, AppLocalizations.of(context)!.drivers, isMobile),
                   _buildMenuItem(4, LucideIcons.userPlus, AppLocalizations.of(context)!.users, isMobile),
-                  _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile), // Added Zones
+                  _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile),
                   _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
-                  _buildMenuItem(6, LucideIcons.messageSquare, AppLocalizations.of(context)!.inbox, isMobile),
-                  const SizedBox(height: 16),
+                  _buildMenuItem(10, LucideIcons.megaphone, AppLocalizations.of(context)!.promotions, isMobile),
                 ],
               ),
             ),
@@ -169,6 +188,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildUserProfile(BuildContext context) {
+    bool isDesktop = MediaQuery.of(context).size.width >= 1100;
+    
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -176,35 +197,56 @@ class _DashboardScreenState extends State<DashboardScreen> {
         color: Theme.of(context).colorScheme.background.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 18,
-            backgroundColor: AppColors.primary,
-            child: Text('AD', style: TextStyle(fontSize: 12)),
+      child: isDesktop 
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircleAvatar(
+                radius: 18,
+                backgroundColor: AppColors.primary,
+                child: Text('AD', style: TextStyle(fontSize: 12)),
+              ),
+              const SizedBox(height: 8),
+              IconButton(
+                icon: const Icon(LucideIcons.logOut, size: 16),
+                onPressed: () async {
+                  await sl<AuthRepository>().logout();
+                  if (context.mounted) {
+                    context.go('/login');
+                  }
+                },
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              const CircleAvatar(
+                radius: 18,
+                backgroundColor: AppColors.primary,
+                child: Text('AD', style: TextStyle(fontSize: 12)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(AppLocalizations.of(context)!.admin, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                    Text(AppLocalizations.of(context)!.superAdmin, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11)),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(LucideIcons.logOut, size: 16),
+                onPressed: () async {
+                  await sl<AuthRepository>().logout();
+                  if (context.mounted) {
+                    context.go('/login');
+                  }
+                },
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(AppLocalizations.of(context)!.admin, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                Text(AppLocalizations.of(context)!.superAdmin, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11)),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: const Icon(LucideIcons.logOut, size: 16),
-            onPressed: () async {
-              await sl<AuthRepository>().logout();
-              if (context.mounted) {
-                context.go('/login');
-              }
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -238,6 +280,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 5: return const TicketsScreen();
       case 8: return const ZonesScreen();
       case 9: return const VerticalsScreen();
+      case 10: return const PromotionsScreen();
       default: return _buildComingSoon();
     }
   }
@@ -337,8 +380,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildMenuItem(int index, IconData icon, String title, bool isMobile) {
     final isSelected = _selectedIndex == index;
+    bool isDesktop = !isMobile;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 8 : 16, vertical: 4),
       child: InkWell(
         onTap: () {
           setState(() => _selectedIndex = index);
@@ -346,27 +391,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: isDesktop ? 12 : 12),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
-            children: [
-              Icon(icon, color: isSelected ? AppColors.primary : AppColors.textSecondary, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          child: isDesktop 
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icon, color: isSelected ? AppColors.primary : AppColors.textSecondary, size: 22),
+                  const SizedBox(height: 6),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                ],
+              )
+            : Row(
+                children: [
+                  Icon(icon, color: isSelected ? AppColors.primary : AppColors.textSecondary, size: 20),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
         ),
       ),
     );
@@ -456,6 +522,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 7: return l10n.settings;
       case 8: return l10n.deliveryZones;
       case 9: return l10n.businessTypes;
+      case 10: return l10n.promotions;
       default: return l10n.dashboard;
     }
   }

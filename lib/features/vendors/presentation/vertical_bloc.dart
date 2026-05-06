@@ -75,8 +75,8 @@ class VerticalBloc extends Bloc<VerticalEvent, VerticalState> {
     on<CreateVertical>((event, emit) async {
       emit(VerticalActionInProgress());
       try {
-        final success = await _repository.createVertical(event.data);
-        if (success) {
+        final result = await _repository.createVertical(event.data);
+        if (result != null) {
           emit(VerticalActionSuccess('Business Type created successfully'));
           add(FetchVerticals());
         } else {

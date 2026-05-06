@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
@@ -15,16 +18,17 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _nameArController;
-  late TextEditingController _iconUrlController;
   late TextEditingController _sortOrderController;
   bool _isActive = true;
+  bool _isSaving = false;
+  XFile? _selectedIcon;
+  static final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.vertical?['name'] ?? '');
     _nameArController = TextEditingController(text: widget.vertical?['nameAr'] ?? '');
-    _iconUrlController = TextEditingController(text: widget.vertical?['iconUrl'] ?? '');
     _sortOrderController = TextEditingController(text: widget.vertical?['sortOrder']?.toString() ?? '0');
     _isActive = widget.vertical?['isActive'] ?? true;
   }
@@ -33,9 +37,29 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
   void dispose() {
     _nameController.dispose();
     _nameArController.dispose();
-    _iconUrlController.dispose();
     _sortOrderController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickIcon() async {
+    try {
+      // Small delay to ensure dialog animations don't interfere with picker
+      await Future.delayed(const Duration(milliseconds: 200));
+      
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (image != null) {
+        setState(() => _selectedIcon = image);
+      }
+    } catch (e) {
+      print('AddVerticalDialog _pickIcon Error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.failedToPickImage)),
+        );
+      }
+    }
   }
 
   @override
@@ -125,6 +149,67 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Icon Picker
+                        Row(
+                          children: [
+                            Text(AppLocalizations.of(context)!.businessTypeIcon, 
+                              style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+                            const Text(' *', style: TextStyle(color: AppColors.error, fontSize: 13)),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Center(
+                          child: Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: _pickIcon,
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.03),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08)),
+                                  ),
+                                  child: _selectedIcon != null
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(20),
+                                          child: kIsWeb 
+                                              ? Image.network(_selectedIcon!.path, fit: BoxFit.cover)
+                                              : Image.file(File(_selectedIcon!.path), fit: BoxFit.cover),
+                                        )
+                                      : widget.vertical?['iconUrl'] != null
+                                          ? ClipRRect(
+                                              borderRadius: BorderRadius.circular(20),
+                                              child: _buildImage(widget.vertical!['iconUrl']),
+                                            )
+                                          : Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(LucideIcons.image, size: 32, color: AppColors.textMuted.withOpacity(0.5)),
+                                                const SizedBox(height: 4),
+                                                Text(AppLocalizations.of(context)!.uploadIcon, 
+                                                  style: TextStyle(fontSize: 11, color: AppColors.textMuted.withOpacity(0.7))),
+                                              ],
+                                            ),
+                                ),
+                              ),
+                              if (_selectedIcon != null || widget.vertical?['iconUrl'] != null)
+                                Positioned(
+                                  right: -4,
+                                  top: -4,
+                                  child: IconButton(
+                                    onPressed: () => setState(() => _selectedIcon = null),
+                                    icon: const Icon(LucideIcons.minusCircle, color: AppColors.error, size: 20),
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        
                         _buildTextField(
                           controller: _nameController,
                           label: AppLocalizations.of(context)!.nameEn,
@@ -139,13 +224,6 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                           hint: 'مثال: مطاعم',
                           icon: LucideIcons.languages,
                           textAlign: TextAlign.right,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildTextField(
-                          controller: _iconUrlController,
-                          label: AppLocalizations.of(context)!.iconUrlOptional,
-                          hint: 'https://...',
-                          icon: LucideIcons.image,
                         ),
                         const SizedBox(height: 12),
                         _buildTextField(
@@ -188,7 +266,7 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                      onPressed: _submit,
+                      onPressed: _isSaving ? null : _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -273,14 +351,52 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
     );
   }
 
+  Widget _buildImage(String url) {
+    if (url.isEmpty) {
+      return const Icon(LucideIcons.image);
+    }
+
+    if (url.startsWith('file://') || url.startsWith('/data/user/') || url.startsWith('/storage/')) {
+      final path = url.replaceFirst('file://', '');
+      return Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.image),
+      );
+    }
+
+    // Prepend base URL for relative media paths from the server
+    final fullUrl = url.startsWith('/media/') 
+        ? 'https://api.otlob-egy.online$url' 
+        : url;
+
+    return Image.network(
+      fullUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.image),
+    );
+  }
+
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
+      // Check if icon is provided (required)
+      final bool hasExistingIcon = widget.vertical?['iconUrl'] != null;
+      if (_selectedIcon == null && !hasExistingIcon) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.fieldRequired),
+            backgroundColor: AppColors.error,
+          ),
+        );
+        return;
+      }
+
       Navigator.pop(context, {
         'name': _nameController.text,
         'nameAr': _nameArController.text.isNotEmpty ? _nameArController.text : null,
-        'iconUrl': _iconUrlController.text.isNotEmpty ? _iconUrlController.text : null,
         'isActive': _isActive,
         'sortOrder': num.tryParse(_sortOrderController.text) ?? 0,
+        'iconFile': _selectedIcon,
       });
     }
   }

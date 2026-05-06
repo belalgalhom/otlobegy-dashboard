@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:otlob_api/otlob_api.dart';
 
@@ -28,12 +29,16 @@ class AuthRepository {
 
         await _storage.write(key: 'access_token', value: data['access_token']);
         await _storage.write(key: 'refresh_token', value: data['refresh_token']);
-        await _storage.write(key: 'user_id', value: userData['id']);
+        await _storage.write(key: 'user_id', value: userData['id']?.toString());
         return true;
       }
       return false;
     } catch (e) {
       if (e == 'ACCESS_DENIED') rethrow;
+      print('AuthRepository login error: $e');
+      if (e is DioException) {
+        print('AuthRepository login Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
+      }
       return false;
     }
   }

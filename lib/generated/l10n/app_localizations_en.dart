@@ -447,6 +447,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconUrlOptional => 'Icon URL (Optional)';
 
   @override
+  String get businessTypeIcon => 'Business Type Icon';
+
+  @override
+  String get uploadIcon => 'Upload Icon';
+
+  @override
+  String get uploadCover => 'Upload Cover';
+
+  @override
   String get sortOrder => 'Sort Order';
 
   @override
@@ -619,4 +628,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inactiveStatus => 'INACTIVE';
+
+  @override
+  String get promotions => 'Promotions';
+
+  @override
+  String get manageBannersAndOffers =>
+      'Manage home screen banners and special offers';
+
+  @override
+  String get addPromotion => 'Add Promotion';
+
+  @override
+  String get editPromotion => 'Edit Promotion';
+
+  @override
+  String get deletePromotion => 'Delete Promotion';
+
+  @override
+  String get noPromotionsFound => 'No promotions found';
+
+  @override
+  String get startCreatingBanners =>
+      'Start creating banners to engage your customers';
+
+  @override
+  String deletePromotionConfirm(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get promotionType => 'Promotion Type';
+
+  @override
+  String get bannerType => 'Simple Banner';
+
+  @override
+  String get vendorType => 'Link to Vendor';
+
+  @override
+  String get productType => 'Link to Product';
+
+  @override
+  String get linkType => 'External Link';
+
+  @override
+  String get externalUrl => 'External URL';
+
+  @override
+  String get selectVendor => 'Select Vendor';
+
+  @override
+  String get selectProduct => 'Select Product';
+
+  @override
+  String get uploadBannerImage => 'Upload Banner Image';
+
+  @override
+  String get titleEn => 'Title (EN)';
+
+  @override
+  String get titleAr => 'Title (AR)';
 }

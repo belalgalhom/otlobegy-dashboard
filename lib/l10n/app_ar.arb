@@ -175,6 +175,9 @@
   "nameEn": "الاسم (EN)",
   "nameAr": "الاسم (AR)",
   "iconUrlOptional": "رابط الأيقونة (اختياري)",
+  "businessTypeIcon": "أيقونة نوع العمل",
+  "uploadIcon": "رفع أيقونة",
+  "uploadCover": "رفع الغلاف",
   "sortOrder": "ترتيب الفرز",
   "visibilityForVendors": "الظهور للتجار",
   "save": "حفظ",
@@ -245,5 +248,31 @@
   "addZone": "إضافة منطقة",
   "noZonesDefined": "لم يتم تعريف مناطق بعد.",
   "points": "نقاط",
-  "inactiveStatus": "غير نشط"
+  "inactiveStatus": "غير نشط",
+  "promotions": "العروض والترويج",
+  "manageBannersAndOffers": "إدارة بنرات الشاشة الرئيسية والعروض الخاصة",
+  "addPromotion": "إضافة عرض",
+  "editPromotion": "تعديل عرض",
+  "deletePromotion": "حذف عرض",
+  "noPromotionsFound": "لا توجد عروض ترويجية",
+  "startCreatingBanners": "ابدأ في إنشاء بنرات لجذب عملائك",
+  "deletePromotionConfirm": "هل أنت متأكد أنك تريد حذف \"{name}\"؟",
+  "@deletePromotionConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "promotionType": "نوع العرض",
+  "bannerType": "بنر بسيط",
+  "vendorType": "رابط لمتجر",
+  "productType": "رابط لمنتج",
+  "linkType": "رابط خارجي",
+  "externalUrl": "رابط خارجي",
+  "selectVendor": "اختر المتجر",
+  "selectProduct": "اختر المنتج",
+  "uploadBannerImage": "رفع صورة البنر",
+  "titleEn": "العنوان (بالإنجليزي)",
+  "titleAr": "العنوان (بالعربي)",
+  "descriptionEn": "الوصف (بالإنجليزي)",
+  "descriptionAr": "الوصف (بالعربي)"
 }

@@ -938,6 +938,24 @@ abstract class AppLocalizations {
   /// **'Icon URL (Optional)'**
   String get iconUrlOptional;
 
+  /// No description provided for @businessTypeIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Type Icon'**
+  String get businessTypeIcon;
+
+  /// No description provided for @uploadIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Icon'**
+  String get uploadIcon;
+
+  /// No description provided for @uploadCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Cover'**
+  String get uploadCover;
+
   /// No description provided for @sortOrder.
   ///
   /// In en, this message translates to:
@@ -1267,6 +1285,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'INACTIVE'**
   String get inactiveStatus;
+
+  /// No description provided for @promotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotions'**
+  String get promotions;
+
+  /// No description provided for @manageBannersAndOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage home screen banners and special offers'**
+  String get manageBannersAndOffers;
+
+  /// No description provided for @addPromotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Promotion'**
+  String get addPromotion;
+
+  /// No description provided for @editPromotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Promotion'**
+  String get editPromotion;
+
+  /// No description provided for @deletePromotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Promotion'**
+  String get deletePromotion;
+
+  /// No description provided for @noPromotionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No promotions found'**
+  String get noPromotionsFound;
+
+  /// No description provided for @startCreatingBanners.
+  ///
+  /// In en, this message translates to:
+  /// **'Start creating banners to engage your customers'**
+  String get startCreatingBanners;
+
+  /// No description provided for @deletePromotionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String deletePromotionConfirm(String name);
+
+  /// No description provided for @promotionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotion Type'**
+  String get promotionType;
+
+  /// No description provided for @bannerType.
+  ///
+  /// In en, this message translates to:
+  /// **'Simple Banner'**
+  String get bannerType;
+
+  /// No description provided for @vendorType.
+  ///
+  /// In en, this message translates to:
+  /// **'Link to Vendor'**
+  String get vendorType;
+
+  /// No description provided for @productType.
+  ///
+  /// In en, this message translates to:
+  /// **'Link to Product'**
+  String get productType;
+
+  /// No description provided for @linkType.
+  ///
+  /// In en, this message translates to:
+  /// **'External Link'**
+  String get linkType;
+
+  /// No description provided for @externalUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'External URL'**
+  String get externalUrl;
+
+  /// No description provided for @selectVendor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Vendor'**
+  String get selectVendor;
+
+  /// No description provided for @selectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Product'**
+  String get selectProduct;
+
+  /// No description provided for @uploadBannerImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Banner Image'**
+  String get uploadBannerImage;
+
+  /// No description provided for @titleEn.
+  ///
+  /// In en, this message translates to:
+  /// **'Title (EN)'**
+  String get titleEn;
+
+  /// No description provided for @titleAr.
+  ///
+  /// In en, this message translates to:
+  /// **'Title (AR)'**
+  String get titleAr;
 }
 
 class _AppLocalizationsDelegate

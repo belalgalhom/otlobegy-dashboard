@@ -22,14 +22,14 @@ class StatCard extends StatelessWidget {
     // Determine dynamic width based on device
     final double cardWidth = isMobile 
         ? (MediaQuery.of(context).size.width - 64) / 2 - 8 
-        : 180.0; // Reduced from 240
+        : 150.0; // Reduced from 180
 
     return Container(
       width: cardWidth,
-      padding: const EdgeInsets.all(16), // Reduced from 24
+      padding: const EdgeInsets.all(12), // Reduced from 16
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(20), // Slightly smaller radius
+        borderRadius: BorderRadius.circular(16), // Slightly smaller radius
         border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
         boxShadow: [
           BoxShadow(
@@ -43,30 +43,30 @@ class StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8), // Reduced from 12
+            padding: const EdgeInsets.all(6), // Reduced from 8
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: color, size: 18), // Reduced from 22
+            child: Icon(icon, color: color, size: 16), // Reduced from 18
           ),
-          const SizedBox(height: 16), // Reduced from 24
+          const SizedBox(height: 12), // Reduced from 16
           Text(
             title,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              fontSize: 12, // Reduced from 14
+              fontSize: 11, // Reduced from 12
               fontWeight: FontWeight.w500,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             value,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 20, // Reduced from 26
+              fontSize: 18, // Reduced from 20
               fontWeight: FontWeight.bold,
               letterSpacing: -0.5,
             ),

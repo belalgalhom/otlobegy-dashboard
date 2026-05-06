@@ -175,6 +175,9 @@
   "nameEn": "Name (EN)",
   "nameAr": "Name (AR)",
   "iconUrlOptional": "Icon URL (Optional)",
+  "businessTypeIcon": "Business Type Icon",
+  "uploadIcon": "Upload Icon",
+  "uploadCover": "Upload Cover",
   "sortOrder": "Sort Order",
   "visibilityForVendors": "Visibility for vendors",
   "save": "Save",
@@ -245,5 +248,31 @@
   "addZone": "Add Zone",
   "noZonesDefined": "No zones defined yet.",
   "points": "Points",
-  "inactiveStatus": "INACTIVE"
+  "inactiveStatus": "INACTIVE",
+  "promotions": "Promotions",
+  "manageBannersAndOffers": "Manage home screen banners and special offers",
+  "addPromotion": "Add Promotion",
+  "editPromotion": "Edit Promotion",
+  "deletePromotion": "Delete Promotion",
+  "noPromotionsFound": "No promotions found",
+  "startCreatingBanners": "Start creating banners to engage your customers",
+  "deletePromotionConfirm": "Are you sure you want to delete \"{name}\"?",
+  "@deletePromotionConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "promotionType": "Promotion Type",
+  "bannerType": "Simple Banner",
+  "vendorType": "Link to Vendor",
+  "productType": "Link to Product",
+  "linkType": "External Link",
+  "externalUrl": "External URL",
+  "selectVendor": "Select Vendor",
+  "selectProduct": "Select Product",
+  "uploadBannerImage": "Upload Banner Image",
+  "titleEn": "Title (EN)",
+  "titleAr": "Title (AR)",
+  "descriptionEn": "Description (EN)",
+  "descriptionAr": "Description (AR)"
 }

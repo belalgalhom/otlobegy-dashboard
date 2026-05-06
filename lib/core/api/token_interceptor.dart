@@ -11,6 +11,11 @@ class TokenInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    // Don't add token for login or refresh requests
+    if (options.path == '/auth/login' || options.path == '/auth/refresh') {
+      return handler.next(options);
+    }
+
     final token = await _storage.read(key: 'access_token');
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
