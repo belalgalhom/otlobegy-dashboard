@@ -12,6 +12,39 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'أطلب أدمن';
 
   @override
+  String get settings => 'الإعدادات';
+
+  @override
+  String get appCustomization => 'تخصيص التطبيق';
+
+  @override
+  String get homeCover => 'صورة الغلاف الرئيسية';
+
+  @override
+  String get motorcycleIcon => 'أيقونة الدراجة النارية';
+
+  @override
+  String get carIcon => 'أيقونة السيارة';
+
+  @override
+  String get deliveryBannerIcon => 'أيقونة بنر التوصيل';
+
+  @override
+  String get changeImage => 'تغيير الصورة';
+
+  @override
+  String get uploadSuccess => 'تم رفع الصورة بنجاح';
+
+  @override
+  String get uploadError => 'فشل رفع الصورة';
+
+  @override
+  String get generalSettings => 'الإعدادات العامة';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
   String get emailAddress => 'البريد الإلكتروني';
 
   @override
@@ -51,16 +84,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get inbox => 'الوارد';
 
   @override
-  String get settings => 'الإعدادات';
-
-  @override
   String get searchHint => 'بحث...';
 
   @override
   String get admin => 'أدمن';
 
   @override
-  String get superAdmin => 'سوبر أدمن';
+  String get superAdmin => 'مدير عام';
 
   @override
   String get comingSoon => 'الصفحة ستتوفر قريباً';
@@ -238,9 +268,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get failedToPickImage => 'فشل في اختيار الصورة';
-
-  @override
-  String get changeImage => 'تغيير الصورة';
 
   @override
   String get removeImage => 'إزالة الصورة';

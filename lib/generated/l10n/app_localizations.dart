@@ -98,11 +98,77 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
-  /// No description provided for @appTitle.
+  /// The title of the application
   ///
   /// In en, this message translates to:
   /// **'Otlob Admin'**
   String get appTitle;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @appCustomization.
+  ///
+  /// In en, this message translates to:
+  /// **'App Customization'**
+  String get appCustomization;
+
+  /// No description provided for @homeCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Cover Image'**
+  String get homeCover;
+
+  /// No description provided for @motorcycleIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Motorcycle Icon'**
+  String get motorcycleIcon;
+
+  /// No description provided for @carIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Car Icon'**
+  String get carIcon;
+
+  /// No description provided for @deliveryBannerIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Banner Icon'**
+  String get deliveryBannerIcon;
+
+  /// No description provided for @changeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Image'**
+  String get changeImage;
+
+  /// No description provided for @uploadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Image uploaded successfully'**
+  String get uploadSuccess;
+
+  /// No description provided for @uploadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to upload image'**
+  String get uploadError;
+
+  /// No description provided for @generalSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'General Settings'**
+  String get generalSettings;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
 
   /// No description provided for @emailAddress.
   ///
@@ -181,12 +247,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inbox'**
   String get inbox;
-
-  /// No description provided for @settings.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get settings;
 
   /// No description provided for @searchHint.
   ///
@@ -559,12 +619,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to pick image'**
   String get failedToPickImage;
-
-  /// No description provided for @changeImage.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Image'**
-  String get changeImage;
 
   /// No description provided for @removeImage.
   ///

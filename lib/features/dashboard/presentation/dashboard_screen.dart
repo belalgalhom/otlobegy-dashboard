@@ -22,6 +22,7 @@ import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/localization/language_cubit.dart';
 import 'package:otlob_admin/core/theme/theme_cubit.dart';
+import 'package:otlob_admin/features/settings/presentation/settings_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -281,6 +282,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 8: return const ZonesScreen();
       case 9: return const VerticalsScreen();
       case 10: return const PromotionsScreen();
+      case 7: return const SettingsScreen();
       default: return _buildComingSoon();
     }
   }

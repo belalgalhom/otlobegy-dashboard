@@ -12,6 +12,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Otlob Admin';
 
   @override
+  String get settings => 'Settings';
+
+  @override
+  String get appCustomization => 'App Customization';
+
+  @override
+  String get homeCover => 'Home Cover Image';
+
+  @override
+  String get motorcycleIcon => 'Motorcycle Icon';
+
+  @override
+  String get carIcon => 'Car Icon';
+
+  @override
+  String get deliveryBannerIcon => 'Delivery Banner Icon';
+
+  @override
+  String get changeImage => 'Change Image';
+
+  @override
+  String get uploadSuccess => 'Image uploaded successfully';
+
+  @override
+  String get uploadError => 'Failed to upload image';
+
+  @override
+  String get generalSettings => 'General Settings';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
   String get emailAddress => 'Email Address';
 
   @override
@@ -49,9 +82,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inbox => 'Inbox';
-
-  @override
-  String get settings => 'Settings';
 
   @override
   String get searchHint => 'Search...';
@@ -239,9 +269,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToPickImage => 'Failed to pick image';
-
-  @override
-  String get changeImage => 'Change Image';
 
   @override
   String get removeImage => 'Remove Image';
