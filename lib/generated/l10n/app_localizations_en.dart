@@ -633,8 +633,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get promotions => 'Promotions';
 
   @override
-  String get manageBannersAndOffers =>
-      'Manage home screen banners and special offers';
+  String get manageBannersAndOffers => 'Manage Banners and Offers';
 
   @override
   String get addPromotion => 'Add Promotion';

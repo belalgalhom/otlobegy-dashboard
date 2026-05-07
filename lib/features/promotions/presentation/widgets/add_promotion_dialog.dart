@@ -34,7 +34,9 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
   final ImagePicker _picker = ImagePicker();
   
   List<dynamic> _vendors = [];
+  List<dynamic> _products = [];
   bool _isLoadingVendors = true;
+  bool _isLoadingProducts = false;
 
   @override
   void initState() {
@@ -63,9 +65,32 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
           _vendors = result.items;
           _isLoadingVendors = false;
         });
+        
+        // If editing and has a vendor selected, fetch products
+        if (_selectedVendorId != null && _type == 'PRODUCT') {
+          _fetchProducts(_selectedVendorId!);
+        }
       }
     } catch (e) {
       if (mounted) setState(() => _isLoadingVendors = false);
+    }
+  }
+
+  Future<void> _fetchProducts(String vendorId) async {
+    setState(() {
+      _isLoadingProducts = true;
+      _products = [];
+    });
+    try {
+      final result = await sl<VendorRepository>().getProducts(vendorId);
+      if (mounted) {
+        setState(() {
+          _products = result.items;
+          _isLoadingProducts = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isLoadingProducts = false);
     }
   }
 
@@ -127,13 +152,23 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                         _buildTypeDropdown(l10n),
                         const SizedBox(height: 16),
 
-                        if (_type == 'VENDOR') _buildVendorDropdown(l10n),
-                        if (_type == 'EXTERNAL_LINK') _buildTextField(
-                          controller: _urlController,
-                          label: l10n.externalUrl,
-                          hint: 'https://...',
-                          icon: LucideIcons.link,
-                        ),
+                        if (_type == 'VENDOR' || _type == 'PRODUCT') ...[
+                          _buildVendorDropdown(l10n),
+                          if (_type == 'PRODUCT' && _selectedVendorId != null) ...[
+                            const SizedBox(height: 16),
+                            _buildProductDropdown(l10n),
+                          ],
+                        ],
+                        
+                        if (_type == 'EXTERNAL_LINK') ...[
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            controller: _urlController,
+                            label: l10n.externalUrl,
+                            hint: 'https://...',
+                            icon: LucideIcons.link,
+                          ),
+                        ],
                         
                         const SizedBox(height: 32),
                         _buildSectionHeader(l10n.generalInformation, LucideIcons.info),
@@ -375,7 +410,50 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
           value: v['id'], 
           child: Text(v['storeName'] ?? '', overflow: TextOverflow.ellipsis),
         )).toList(),
-        onChanged: (v) => setState(() => _selectedVendorId = v),
+        onChanged: (v) {
+          setState(() {
+            _selectedVendorId = v;
+            _selectedProductId = null; // Reset product when vendor changes
+          });
+          if (v != null && _type == 'PRODUCT') {
+            _fetchProducts(v);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildProductDropdown(AppLocalizations l10n) {
+    if (_isLoadingProducts) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_products.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Text(
+          'No products found for this vendor',
+          style: TextStyle(color: AppColors.error, fontSize: 13),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: DropdownButtonFormField<String>(
+        value: _selectedProductId,
+        decoration: InputDecoration(
+          labelText: l10n.selectProduct,
+          prefixIcon: const Icon(LucideIcons.package, size: 18),
+        ),
+        items: _products.map((p) => DropdownMenuItem<String>(
+          value: p['id'], 
+          child: Text(p['name'] ?? '', overflow: TextOverflow.ellipsis),
+        )).toList(),
+        onChanged: (v) => setState(() => _selectedProductId = v),
       ),
     );
   }

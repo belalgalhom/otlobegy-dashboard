@@ -1295,7 +1295,7 @@ abstract class AppLocalizations {
   /// No description provided for @manageBannersAndOffers.
   ///
   /// In en, this message translates to:
-  /// **'Manage home screen banners and special offers'**
+  /// **'Manage Banners and Offers'**
   String get manageBannersAndOffers;
 
   /// No description provided for @addPromotion.
