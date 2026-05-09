@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
@@ -31,7 +33,9 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
   String? _selectedProductId;
   
   XFile? _imageFile;
-  final ImagePicker _picker = ImagePicker();
+  
+  DateTime? _startDate;
+  DateTime? _endDate;
   
   List<dynamic> _vendors = [];
   List<dynamic> _products = [];
@@ -53,6 +57,13 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
     _isActive = p?['isActive'] ?? true;
     _selectedVendorId = p?['vendorId'];
     _selectedProductId = p?['productId'];
+    
+    if (p?['startDate'] != null) {
+      _startDate = DateTime.tryParse(p['startDate'].toString());
+    }
+    if (p?['endDate'] != null) {
+      _endDate = DateTime.tryParse(p['endDate'].toString());
+    }
     
     _fetchVendors();
   }
@@ -95,9 +106,17 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() => _imageFile = image);
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      
+      if (result != null && result.files.single.path != null) {
+        setState(() => _imageFile = XFile(result.files.single.path!));
+      }
+    } catch (e) {
+      print('Error picking image: $e');
     }
   }
 
@@ -167,6 +186,11 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                             label: l10n.externalUrl,
                             hint: 'https://...',
                             icon: LucideIcons.link,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) return l10n.fieldRequired;
+                              if (!Uri.parse(v).isAbsolute) return l10n.invalidUrl;
+                              return null;
+                            },
                           ),
                         ],
                         
@@ -248,6 +272,8 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                             ],
                           ),
                         
+                        const SizedBox(height: 16),
+                        _buildDateSelectors(l10n),
                         const SizedBox(height: 32),
                         
                         if (isVeryNarrow) ...[
@@ -326,6 +352,161 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
     );
   }
 
+  Widget _buildDateSelectors(AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(l10n.scheduleOptional, LucideIcons.calendar),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildDatePickerTile(
+                label: l10n.startDate,
+                value: _startDate,
+                onTap: () async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: _startDate ?? DateTime.now(),
+                    firstDate: DateTime(2024),
+                    lastDate: DateTime(2030),
+                  );
+                  if (date != null) {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(_startDate ?? DateTime.now()),
+                    );
+                    if (time != null) {
+                      setState(() {
+                        _startDate = DateTime(
+                          date.year,
+                          date.month,
+                          date.day,
+                          time.hour,
+                          time.minute,
+                        );
+                      });
+                    }
+                  }
+                },
+                onClear: () => setState(() => _startDate = null),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildDatePickerTile(
+                label: l10n.endDate,
+                value: _endDate,
+                onTap: () async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: _endDate ?? (_startDate ?? DateTime.now()),
+                    firstDate: _startDate ?? DateTime(2024),
+                    lastDate: DateTime(2030),
+                  );
+                  if (date != null) {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(_endDate ?? DateTime.now()),
+                    );
+                    if (time != null) {
+                      setState(() {
+                        _endDate = DateTime(
+                          date.year,
+                          date.month,
+                          date.day,
+                          time.hour,
+                          time.minute,
+                        );
+                      });
+                    }
+                  }
+                },
+                onClear: () => setState(() => _endDate = null),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDatePickerTile({
+    required String label,
+    required DateTime? value,
+    required VoidCallback onTap,
+    required VoidCallback onClear,
+  }) {
+    final dateFormat = DateFormat('MMM dd, yyyy');
+    final timeFormat = DateFormat('hh:mm a');
+    
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.02),
+          border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.08)),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  LucideIcons.calendar, 
+                  size: 14, 
+                  color: value != null ? AppColors.primary : AppColors.textSecondary
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  label, 
+                  style: const TextStyle(
+                    color: AppColors.textSecondary, 
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  )
+                ),
+                if (value != null) ...[
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: onClear,
+                    child: Icon(LucideIcons.x, size: 14, color: AppColors.error.withOpacity(0.7)),
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 8),
+            if (value != null) ...[
+              Text(
+                dateFormat.format(value),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              Text(
+                timeFormat.format(value),
+                style: TextStyle(
+                  color: AppColors.primary.withOpacity(0.8), 
+                  fontSize: 12, 
+                  fontWeight: FontWeight.w600
+                ),
+              ),
+            ] else
+              Text(
+                'Set Schedule',
+                style: TextStyle(
+                  color: AppColors.textSecondary.withOpacity(0.5),
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildSectionHeader(String title, IconData icon) {
     return Row(
       children: [
@@ -373,7 +554,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                       const SizedBox(height: 12),
                       Text(l10n.uploadBannerImage, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                       const SizedBox(height: 4),
-                      Text('PNG, JPG (Recommended 1200x600)', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4), fontSize: 11)),
+                      Text('All image formats supported', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4), fontSize: 11)),
                     ],
                   ),
       ),
@@ -410,6 +591,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
           value: v['id'], 
           child: Text(v['storeName'] ?? '', overflow: TextOverflow.ellipsis),
         )).toList(),
+        validator: (v) => v == null ? l10n.fieldRequired : null,
         onChanged: (v) {
           setState(() {
             _selectedVendorId = v;
@@ -453,6 +635,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
           value: p['id'], 
           child: Text(p['name'] ?? '', overflow: TextOverflow.ellipsis),
         )).toList(),
+        validator: (v) => v == null ? l10n.fieldRequired : null,
         onChanged: (v) => setState(() => _selectedProductId = v),
       ),
     );
@@ -570,9 +753,10 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
   }
 
   void _submit() {
+    final l10n = AppLocalizations.of(context)!;
     if (_formKey.currentState?.validate() ?? false) {
       if (_imageFile == null && widget.promotion?['imageUrl'] == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an image')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.imageRequired)));
         return;
       }
 
@@ -582,18 +766,39 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
       final descriptionAr = _descriptionArController.text.trim();
       final externalUrl = _urlController.text.trim();
 
+      // Clean up data based on type
+      String? finalVendorId = _selectedVendorId;
+      String? finalProductId = _selectedProductId;
+      String? finalExternalUrl = externalUrl.isNotEmpty ? externalUrl : null;
+
+      if (_type == 'BANNER') {
+        finalVendorId = null;
+        finalProductId = null;
+        finalExternalUrl = null;
+      } else if (_type == 'VENDOR') {
+        finalProductId = null;
+        finalExternalUrl = null;
+      } else if (_type == 'PRODUCT') {
+        finalExternalUrl = null;
+      } else if (_type == 'EXTERNAL_LINK') {
+        finalVendorId = null;
+        finalProductId = null;
+      }
+
       Navigator.pop(context, {
         'title': _titleController.text.trim(),
         'titleAr': titleAr.isNotEmpty ? titleAr : null,
         'description': description.isNotEmpty ? description : null,
         'descriptionAr': descriptionAr.isNotEmpty ? descriptionAr : null,
         'type': _type,
-        'vendorId': _selectedVendorId,
-        'productId': _selectedProductId,
-        'externalUrl': externalUrl.isNotEmpty ? externalUrl : null,
+        'vendorId': finalVendorId,
+        'productId': finalProductId,
+        'externalUrl': finalExternalUrl,
         'isActive': _isActive,
         'sortOrder': int.tryParse(_sortOrderController.text) ?? 0,
         'imageFile': _imageFile,
+        'startDate': _startDate?.toIso8601String(),
+        'endDate': _endDate?.toIso8601String(),
       });
     }
   }

@@ -148,8 +148,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           phone: event.phone,
         );
         if (success) {
-          emit(UserOperationSuccess('User added successfully'));
+          emit(UserOperationSuccess('common.success.resource_created'));
           add(FetchUsers()); // Refresh the list
+
         } else {
           emit(UserError('Failed to add user'));
         }
@@ -168,8 +169,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           role: event.role,
         );
         if (success) {
-          emit(UserOperationSuccess('User updated successfully'));
+          emit(UserOperationSuccess('common.success.resource_updated'));
           add(FetchUsers());
+
         } else {
           emit(UserError('Failed to update user'));
         }
@@ -182,8 +184,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       try {
         final success = await _repository.deleteUser(event.id);
         if (success) {
-          emit(UserOperationSuccess('User deleted successfully'));
+          emit(UserOperationSuccess('common.success.resource_deleted'));
           add(FetchUsers());
+
         } else {
           emit(UserError('Failed to delete user'));
         }
@@ -196,8 +199,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       try {
         final success = await _repository.banUser(event.id, reason: event.reason);
         if (success) {
-          emit(UserOperationSuccess('User banned successfully'));
+          emit(UserOperationSuccess('common.success.operation'));
           add(FetchUsers());
+
         } else {
           emit(UserError('Failed to ban user'));
         }
@@ -210,8 +214,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       try {
         final success = await _repository.unbanUser(event.id);
         if (success) {
-          emit(UserOperationSuccess('User unbanned successfully'));
+          emit(UserOperationSuccess('common.success.operation'));
           add(FetchUsers());
+
         } else {
           emit(UserError('Failed to unban user'));
         }

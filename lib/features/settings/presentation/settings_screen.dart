@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
@@ -193,12 +195,19 @@ class _SettingsContentState extends State<SettingsContent> {
   }
 
   Future<void> _pickAndUploadImage(BuildContext context, String type) async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery);
-    
-    if (image != null && context.mounted) {
-      final bytes = await image.readAsBytes();
-      context.read<SettingsBloc>().add(UploadSettingImage(type, bytes, image.name));
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      
+      if (result != null && result.files.single.path != null && context.mounted) {
+        final file = File(result.files.single.path!);
+        final bytes = await file.readAsBytes();
+        context.read<SettingsBloc>().add(UploadSettingImage(type, bytes, result.files.single.name));
+      }
+    } catch (e) {
+      print('Error picking image: $e');
     }
   }
 }

@@ -4,8 +4,10 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:otlob_admin/core/utils/image_utils.dart';
 
 class AddVendorDialog extends StatefulWidget {
   final dynamic vendor;
@@ -23,12 +25,12 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   late TextEditingController _descriptionArController;
   late TextEditingController _taxIdController;
   late TextEditingController _commissionController;
+  late TextEditingController _phoneController;
   
   String? _selectedVerticalId;
   List<dynamic> _verticals = [];
   bool _isLoadingVerticals = true;
   XFile? _pickedImage;
-  final _picker = ImagePicker();
 
   @override
   void initState() {
@@ -39,6 +41,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     _descriptionArController = TextEditingController(text: widget.vendor?['descriptionAr'] ?? '');
     _taxIdController = TextEditingController(text: widget.vendor?['taxId'] ?? '');
     _commissionController = TextEditingController(text: widget.vendor?['commissionRate']?.toString() ?? '10');
+    _phoneController = TextEditingController(text: widget.vendor?['phone'] ?? '');
     _selectedVerticalId = widget.vendor?['verticalId'];
     _loadVerticals();
   }
@@ -51,6 +54,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     _descriptionArController.dispose();
     _taxIdController.dispose();
     _commissionController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -245,6 +249,14 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                               Expanded(child: _buildTextField(controller: _commissionController, label: AppLocalizations.of(context)!.commissionPercent, hint: '10', icon: LucideIcons.percent, keyboardType: TextInputType.number)),
                             ],
                           ),
+                        const SizedBox(height: 16),
+                        _buildTextField(
+                          controller: _phoneController,
+                          label: AppLocalizations.of(context)!.phone,
+                          hint: '+201234567890',
+                          icon: LucideIcons.phone,
+                          keyboardType: TextInputType.phone,
+                        ),
                         const SizedBox(height: 24),
                         _buildSectionHeader(LucideIcons.image, 'STORE APPEARANCE'),
                         const SizedBox(height: 12),
@@ -424,12 +436,25 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                       ),
                     ],
                   )
-                : widget.vendor?['coverUrl'] != null
+                : (widget.vendor?['coverImage'] ?? widget.vendor?['image']) != null
                     ? Stack(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.network(widget.vendor['coverUrl'], height: 140, width: double.infinity, fit: BoxFit.cover),
+                            child: Image.network(
+                              ImageUtils.formatImageUrl(widget.vendor?['coverImage'] ?? widget.vendor?['image']), 
+                              height: 140, 
+                              width: double.infinity, 
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(LucideIcons.imagePlus, size: 32, color: AppColors.textMuted),
+                                  const SizedBox(height: 8),
+                                  Text(AppLocalizations.of(context)!.uploadCover, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                ],
+                              ),
+                            ),
                           ),
                           Center(
                             child: Container(
@@ -458,9 +483,17 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() => _pickedImage = image);
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      
+      if (result != null && result.files.single.path != null) {
+        setState(() => _pickedImage = XFile(result.files.single.path!));
+      }
+    } catch (e) {
+      print('Error picking image: $e');
     }
   }
 
@@ -481,6 +514,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
         'taxId': _taxIdController.text,
         'commissionRate': double.tryParse(_commissionController.text) ?? 10.0,
         'verticalId': _selectedVerticalId,
+        'phone': _phoneController.text,
         'coverImage': _pickedImage,
       };
 

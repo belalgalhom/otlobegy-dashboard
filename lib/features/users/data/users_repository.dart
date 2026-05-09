@@ -72,7 +72,9 @@ class UsersRepository {
         ..email = email
         ..password = password
         ..phone = phone
+        ..role = role
       );
+
       
       await _apiClient.getUsersApi().usersControllerAdminCreate(registerDto: dto);
       

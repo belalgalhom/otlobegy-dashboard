@@ -4,6 +4,8 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
+
 
 class MenuCategoriesScreen extends StatefulWidget {
   final String vendorId;
@@ -340,13 +342,35 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                           'name': nameController.text,
                           'nameAr': nameArController.text,
                         };
-                        bool success;
-                        if (isEdit) {
-                          success = await sl<VendorRepository>().updateMenuCategory(widget.vendorId, category['id'], data);
-                        } else {
-                          success = await sl<VendorRepository>().createMenuCategory(widget.vendorId, data);
+                        try {
+                          bool success;
+                          if (isEdit) {
+                            success = await sl<VendorRepository>().updateMenuCategory(widget.vendorId, category['id'], data);
+                          } else {
+                            success = await sl<VendorRepository>().createMenuCategory(widget.vendorId, data);
+                          }
+                          if (mounted) {
+                            Navigator.pop(context, success);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(ErrorUtils.translate(context, isEdit ? 'common.success.resource_updated' : 'common.success.resource_created')),
+                                backgroundColor: AppColors.success,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(ErrorUtils.translate(context, e.toString())),
+                                backgroundColor: AppColors.error,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
                         }
-                        if (mounted) Navigator.pop(context, success);
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
@@ -435,11 +459,33 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        final success = await sl<VendorRepository>().deleteMenuCategory(widget.vendorId, category['id']);
-                        if (mounted) {
-                          Navigator.pop(context);
-                          if (success) _fetchCategories();
+                        try {
+                          final success = await sl<VendorRepository>().deleteMenuCategory(widget.vendorId, category['id']);
+                          if (mounted) {
+                            Navigator.pop(context);
+                            if (success) {
+                              _fetchCategories();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(ErrorUtils.translate(context, 'common.success.resource_deleted')),
+                                  backgroundColor: AppColors.success,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(ErrorUtils.translate(context, e.toString())),
+                                backgroundColor: AppColors.error,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
                         }
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.error,

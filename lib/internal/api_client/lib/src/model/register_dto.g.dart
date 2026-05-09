@@ -15,6 +15,8 @@ class _$RegisterDto extends RegisterDto {
   final String name;
   @override
   final String? phone;
+  @override
+  final String? role;
 
   factory _$RegisterDto([void Function(RegisterDtoBuilder)? updates]) =>
       (RegisterDtoBuilder()..update(updates))._build();
@@ -24,6 +26,7 @@ class _$RegisterDto extends RegisterDto {
     required this.password,
     required this.name,
     this.phone,
+    this.role,
   }) : super._();
   @override
   RegisterDto rebuild(void Function(RegisterDtoBuilder) updates) =>
@@ -39,7 +42,8 @@ class _$RegisterDto extends RegisterDto {
         email == other.email &&
         password == other.password &&
         name == other.name &&
-        phone == other.phone;
+        phone == other.phone &&
+        role == other.role;
   }
 
   @override
@@ -49,6 +53,7 @@ class _$RegisterDto extends RegisterDto {
     _$hash = $jc(_$hash, password.hashCode);
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, phone.hashCode);
+    _$hash = $jc(_$hash, role.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -59,7 +64,8 @@ class _$RegisterDto extends RegisterDto {
           ..add('email', email)
           ..add('password', password)
           ..add('name', name)
-          ..add('phone', phone))
+          ..add('phone', phone)
+          ..add('role', role))
         .toString();
   }
 }
@@ -83,6 +89,10 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
   String? get phone => _$this._phone;
   set phone(String? phone) => _$this._phone = phone;
 
+  String? _role;
+  String? get role => _$this._role;
+  set role(String? role) => _$this._role = role;
+
   RegisterDtoBuilder() {
     RegisterDto._defaults(this);
   }
@@ -94,6 +104,7 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
       _password = $v.password;
       _name = $v.name;
       _phone = $v.phone;
+      _role = $v.role;
       _$v = null;
     }
     return this;
@@ -132,6 +143,7 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
             'name',
           ),
           phone: phone,
+          role: role,
         );
     replace(_$result);
     return _$result;

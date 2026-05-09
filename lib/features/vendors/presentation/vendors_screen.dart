@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/core/widgets/stat_card.dart';
 import 'package:otlob_admin/features/vendors/presentation/vendor_bloc.dart';
@@ -11,16 +12,17 @@ import 'package:otlob_admin/features/vendors/presentation/branches_screen.dart';
 import 'package:otlob_admin/features/vendors/presentation/products_screen.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:otlob_admin/core/utils/image_utils.dart';
+
 
 class VendorsScreen extends StatelessWidget {
   const VendorsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<VendorBloc>()..add(FetchVendors()),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
           bool isMobile = constraints.maxWidth < 600;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +68,7 @@ class VendorsScreen extends StatelessWidget {
                   if (state is VendorActionSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(state.message),
+                        content: Text(ErrorUtils.translate(context, state.message)),
                         backgroundColor: AppColors.success,
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -74,12 +76,13 @@ class VendorsScreen extends StatelessWidget {
                   } else if (state is VendorError) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(state.message),
+                        content: Text(ErrorUtils.translate(context, state.message)),
                         backgroundColor: AppColors.error,
                         behavior: SnackBarBehavior.floating,
                       ),
                     );
                   }
+
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,15 +125,8 @@ class VendorsScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
-                      ),
-                      child: BlocBuilder<VendorBloc, VendorState>(
-                        builder: (context, state) {
+                    BlocBuilder<VendorBloc, VendorState>(
+                      builder: (context, state) {
                           if (state is VendorLoading && state.vendors.isEmpty) {
                             return const Center(
                               child: Padding(
@@ -151,14 +147,12 @@ class VendorsScreen extends StatelessWidget {
                           return const SizedBox();
                         },
                       ),
-                    ),
                   ],
                 ),
               ),
             ],
           );
         },
-      ),
     );
   }
 
@@ -183,127 +177,71 @@ class VendorsScreen extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: vendors.length,
-      separatorBuilder: (context, index) => Divider(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05), height: 1),
+      separatorBuilder: (context, index) => const SizedBox(height: 0),
       itemBuilder: (context, index) {
         final v = vendors[index];
-        if (isMobile) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(LucideIcons.store, color: AppColors.primary, size: 18),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            v['storeName'] ?? AppLocalizations.of(context)!.unnamedStore,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            v['vertical']?['name'] ?? AppLocalizations.of(context)!.noCategory,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 12),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 12),
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                runAlignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 8,
-                runSpacing: 12,
-                children: [
-                  InkWell(
-                    onTap: () => _confirmStatusChange(context, v),
-                    borderRadius: BorderRadius.circular(8),
-                    child: _buildStatusChip(context, v['status'] ?? 'CLOSED'),
-                  ),
-                  _buildActions(context, v),
-                ],
-              ),
-              ],
-            ),
-          );
-        }
-
+        final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+        
         return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.02),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                textDirection: isArabic ? TextDirection.ltr : TextDirection.rtl,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8), // Reduced from 10
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(LucideIcons.store, color: AppColors.primary, size: 18), // Reduced from 20
-                  ),
+                  _buildVendorThumbnail(v),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          v['storeName'] ?? AppLocalizations.of(context)!.unnamedStore,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14, // Reduced from 16
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
+                          isArabic
+                              ? (v['storeNameAr']?.toString().isNotEmpty == true ? v['storeNameAr'] : v['storeName']) ?? AppLocalizations.of(context)!.unnamedStore
+                              : v['storeName'] ?? AppLocalizations.of(context)!.unnamedStore,
+                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
                         ),
                         Text(
-                          v['vertical']?['name'] ?? AppLocalizations.of(context)!.restaurant,
-                          style: TextStyle(
-                            color: AppColors.textSecondary.withOpacity(0.7),
-                            fontSize: 11, // Reduced from 13
-                          ),
+                          isArabic
+                              ? (v['vertical']?['nameAr']?.toString().isNotEmpty == true ? v['vertical']['nameAr'] : v['vertical']?['name']) ?? AppLocalizations.of(context)!.restaurant
+                              : v['vertical']?['name'] ?? AppLocalizations.of(context)!.restaurant,
+                          style: TextStyle(color: AppColors.textSecondary.withOpacity(0.7), fontSize: 12),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(height: 8),
+                        InkWell(
+                          onTap: () => _confirmStatusChange(context, v),
+                          borderRadius: BorderRadius.circular(8),
+                          child: _buildStatusChip(context, v['status'] ?? 'CLOSED'),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  InkWell(
-                    onTap: () => _confirmStatusChange(context, v),
-                    borderRadius: BorderRadius.circular(8),
-                    child: _buildStatusChip(context, v['status'] ?? 'CLOSED'),
-                  ),
                 ],
               ),
-              const SizedBox(height: 12), // Reduced from 16
-              Divider(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05), height: 1),
-              const SizedBox(height: 8), // Reduced from 12
+              const SizedBox(height: 16),
+              const Divider(height: 1, color: Colors.white12),
+              const SizedBox(height: 16),
               _buildActions(context, v),
             ],
           ),
@@ -313,12 +251,11 @@ class VendorsScreen extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context, dynamic v) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerLeft,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      alignment: WrapAlignment.start,
+      children: [
           _buildActionItem(
             context: context,
             icon: LucideIcons.mapPin,
@@ -326,7 +263,6 @@ class VendorsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.branches,
             onPressed: () => _viewBranches(context, v),
           ),
-          const SizedBox(width: 12),
           _buildActionItem(
             context: context,
             icon: LucideIcons.list,
@@ -334,7 +270,6 @@ class VendorsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.menuCategories,
             onPressed: () => _viewMenuCategories(context, v),
           ),
-          const SizedBox(width: 12),
           _buildActionItem(
             context: context,
             icon: LucideIcons.package,
@@ -342,7 +277,6 @@ class VendorsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.products,
             onPressed: () => _viewProducts(context, v),
           ),
-          const SizedBox(width: 12),
           _buildActionItem(
             context: context,
             icon: LucideIcons.edit3,
@@ -350,7 +284,6 @@ class VendorsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.editVendor,
             onPressed: () => _showEditVendorDialog(context, v),
           ),
-          const SizedBox(width: 12),
           _buildActionItem(
             context: context,
             icon: LucideIcons.trash2,
@@ -358,10 +291,58 @@ class VendorsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.deleteVendor,
             onPressed: () => _confirmDelete(context, v),
           ),
+          _buildActionItem(
+            context: context,
+            icon: LucideIcons.phone,
+            color: Colors.blue,
+            label: AppLocalizations.of(context)!.call,
+            onPressed: () => _callVendor(v),
+          ),
         ],
+      );
+    }
+
+  Widget _buildVendorThumbnail(dynamic v) {
+    final imageUrl = ImageUtils.formatImageUrl(v['coverImage'] ?? v['image']);
+    return Container(
+      width: 100,
+      height: 70,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: AppColors.primary.withOpacity(0.05),
+        border: Border.all(color: Colors.white12),
       ),
+      child: imageUrl.isNotEmpty && imageUrl.startsWith('http')
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(
+              imageUrl, 
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.image, color: AppColors.primary, size: 30),
+            ),
+          )
+        : const Icon(LucideIcons.image, color: AppColors.primary, size: 30),
     );
   }
+
+  void _callVendor(dynamic v) async {
+    // Try to find a phone number in branches if not on vendor
+    String? phone = v['phone'];
+    if (phone == null && v['branches'] != null && (v['branches'] as List).isNotEmpty) {
+      phone = v['branches'][0]['phone'];
+    }
+    
+    if (phone != null && phone.isNotEmpty) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phone,
+      );
+      if (await canLaunchUrl(launchUri)) {
+        await launchUrl(launchUri);
+      }
+    }
+  }
+
 
   Widget _buildActionItem({
     required BuildContext context,
@@ -377,26 +358,27 @@ class VendorsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(8), // Reduced from 10
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, size: 16, color: color), // Reduced from 18
+            child: Icon(icon, size: 20, color: color),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             label,
             style: TextStyle(
-              fontSize: 9, // Reduced from 10
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
             ),
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildStatusChip(BuildContext context, String status) {
     Color color;

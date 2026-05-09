@@ -41,6 +41,9 @@ abstract class CreateVendorDto implements Built<CreateVendorDto, CreateVendorDto
   @BuiltValueField(wireName: r'commissionRate')
   num? get commissionRate;
 
+  @BuiltValueField(wireName: r'phone')
+  String? get phone;
+
   CreateVendorDto._();
 
   factory CreateVendorDto([void updates(CreateVendorDtoBuilder b)]) = _$CreateVendorDto;
@@ -107,6 +110,13 @@ class _$CreateVendorDtoSerializer implements PrimitiveSerializer<CreateVendorDto
       yield serializers.serialize(
         object.commissionRate,
         specifiedType: const FullType(num),
+      );
+    }
+    if (object.phone != null) {
+      yield r'phone';
+      yield serializers.serialize(
+        object.phone,
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -180,6 +190,13 @@ class _$CreateVendorDtoSerializer implements PrimitiveSerializer<CreateVendorDto
             specifiedType: const FullType(num),
           ) as num;
           result.commissionRate = valueDes;
+          break;
+        case r'phone':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.phone = valueDes;
           break;
         default:
           unhandled.add(key);

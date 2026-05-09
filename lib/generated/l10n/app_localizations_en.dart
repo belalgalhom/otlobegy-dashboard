@@ -636,6 +636,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get call => 'Call';
+
+  @override
   String get activeZones => 'Active Zones';
 
   @override
@@ -715,4 +718,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get titleAr => 'Title (AR)';
+
+  @override
+  String get common_error_validation =>
+      'Validation Error: Please check your input.';
+
+  @override
+  String get common_error_server_error =>
+      'Server Error: Please try again later.';
+
+  @override
+  String get common_error_unknown => 'An unknown error occurred.';
+
+  @override
+  String get common_error_forbidden =>
+      'Access Denied: You do not have permission.';
+
+  @override
+  String get common_error_unauthorized => 'Unauthorized: Please log in again.';
+
+  @override
+  String get common_error_too_many_requests =>
+      'Too many requests. Please slow down.';
+
+  @override
+  String get common_success_operation => 'Operation completed successfully.';
+
+  @override
+  String get common_success_resource_created => 'Created successfully.';
+
+  @override
+  String get common_success_resource_updated => 'Updated successfully.';
+
+  @override
+  String get common_success_resource_deleted => 'Deleted successfully.';
+
+  @override
+  String get auth_error_user_exists =>
+      'User already exists with this email or phone.';
+
+  @override
+  String get auth_error_invalid_credentials => 'Invalid email or password.';
+
+  @override
+  String get auth_error_unverified => 'Account not verified.';
+
+  @override
+  String get auth_error_banned => 'Your account has been banned.';
+
+  @override
+  String get auth_error_user_not_found => 'User not found.';
+
+  @override
+  String get auth_error_otp_invalid => 'Invalid OTP code.';
+
+  @override
+  String get auth_error_otp_expired => 'OTP code has expired.';
+
+  @override
+  String get auth_error_session_expired =>
+      'Your session has expired. Please login again.';
+
+  @override
+  String get user_error_user_not_found => 'User not found.';
+
+  @override
+  String get user_error_profile_update_failed => 'Failed to update profile.';
+
+  @override
+  String get user_error_avatar_upload_failed => 'Failed to upload avatar.';
+
+  @override
+  String get user_error_invalid_password =>
+      'The current password you entered is incorrect.';
+
+  @override
+  String get user_error_password_same_as_old =>
+      'New password cannot be the same as the old one.';
+
+  @override
+  String get vendor_error_not_found => 'Vendor not found.';
+
+  @override
+  String get vendor_error_slug_taken =>
+      'This store name or slug is already taken.';
+
+  @override
+  String get vendor_branch_error_not_found => 'Branch not found.';
+
+  @override
+  String get menu_category_error_not_found => 'Category not found.';
+
+  @override
+  String get product_error_not_found => 'Product not found.';
+
+  @override
+  String get product_error_sku_taken => 'SKU already exists.';
+
+  @override
+  String get vendor_vertical_error_not_found => 'Business type not found.';
+
+  @override
+  String get showMore => 'Show more';
+
+  @override
+  String get showLess => 'Show less';
+
+  @override
+  String get invalidUrl => 'Please enter a valid URL';
+
+  @override
+  String get imageRequired => 'Please select an image';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get scheduleOptional => 'Schedule (Optional)';
 }

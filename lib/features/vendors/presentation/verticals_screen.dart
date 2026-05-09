@@ -6,6 +6,8 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/presentation/vertical_bloc.dart';
 import 'package:otlob_admin/features/vendors/presentation/widgets/add_vertical_dialog.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
+
 
 class VerticalsScreen extends StatefulWidget {
   const VerticalsScreen({super.key});
@@ -24,13 +26,14 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
       listener: (context, state) {
         if (state is VerticalActionSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
+            SnackBar(content: Text(ErrorUtils.translate(context, state.message)), backgroundColor: AppColors.success),
           );
         } else if (state is VerticalError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.redAccent),
+            SnackBar(content: Text(ErrorUtils.translate(context, state.message)), backgroundColor: Colors.redAccent),
           );
         }
+
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

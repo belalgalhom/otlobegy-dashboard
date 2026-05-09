@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
@@ -22,7 +23,6 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
   bool _isActive = true;
   bool _isSaving = false;
   XFile? _selectedIcon;
-  static final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -46,11 +46,13 @@ class _AddVerticalDialogState extends State<AddVerticalDialog> {
       // Small delay to ensure dialog animations don't interfere with picker
       await Future.delayed(const Duration(milliseconds: 200));
       
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
       );
-      if (image != null) {
-        setState(() => _selectedIcon = image);
+      
+      if (result != null && result.files.single.path != null) {
+        setState(() => _selectedIcon = XFile(result.files.single.path!));
       }
     } catch (e) {
       print('AddVerticalDialog _pickIcon Error: $e');

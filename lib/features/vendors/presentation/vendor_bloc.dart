@@ -104,14 +104,16 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
       try {
         final success = await _repository.createVendor(event.data);
         if (success) {
-          emit(VendorActionSuccess('Vendor created successfully', vendors: state.vendors, total: state.total));
+          emit(VendorActionSuccess('common.success.resource_created', vendors: state.vendors, total: state.total));
           add(FetchVendors());
+
         } else {
           emit(VendorError('Failed to create vendor', vendors: state.vendors, total: state.total));
         }
       } catch (e) {
-        emit(VendorError('An error occurred while creating vendor', vendors: state.vendors, total: state.total));
+        emit(VendorError(e.toString(), vendors: state.vendors, total: state.total));
       }
+
     });
 
     on<CreateProduct>((event, emit) async {
@@ -119,13 +121,15 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
       try {
         final productId = await _repository.createProduct(event.data);
         if (productId != null) {
-          emit(VendorActionSuccess('Product added successfully', vendors: state.vendors, total: state.total));
+          emit(VendorActionSuccess('common.success.resource_created', vendors: state.vendors, total: state.total));
         } else {
+
           emit(VendorError('Failed to add product', vendors: state.vendors, total: state.total));
         }
       } catch (e) {
-        emit(VendorError('An error occurred while adding product', vendors: state.vendors, total: state.total));
+        emit(VendorError(e.toString(), vendors: state.vendors, total: state.total));
       }
+
     });
 
     on<UpdateVendor>((event, emit) async {
@@ -133,14 +137,16 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
       try {
         final success = await _repository.updateVendor(event.id, event.data);
         if (success) {
-          emit(VendorActionSuccess('Vendor updated successfully', vendors: state.vendors, total: state.total));
+          emit(VendorActionSuccess('common.success.resource_updated', vendors: state.vendors, total: state.total));
           add(FetchVendors());
+
         } else {
           emit(VendorError('Failed to update vendor', vendors: state.vendors, total: state.total));
         }
       } catch (e) {
-        emit(VendorError('An error occurred while updating vendor', vendors: state.vendors, total: state.total));
+        emit(VendorError(e.toString(), vendors: state.vendors, total: state.total));
       }
+
     });
 
     on<UpdateVendorStatus>((event, emit) async {
@@ -148,14 +154,16 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
       try {
         final success = await _repository.updateVendorStatus(event.id, event.status);
         if (success) {
-          emit(VendorActionSuccess('Status updated successfully', vendors: state.vendors, total: state.total));
+          emit(VendorActionSuccess('common.success.resource_updated', vendors: state.vendors, total: state.total));
           add(FetchVendors());
+
         } else {
           emit(VendorError('Failed to update status', vendors: state.vendors, total: state.total));
         }
       } catch (e) {
-        emit(VendorError('An error occurred while updating status', vendors: state.vendors, total: state.total));
+        emit(VendorError(e.toString(), vendors: state.vendors, total: state.total));
       }
+
     });
 
     on<DeleteVendor>((event, emit) async {
@@ -163,14 +171,16 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
       try {
         final success = await _repository.deleteVendor(event.id);
         if (success) {
-          emit(VendorActionSuccess('Vendor deleted successfully', vendors: state.vendors, total: state.total));
+          emit(VendorActionSuccess('common.success.resource_deleted', vendors: state.vendors, total: state.total));
           add(FetchVendors());
+
         } else {
           emit(VendorError('Failed to delete vendor', vendors: state.vendors, total: state.total));
         }
       } catch (e) {
-        emit(VendorError('An error occurred while deleting vendor', vendors: state.vendors, total: state.total));
+        emit(VendorError(e.toString(), vendors: state.vendors, total: state.total));
       }
+
     });
   }
 }

@@ -21,6 +21,8 @@ class _$CreateVendorDto extends CreateVendorDto {
   final String? taxId;
   @override
   final num? commissionRate;
+  @override
+  final String? phone;
 
   factory _$CreateVendorDto([void Function(CreateVendorDtoBuilder)? updates]) =>
       (CreateVendorDtoBuilder()..update(updates))._build();
@@ -33,6 +35,7 @@ class _$CreateVendorDto extends CreateVendorDto {
     required this.verticalId,
     this.taxId,
     this.commissionRate,
+    this.phone,
   }) : super._();
   @override
   CreateVendorDto rebuild(void Function(CreateVendorDtoBuilder) updates) =>
@@ -51,7 +54,8 @@ class _$CreateVendorDto extends CreateVendorDto {
         descriptionAr == other.descriptionAr &&
         verticalId == other.verticalId &&
         taxId == other.taxId &&
-        commissionRate == other.commissionRate;
+        commissionRate == other.commissionRate &&
+        phone == other.phone;
   }
 
   @override
@@ -64,6 +68,7 @@ class _$CreateVendorDto extends CreateVendorDto {
     _$hash = $jc(_$hash, verticalId.hashCode);
     _$hash = $jc(_$hash, taxId.hashCode);
     _$hash = $jc(_$hash, commissionRate.hashCode);
+    _$hash = $jc(_$hash, phone.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -77,7 +82,8 @@ class _$CreateVendorDto extends CreateVendorDto {
           ..add('descriptionAr', descriptionAr)
           ..add('verticalId', verticalId)
           ..add('taxId', taxId)
-          ..add('commissionRate', commissionRate))
+          ..add('commissionRate', commissionRate)
+          ..add('phone', phone))
         .toString();
   }
 }
@@ -116,6 +122,10 @@ class CreateVendorDtoBuilder
   set commissionRate(num? commissionRate) =>
       _$this._commissionRate = commissionRate;
 
+  String? _phone;
+  String? get phone => _$this._phone;
+  set phone(String? phone) => _$this._phone = phone;
+
   CreateVendorDtoBuilder() {
     CreateVendorDto._defaults(this);
   }
@@ -130,6 +140,7 @@ class CreateVendorDtoBuilder
       _verticalId = $v.verticalId;
       _taxId = $v.taxId;
       _commissionRate = $v.commissionRate;
+      _phone = $v.phone;
       _$v = null;
     }
     return this;
@@ -167,6 +178,7 @@ class CreateVendorDtoBuilder
           ),
           taxId: taxId,
           commissionRate: commissionRate,
+          phone: phone,
         );
     replace(_$result);
     return _$result;

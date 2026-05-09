@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
+import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
 import 'package:otlob_admin/features/promotions/presentation/widgets/add_promotion_dialog.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
 
 class PromotionsScreen extends StatefulWidget {
   const PromotionsScreen({super.key});
@@ -17,24 +21,23 @@ class PromotionsScreen extends StatefulWidget {
 }
 
 class _PromotionsScreenState extends State<PromotionsScreen> {
-  List<dynamic> _promotions = [];
-  bool _isLoading = true;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
-    _fetchPromotions();
+    // Refresh every 30 seconds to catch auto-deactivated promotions
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (mounted) {
+        context.read<PromotionBloc>().add(FetchPromotions());
+      }
+    });
   }
 
-  Future<void> _fetchPromotions() async {
-    setState(() => _isLoading = true);
-    final result = await sl<VendorRepository>().getPromotions();
-    if (mounted) {
-      setState(() {
-        _promotions = result;
-        _isLoading = false;
-      });
-    }
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -43,73 +46,85 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
     final isMobile = size.width < 600;
     final l10n = AppLocalizations.of(context)!;
 
-    if (_isLoading) {
-      return const SizedBox(
-        height: 400,
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header Section with Glassmorphism-like feel
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.03),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppColors.primary.withOpacity(0.05)),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.promotions,
-                      style: TextStyle(
-                        fontSize: isMobile ? 24 : 32,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        letterSpacing: -1,
+    return BlocListener<PromotionBloc, PromotionState>(
+      listener: (context, state) {
+        if (state is PromotionError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+          );
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Section
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.03),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: AppColors.primary.withOpacity(0.05)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.promotions,
+                        style: TextStyle(
+                          fontSize: isMobile ? 24 : 32,
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          letterSpacing: -1,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.manageBannersAndOffers,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                        fontWeight: FontWeight.w500,
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.manageBannersAndOffers,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () => _showAddPromotionDialog(),
-                icon: const Icon(LucideIcons.plus, size: 18),
-                label: Text(l10n.addPromotion),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  elevation: 8,
-                  shadowColor: AppColors.primary.withOpacity(0.4),
+                ElevatedButton.icon(
+                  onPressed: () => _showAddPromotionDialog(context),
+                  icon: const Icon(LucideIcons.plus, size: 18),
+                  label: Text(l10n.addPromotion),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 8,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 32),
+          const SizedBox(height: 32),
 
-        // List Grid
-        _promotions.isEmpty
-            ? _buildEmptyState(l10n)
-            : GridView.builder(
+          // List Grid
+          BlocBuilder<PromotionBloc, PromotionState>(
+            builder: (context, state) {
+              if (state is PromotionLoading && state.promotions.isEmpty) {
+                return const SizedBox(
+                  height: 400,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              if (state.promotions.isEmpty) {
+                return _buildEmptyState(context, l10n);
+              }
+
+              return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -118,18 +133,21 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                   mainAxisSpacing: 24,
                   childAspectRatio: 1.7,
                 ),
-                itemCount: _promotions.length,
+                itemCount: state.promotions.length,
                 itemBuilder: (context, index) {
-                  final promo = _promotions[index];
-                  return _buildPromotionCard(promo, l10n);
+                  final promo = state.promotions[index];
+                  return _buildPromotionCard(context, promo, l10n);
                 },
-              ),
-        const SizedBox(height: 48),
-      ],
+              );
+            },
+          ),
+          const SizedBox(height: 48),
+        ],
+      ),
     );
   }
 
-  Widget _buildEmptyState(AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +180,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
     );
   }
 
-  Widget _buildPromotionCard(dynamic promo, AppLocalizations l10n) {
+  Widget _buildPromotionCard(BuildContext context, dynamic promo, AppLocalizations l10n) {
     final bool isActive = promo['isActive'] ?? true;
     final String type = promo['type'] ?? 'BANNER';
     final bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
@@ -268,13 +286,13 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                 children: [
                   _buildActionCircle(
                     icon: LucideIcons.edit3,
-                    onTap: () => _showAddPromotionDialog(promotion: promo),
+                    onTap: () => _showAddPromotionDialog(context, promotion: promo),
                   ),
                   const SizedBox(width: 10),
                   _buildActionCircle(
                     icon: LucideIcons.trash2,
                     color: AppColors.error,
-                    onTap: () => _confirmDelete(promo, l10n),
+                    onTap: () => _confirmDelete(context, promo, l10n),
                   ),
                 ],
               ),
@@ -319,40 +337,62 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
     );
   }
 
-  void _showAddPromotionDialog({dynamic promotion}) async {
+  void _showAddPromotionDialog(BuildContext context, {dynamic promotion}) async {
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (context) => AddPromotionDialog(promotion: promotion),
     );
 
-    if (result != null && mounted) {
-      bool success = false;
-      String? id;
+    if (result != null && context.mounted) {
+      final bloc = context.read<PromotionBloc>();
+      
+      try {
+        bool success = false;
+        String? id;
 
-      if (promotion != null) {
-        success = await sl<VendorRepository>().updatePromotion(promotion['id'], result);
-        id = promotion['id'];
-      } else {
-        id = await sl<VendorRepository>().createPromotion(result);
-        success = id != null;
-      }
+        if (promotion != null) {
+          success = await sl<VendorRepository>().updatePromotion(promotion['id'], result);
+          id = promotion['id'];
+        } else {
+          id = await sl<VendorRepository>().createPromotion(result);
+          success = id != null;
+        }
 
-      if (success && id != null && result['imageFile'] != null) {
-        final imageFile = result['imageFile'] as XFile;
-        final multipartFile = await dio.MultipartFile.fromFile(
-          imageFile.path,
-          filename: imageFile.name,
-        );
-        await sl<VendorRepository>().uploadPromotionImage(id, multipartFile);
-      }
+        if (success && id != null && result['imageFile'] != null) {
+          final imageFile = result['imageFile'] as XFile;
+          final multipartFile = await dio.MultipartFile.fromFile(
+            imageFile.path,
+            filename: imageFile.name,
+          );
+          await sl<VendorRepository>().uploadPromotionImage(id, multipartFile);
+        }
 
-      if (success) {
-        _fetchPromotions();
+        if (success && context.mounted) {
+          final message = promotion != null 
+              ? ErrorUtils.translate(context, 'common.success.resource_updated')
+              : ErrorUtils.translate(context, 'common.success.resource_created');
+              
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+              backgroundColor: AppColors.success,
+            ),
+          );
+          bloc.add(FetchPromotions());
+        }
+      } catch (e) {
+        if (context.mounted) {
+          final errorMessage = ErrorUtils.translate(context, e.toString());
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage), backgroundColor: AppColors.error),
+          );
+        }
       }
     }
   }
 
-  void _confirmDelete(dynamic promo, AppLocalizations l10n) {
+  void _confirmDelete(BuildContext context, dynamic promo, AppLocalizations l10n) {
+    final bloc = context.read<PromotionBloc>();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -364,9 +404,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           TextButton(
             onPressed: () async {
               final success = await sl<VendorRepository>().deletePromotion(promo['id']);
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.pop(context);
-                if (success) _fetchPromotions();
+                if (success) bloc.add(FetchPromotions());
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),

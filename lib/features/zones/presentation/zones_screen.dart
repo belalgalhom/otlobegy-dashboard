@@ -12,109 +12,112 @@ class ZonesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<ZoneBloc>()..add(FetchZones()),
-      child: BlocListener<ZoneBloc, ZoneState>(
-        listener: (context, state) {
-          if (state is ZoneOperationSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-            );
-          } else if (state is ZoneError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
-          }
-        },
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            bool isMobile = constraints.maxWidth < 600;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Stats Section
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
+    return BlocListener<ZoneBloc, ZoneState>(
+      listener: (context, state) {
+        if (state is ZoneOperationSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
+          );
+        } else if (state is ZoneError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+          );
+        }
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isMobile = constraints.maxWidth < 600;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Stats Section
+              BlocBuilder<ZoneBloc, ZoneState>(
+                builder: (context, state) {
+                  String total = '0';
+                  if (state is ZonesLoaded) total = state.total.toString();
+                  return Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      StatCard(
+                        title: AppLocalizations.of(context)!.activeZones,
+                        value: total,
+                        icon: LucideIcons.map,
+                        color: AppColors.primary,
+                        isMobile: isMobile,
+                      ),
+                      StatCard(
+                        title: AppLocalizations.of(context)!.busyZones,
+                        value: '0',
+                        icon: LucideIcons.activity,
+                        color: AppColors.warning,
+                        isMobile: isMobile,
+                      ),
+                      StatCard(
+                        title: AppLocalizations.of(context)!.deliveries,
+                        value: '0',
+                        icon: LucideIcons.navigation,
+                        color: AppColors.success,
+                        isMobile: isMobile,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              // Management Section
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StatCard(
-                      title: AppLocalizations.of(context)!.activeZones,
-                      value: '0',
-                      icon: LucideIcons.map,
-                      color: AppColors.primary,
-                      isMobile: isMobile,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            AppLocalizations.of(context)!.deliveryZones,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(LucideIcons.plus, size: 14),
+                          label: Text(AppLocalizations.of(context)!.addZone),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(100, 44),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
                     ),
-                    StatCard(
-                      title: AppLocalizations.of(context)!.busyZones,
-                      value: '0',
-                      icon: LucideIcons.activity,
-                      color: AppColors.warning,
-                      isMobile: isMobile,
-                    ),
-                    StatCard(
-                      title: AppLocalizations.of(context)!.deliveries,
-                      value: '0',
-                      icon: LucideIcons.navigation,
-                      color: AppColors.success,
-                      isMobile: isMobile,
+                    const SizedBox(height: 24),
+                    BlocBuilder<ZoneBloc, ZoneState>(
+                      builder: (context, state) {
+                        if (state is ZoneLoading) {
+                          return const Center(child: Padding(
+                            padding: EdgeInsets.all(40.0),
+                            child: CircularProgressIndicator(),
+                          ));
+                        } else if (state is ZonesLoaded) {
+                          return _buildZonesTable(state.zones, context);
+                        }
+                        return const SizedBox();
+                      },
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                // Management Section
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              AppLocalizations.of(context)!.deliveryZones,
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(LucideIcons.plus, size: 14),
-                            label: Text(AppLocalizations.of(context)!.addZone),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(100, 44),
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      BlocBuilder<ZoneBloc, ZoneState>(
-                        builder: (context, state) {
-                          if (state is ZoneLoading) {
-                            return const Center(child: Padding(
-                              padding: EdgeInsets.all(40.0),
-                              child: CircularProgressIndicator(),
-                            ));
-                          } else if (state is ZonesLoaded) {
-                            return _buildZonesTable(state.zones, context);
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

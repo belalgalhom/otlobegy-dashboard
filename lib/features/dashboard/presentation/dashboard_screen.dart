@@ -16,6 +16,7 @@ import 'package:otlob_admin/features/vendors/presentation/verticals_screen.dart'
 import 'package:otlob_admin/features/promotions/presentation/promotions_screen.dart';
 import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
 import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
+import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otlob_admin/features/auth/data/auth_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
@@ -33,6 +34,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
+  bool _isStatsExpanded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -43,6 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         BlocProvider(create: (context) => sl<VerticalBloc>()..add(FetchVerticals())),
         BlocProvider(create: (context) => sl<UserBloc>()..add(FetchUsers())),
         BlocProvider(create: (context) => sl<ZoneBloc>()..add(FetchZones())),
+        BlocProvider(create: (context) => sl<PromotionBloc>()..add(FetchPromotions())),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -70,17 +73,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               if (isMobile) const SizedBox(width: 8),
                               Expanded(
-                                  child: Text(
-                                    _getMenuTitle(context, _selectedIndex),
-                                    style: TextStyle(
-                                      fontSize: isMobile ? 20 : 28,
+                                child: Text(
+                                  _getMenuTitle(context, _selectedIndex),
+                                  style: TextStyle(
+                                    fontSize: isMobile ? 20 : 28,
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).colorScheme.onBackground,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(width: 8),
+
                               if (!isMobile) _buildSearchBar(),
                               if (!isMobile) const SizedBox(width: 16),
                               _buildHeaderAction(LucideIcons.bell),
@@ -304,6 +306,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildDashboardContent(bool isMobile) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -311,25 +315,117 @@ class _DashboardScreenState extends State<DashboardScreen> {
           spacing: 16,
           runSpacing: 16,
           children: [
+            // Always show these core stats
             BlocBuilder<VendorBloc, VendorState>(
               builder: (context, state) {
                 String count = '...';
                 if (state is VendorsLoaded) count = state.total.toString();
-                return StatCard(title: AppLocalizations.of(context)!.totalVendors, value: count, icon: LucideIcons.store, color: AppColors.primary, isMobile: isMobile);
+                return StatCard(
+                  title: l10n.totalVendors,
+                  value: count,
+                  icon: LucideIcons.store,
+                  color: AppColors.primary,
+                  isMobile: isMobile,
+                  onTap: () => setState(() => _selectedIndex = 2),
+                );
               },
             ),
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 String count = '...';
                 if (state is UsersLoaded) count = state.total.toString();
-                return StatCard(title: AppLocalizations.of(context)!.systemUsers, value: count, icon: LucideIcons.users, color: AppColors.info, isMobile: isMobile);
+                return StatCard(
+                  title: l10n.systemUsers,
+                  value: count,
+                  icon: LucideIcons.users,
+                  color: AppColors.info,
+                  isMobile: isMobile,
+                  onTap: () => setState(() => _selectedIndex = 4),
+                );
               },
             ),
-            StatCard(title: AppLocalizations.of(context)!.revenue, value: 'N/A', icon: LucideIcons.dollarSign, color: AppColors.success, isMobile: isMobile),
-            StatCard(title: AppLocalizations.of(context)!.orders, value: 'N/A', icon: LucideIcons.shoppingBag, color: AppColors.warning, isMobile: isMobile),
+            StatCard(
+              title: l10n.orders,
+              value: '0',
+              icon: LucideIcons.shoppingBag,
+              color: AppColors.warning,
+              isMobile: isMobile,
+              onTap: () => setState(() => _selectedIndex = 1),
+            ),
+            StatCard(
+              title: l10n.drivers,
+              value: '0',
+              icon: LucideIcons.truck,
+              color: AppColors.success,
+              isMobile: isMobile,
+              onTap: () => setState(() => _selectedIndex = 3),
+            ),
+
+            if (_isStatsExpanded) ...[
+              StatCard(
+                title: l10n.tickets,
+                value: '0',
+                icon: LucideIcons.helpCircle,
+                color: AppColors.error,
+                isMobile: isMobile,
+                onTap: () => setState(() => _selectedIndex = 5),
+              ),
+              BlocBuilder<ZoneBloc, ZoneState>(
+                builder: (context, state) {
+                  String count = '0';
+                  if (state is ZonesLoaded) count = state.total.toString();
+                  return StatCard(
+                    title: l10n.deliveryZones,
+                    value: count,
+                    icon: LucideIcons.map,
+                    color: Colors.teal,
+                    isMobile: isMobile,
+                    onTap: () => setState(() => _selectedIndex = 8),
+                  );
+                },
+              ),
+              BlocBuilder<VerticalBloc, VerticalState>(
+                builder: (context, state) {
+                  String count = '0';
+                  if (state is VerticalsLoaded) count = state.verticals.length.toString();
+                  return StatCard(
+                    title: l10n.businessTypes,
+                    value: count,
+                    icon: LucideIcons.layers,
+                    color: Colors.purple,
+                    isMobile: isMobile,
+                    onTap: () => setState(() => _selectedIndex = 9),
+                  );
+                },
+              ),
+              BlocBuilder<PromotionBloc, PromotionState>(
+                builder: (context, state) {
+                  String count = '0';
+                  if (state is PromotionLoaded) count = state.total.toString();
+                  return StatCard(
+                    title: l10n.promotions,
+                    value: count,
+                    icon: LucideIcons.megaphone,
+                    color: Colors.orange,
+                    isMobile: isMobile,
+                    onTap: () => setState(() => _selectedIndex = 10),
+                  );
+                },
+              ),
+            ],
           ],
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 16),
+        TextButton.icon(
+          onPressed: () => setState(() => _isStatsExpanded = !_isStatsExpanded),
+          icon: Icon(_isStatsExpanded ? LucideIcons.chevronUp : LucideIcons.chevronDown, size: 16),
+          label: Text(_isStatsExpanded ? l10n.showLess : l10n.showMore),
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.primary,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+        ),
+        const SizedBox(height: 24),
         if (!isMobile)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,

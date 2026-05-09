@@ -48,14 +48,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (success) {
           emit(Authenticated());
         } else {
-          emit(AuthError('Invalid credentials'));
+          emit(AuthError('auth.error.invalid_credentials'));
         }
+
       } catch (e) {
         if (e == 'ACCESS_DENIED') {
-          emit(AuthError('Access Denied: You do not have admin permissions.'));
+          emit(AuthError('common.error.forbidden'));
         } else {
-          emit(AuthError('An error occurred during login'));
+          emit(AuthError(e.toString()));
         }
+
       }
     });
 

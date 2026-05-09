@@ -1298,6 +1298,12 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete {name}? This action cannot be undone.'**
   String deleteUserConfirm(String name);
 
+  /// No description provided for @call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get call;
+
   /// No description provided for @activeZones.
   ///
   /// In en, this message translates to:
@@ -1453,6 +1459,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Title (AR)'**
   String get titleAr;
+
+  /// No description provided for @common_error_validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation Error: Please check your input.'**
+  String get common_error_validation;
+
+  /// No description provided for @common_error_server_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Server Error: Please try again later.'**
+  String get common_error_server_error;
+
+  /// No description provided for @common_error_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred.'**
+  String get common_error_unknown;
+
+  /// No description provided for @common_error_forbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Access Denied: You do not have permission.'**
+  String get common_error_forbidden;
+
+  /// No description provided for @common_error_unauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized: Please log in again.'**
+  String get common_error_unauthorized;
+
+  /// No description provided for @common_error_too_many_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please slow down.'**
+  String get common_error_too_many_requests;
+
+  /// No description provided for @common_success_operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation completed successfully.'**
+  String get common_success_operation;
+
+  /// No description provided for @common_success_resource_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created successfully.'**
+  String get common_success_resource_created;
+
+  /// No description provided for @common_success_resource_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated successfully.'**
+  String get common_success_resource_updated;
+
+  /// No description provided for @common_success_resource_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted successfully.'**
+  String get common_success_resource_deleted;
+
+  /// No description provided for @auth_error_user_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'User already exists with this email or phone.'**
+  String get auth_error_user_exists;
+
+  /// No description provided for @auth_error_invalid_credentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get auth_error_invalid_credentials;
+
+  /// No description provided for @auth_error_unverified.
+  ///
+  /// In en, this message translates to:
+  /// **'Account not verified.'**
+  String get auth_error_unverified;
+
+  /// No description provided for @auth_error_banned.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been banned.'**
+  String get auth_error_banned;
+
+  /// No description provided for @auth_error_user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found.'**
+  String get auth_error_user_not_found;
+
+  /// No description provided for @auth_error_otp_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid OTP code.'**
+  String get auth_error_otp_invalid;
+
+  /// No description provided for @auth_error_otp_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP code has expired.'**
+  String get auth_error_otp_expired;
+
+  /// No description provided for @auth_error_session_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please login again.'**
+  String get auth_error_session_expired;
+
+  /// No description provided for @user_error_user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found.'**
+  String get user_error_user_not_found;
+
+  /// No description provided for @user_error_profile_update_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile.'**
+  String get user_error_profile_update_failed;
+
+  /// No description provided for @user_error_avatar_upload_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to upload avatar.'**
+  String get user_error_avatar_upload_failed;
+
+  /// No description provided for @user_error_invalid_password.
+  ///
+  /// In en, this message translates to:
+  /// **'The current password you entered is incorrect.'**
+  String get user_error_invalid_password;
+
+  /// No description provided for @user_error_password_same_as_old.
+  ///
+  /// In en, this message translates to:
+  /// **'New password cannot be the same as the old one.'**
+  String get user_error_password_same_as_old;
+
+  /// No description provided for @vendor_error_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Vendor not found.'**
+  String get vendor_error_not_found;
+
+  /// No description provided for @vendor_error_slug_taken.
+  ///
+  /// In en, this message translates to:
+  /// **'This store name or slug is already taken.'**
+  String get vendor_error_slug_taken;
+
+  /// No description provided for @vendor_branch_error_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch not found.'**
+  String get vendor_branch_error_not_found;
+
+  /// No description provided for @menu_category_error_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Category not found.'**
+  String get menu_category_error_not_found;
+
+  /// No description provided for @product_error_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found.'**
+  String get product_error_not_found;
+
+  /// No description provided for @product_error_sku_taken.
+  ///
+  /// In en, this message translates to:
+  /// **'SKU already exists.'**
+  String get product_error_sku_taken;
+
+  /// No description provided for @vendor_vertical_error_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Business type not found.'**
+  String get vendor_vertical_error_not_found;
+
+  /// No description provided for @showMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get showMore;
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get showLess;
+
+  /// No description provided for @invalidUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid URL'**
+  String get invalidUrl;
+
+  /// No description provided for @imageRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an image'**
+  String get imageRequired;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// No description provided for @scheduleOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule (Optional)'**
+  String get scheduleOptional;
 }
 
 class _AppLocalizationsDelegate

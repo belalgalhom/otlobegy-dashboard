@@ -8,6 +8,9 @@ import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:otlob_admin/core/utils/image_utils.dart';
+
 
 class ProductsScreen extends StatefulWidget {
   final String vendorId;
@@ -197,7 +200,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 child: product['imageUrl'] != null
                     ? CachedNetworkImage(
-                        imageUrl: _formatImageUrl(product['imageUrl']),
+                        imageUrl: ImageUtils.formatImageUrl(product['imageUrl']),
                         fit: BoxFit.cover,
                         placeholder: (context, url) => const Center(
                           child: SizedBox(
@@ -331,35 +334,48 @@ class _ProductsScreenState extends State<ProductsScreen> {
       bool success = false;
       String? productId;
       
-      if (product != null) {
-        success = await sl<VendorRepository>().updateProduct(widget.vendorId, product['id'], result);
-        productId = product['id'];
-      } else {
-        productId = await sl<VendorRepository>().createProduct(result);
-        success = productId != null;
-      }
-      
-      if (success && productId != null && productId != 'success' && result['imageFile'] != null) {
-        final imageFile = result['imageFile'] as XFile;
-        final multipartFile = await dio.MultipartFile.fromFile(
-          imageFile.path,
-          filename: imageFile.name,
-        );
-        await sl<VendorRepository>().uploadProductImage(widget.vendorId, productId, multipartFile);
-      }
-      
-      if (success) {
-        _fetchProducts();
+      try {
+        if (product != null) {
+          success = await sl<VendorRepository>().updateProduct(widget.vendorId, product['id'], result);
+          productId = product['id'];
+        } else {
+          productId = await sl<VendorRepository>().createProduct(result);
+          success = productId != null;
+        }
+        
+        if (success && productId != null && productId != 'success' && result['imageFile'] != null) {
+          final imageFile = result['imageFile'] as XFile;
+          final multipartFile = await dio.MultipartFile.fromFile(
+            imageFile.path,
+            filename: imageFile.name,
+          );
+          await sl<VendorRepository>().uploadProductImage(widget.vendorId, productId, multipartFile);
+        }
+        
+        if (success) {
+          _fetchProducts();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(ErrorUtils.translate(context, product != null ? 'common.success.resource_updated' : 'common.success.resource_created')),
+                backgroundColor: AppColors.success,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        }
+      } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(product != null ? AppLocalizations.of(context)!.productUpdated : AppLocalizations.of(context)!.productAdded),
-              backgroundColor: AppColors.success,
+              content: Text(ErrorUtils.translate(context, e.toString())),
+              backgroundColor: AppColors.error,
               behavior: SnackBarBehavior.floating,
             ),
           );
         }
       }
+
     }
   }
 
@@ -404,20 +420,33 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        final success = await sl<VendorRepository>().deleteProduct(widget.vendorId, product['id']);
-                        if (mounted) {
-                          Navigator.pop(context);
-                          if (success) {
-                            _fetchProducts();
+                        try {
+                          final success = await sl<VendorRepository>().deleteProduct(widget.vendorId, product['id']);
+                          if (mounted) {
+                            Navigator.pop(context);
+                            if (success) {
+                              _fetchProducts();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(ErrorUtils.translate(context, 'common.success.resource_deleted')),
+                                  backgroundColor: AppColors.success,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(AppLocalizations.of(context)!.productDeleted),
-                                backgroundColor: AppColors.success,
+                                content: Text(ErrorUtils.translate(context, e.toString())),
+                                backgroundColor: AppColors.error,
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
                           }
                         }
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.error,
@@ -437,9 +466,4 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  String _formatImageUrl(String? url) {
-    if (url == null || url.isEmpty) return '';
-    if (url.startsWith('http')) return url;
-    return 'https://api.otlob-egy.online$url';
-  }
 }

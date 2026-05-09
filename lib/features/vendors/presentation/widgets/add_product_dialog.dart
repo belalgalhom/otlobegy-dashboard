@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
@@ -42,7 +43,6 @@ class _AddProductDialogState extends State<AddProductDialog> {
   String? _selectedCategoryId;
   bool _isLoadingCategories = true;
   XFile? _imageFile;
-  final ImagePicker _picker = ImagePicker();
   bool _isPickingImage = false;
 
   @override
@@ -83,14 +83,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
     setState(() => _isPickingImage = true);
     
     try {
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
       );
-      if (image != null) {
-        setState(() => _imageFile = image);
+      
+      if (result != null && result.files.single.path != null) {
+        setState(() => _imageFile = XFile(result.files.single.path!));
       }
     } catch (e) {
       print('Error picking image: $e');

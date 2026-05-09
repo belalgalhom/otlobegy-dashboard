@@ -8,6 +8,8 @@ import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/localization/language_cubit.dart';
 import 'package:otlob_admin/core/theme/theme_cubit.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,9 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
             context.go('/dashboard');
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
+              SnackBar(content: Text(ErrorUtils.translate(context, state.message)), backgroundColor: AppColors.error),
             );
           }
+
         },
         child: Scaffold(
           body: Stack(

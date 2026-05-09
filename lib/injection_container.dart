@@ -16,6 +16,7 @@ import 'package:otlob_admin/core/localization/language_cubit.dart';
 import 'package:otlob_admin/core/theme/theme_cubit.dart';
 import 'package:otlob_admin/features/settings/data/settings_repository.dart';
 import 'package:otlob_admin/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -46,6 +47,7 @@ Future<void> init() async {
   sl.registerFactory(() => ZoneBloc(sl()));
   sl.registerFactory(() => VerticalBloc(sl()));
   sl.registerFactory(() => SettingsBloc(sl()));
+  sl.registerFactory(() => PromotionBloc(sl()));
   sl.registerLazySingleton(() => LanguageCubit(sl()));
   sl.registerLazySingleton(() => ThemeCubit(sl()));
 }

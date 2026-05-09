@@ -7,6 +7,8 @@ import 'package:otlob_admin/features/auth/data/auth_repository.dart';
 import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/utils/phone_utils.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -31,134 +33,131 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<UserBloc>()..add(FetchUsers(limit: 10)),
-      child: BlocListener<UserBloc, UserState>(
-        listener: (context, state) {
-          if (state is UserOperationSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
-            );
-          } else if (state is UserError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
-            );
-          }
-        },
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            bool isMobile = constraints.maxWidth < 600;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Real-time Stats Header
-                BlocBuilder<UserBloc, UserState>(
-                  buildWhen: (previous, current) => current is! UserError || previous is UserInitial,
-                  builder: (context, state) {
-                    int totalUsers = 0;
-                    int totalAdmins = 0;
-                    int bannedUsers = 0;
+    return BlocListener<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state is UserOperationSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(ErrorUtils.translate(context, state.message)), backgroundColor: AppColors.success),
+          );
+        } else if (state is UserError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(ErrorUtils.translate(context, state.message)), backgroundColor: AppColors.error),
+          );
+        }
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isMobile = constraints.maxWidth < 600;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Real-time Stats Header
+              BlocBuilder<UserBloc, UserState>(
+                buildWhen: (previous, current) => current is! UserError || previous is UserInitial,
+                builder: (context, state) {
+                  int totalUsers = 0;
+                  int totalAdmins = 0;
+                  int bannedUsers = 0;
 
-                    if (state is UsersLoaded) {
-                      totalUsers = state.total;
-                      totalAdmins = state.users.where((u) => u['role'].toString().contains('ADMIN')).length;
-                      bannedUsers = state.users.where((u) => u['isBanned'] == true).length;
-                    }
-                    
-                    return Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: [
-                        StatCard(
-                          title: AppLocalizations.of(context)!.totalUsers,
-                          value: totalUsers.toString(),
-                          icon: LucideIcons.users,
-                          color: AppColors.primary,
-                          isMobile: isMobile,
-                        ),
-                        StatCard(
-                          title: AppLocalizations.of(context)!.platformAdmins,
-                          value: totalAdmins.toString(),
-                          icon: LucideIcons.shieldCheck,
-                          color: AppColors.accent,
-                          isMobile: isMobile,
-                        ),
-                        StatCard(
-                          title: AppLocalizations.of(context)!.activeAccounts,
-                          value: (totalUsers - bannedUsers).toString(),
-                          icon: LucideIcons.checkCircle,
-                          color: AppColors.success,
-                          isMobile: isMobile,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-                // Management Section
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  if (state is UsersLoaded) {
+                    totalUsers = state.total;
+                    totalAdmins = state.users.where((u) => u['role'].toString().contains('ADMIN')).length;
+                    bannedUsers = state.users.where((u) => u['isBanned'] == true).length;
+                  }
+                  
+                  return Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              AppLocalizations.of(context)!.platformUsers,
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () => _showUserFormDialog(context),
-                            icon: const Icon(LucideIcons.userPlus, size: 14),
-                            label: Text(AppLocalizations.of(context)!.addUser),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(110, 44),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                          ),
-                        ],
+                      StatCard(
+                        title: AppLocalizations.of(context)!.totalUsers,
+                        value: totalUsers.toString(),
+                        icon: LucideIcons.users,
+                        color: AppColors.primary,
+                        isMobile: isMobile,
                       ),
-                      const SizedBox(height: 24),
-                      BlocBuilder<UserBloc, UserState>(
-                        buildWhen: (previous, current) => current is! UserError || previous is UserInitial,
-                        builder: (context, state) {
-                          if (state is UserLoading) {
-                            return const Center(child: Padding(
-                              padding: EdgeInsets.all(60.0),
-                              child: CircularProgressIndicator(),
-                            ));
-                          } else if (state is UsersLoaded) {
-                            return Column(
-                              children: [
-                                if (constraints.maxWidth < 900)
-                                  _buildUserList(state.users, context)
-                                else
-                                  _buildUserTable(state.users, context),
-                                const SizedBox(height: 24),
-                                _buildPagination(state),
-                              ],
-                            );
-                          } else if (state is UserError) {
-                            return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
-                          }
-                          return const SizedBox();
-                        },
+                      StatCard(
+                        title: AppLocalizations.of(context)!.platformAdmins,
+                        value: totalAdmins.toString(),
+                        icon: LucideIcons.shieldCheck,
+                        color: AppColors.accent,
+                        isMobile: isMobile,
+                      ),
+                      StatCard(
+                        title: AppLocalizations.of(context)!.activeAccounts,
+                        value: (totalUsers - bannedUsers).toString(),
+                        icon: LucideIcons.checkCircle,
+                        color: AppColors.success,
+                        isMobile: isMobile,
                       ),
                     ],
-                  ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              // Management Section
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ],
-            );
-          },
-        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            AppLocalizations.of(context)!.platformUsers,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                          ),
+                        ),
+
+                        ElevatedButton.icon(
+                          onPressed: () => _showUserFormDialog(context),
+                          icon: const Icon(LucideIcons.userPlus, size: 14),
+                          label: Text(AppLocalizations.of(context)!.addUser),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(110, 44),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    BlocBuilder<UserBloc, UserState>(
+                      buildWhen: (previous, current) => current is! UserError || previous is UserInitial,
+                      builder: (context, state) {
+                        if (state is UserLoading) {
+                          return const Center(child: Padding(
+                            padding: EdgeInsets.all(60.0),
+                            child: CircularProgressIndicator(),
+                          ));
+                        } else if (state is UsersLoaded) {
+                          return Column(
+                            children: [
+                              if (constraints.maxWidth < 900)
+                                _buildUserList(state.users, context)
+                              else
+                                _buildUserTable(state.users, context),
+                              const SizedBox(height: 24),
+                              _buildPagination(state),
+                            ],
+                          );
+                        } else if (state is UserError) {
+                          return Center(child: Text(state.message, style: const TextStyle(color: AppColors.error)));
+                        }
+                        return const SizedBox();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -450,8 +449,9 @@ class _UsersScreenState extends State<UsersScreen> {
                               name: nameController.text,
                               email: emailController.text,
                               password: passwordController.text,
-                              phone: phoneController.text,
+                              phone: PhoneUtils.normalize(phoneController.text),
                               role: selectedRole,
+
                             ));
                           } else {
                             if (user['id'] != null) {
@@ -459,7 +459,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 id: user['id'],
                                 name: nameController.text,
                                 email: emailController.text,
-                                phone: phoneController.text,
+                                phone: PhoneUtils.normalize(phoneController.text),
                                 role: selectedRole,
                               ));
                             }

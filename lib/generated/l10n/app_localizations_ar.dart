@@ -630,6 +630,9 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get call => 'اتصال';
+
+  @override
   String get activeZones => 'مناطق نشطة';
 
   @override
@@ -709,4 +712,124 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get titleAr => 'العنوان (بالعربي)';
+
+  @override
+  String get common_error_validation =>
+      'خطأ في التحقق: يرجى التأكد من البيانات المدخلة.';
+
+  @override
+  String get common_error_server_error =>
+      'خطأ في الخادم: يرجى المحاولة مرة أخرى لاحقاً.';
+
+  @override
+  String get common_error_unknown => 'حدث خطأ غير معروف.';
+
+  @override
+  String get common_error_forbidden => 'تم رفض الوصول: ليس لديك صلاحية.';
+
+  @override
+  String get common_error_unauthorized =>
+      'غير مصرح: يرجى تسجيل الدخول مرة أخرى.';
+
+  @override
+  String get common_error_too_many_requests =>
+      'طلبات كثيرة جداً. يرجى الانتظار قليلاً.';
+
+  @override
+  String get common_success_operation => 'تمت العملية بنجاح.';
+
+  @override
+  String get common_success_resource_created => 'تم الإنشاء بنجاح.';
+
+  @override
+  String get common_success_resource_updated => 'تم التحديث بنجاح.';
+
+  @override
+  String get common_success_resource_deleted => 'تم الحذف بنجاح.';
+
+  @override
+  String get auth_error_user_exists =>
+      'المستخدم موجود بالفعل بهذا البريد أو الهاتف.';
+
+  @override
+  String get auth_error_invalid_credentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get auth_error_unverified => 'الحساب غير مفعل.';
+
+  @override
+  String get auth_error_banned => 'لقد تم حظر حسابك.';
+
+  @override
+  String get auth_error_user_not_found => 'المستخدم غير موجود.';
+
+  @override
+  String get auth_error_otp_invalid => 'كود التحقق غير صحيح.';
+
+  @override
+  String get auth_error_otp_expired => 'انتهت صلاحية كود التحقق.';
+
+  @override
+  String get auth_error_session_expired =>
+      'انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.';
+
+  @override
+  String get user_error_user_not_found => 'المستخدم غير موجود.';
+
+  @override
+  String get user_error_profile_update_failed => 'فشل تحديث الملف الشخصي.';
+
+  @override
+  String get user_error_avatar_upload_failed => 'فشل رفع الصورة الشخصية.';
+
+  @override
+  String get user_error_invalid_password =>
+      'كلمة المرور الحالية التي أدخلتها غير صحيحة.';
+
+  @override
+  String get user_error_password_same_as_old =>
+      'لا يمكن أن تكون كلمة المرور الجديدة هي نفسها القديمة.';
+
+  @override
+  String get vendor_error_not_found => 'التاجر غير موجود.';
+
+  @override
+  String get vendor_error_slug_taken => 'اسم المتجر أو الرابط مستخدم بالفعل.';
+
+  @override
+  String get vendor_branch_error_not_found => 'الفرع غير موجود.';
+
+  @override
+  String get menu_category_error_not_found => 'التصنيف غير موجود.';
+
+  @override
+  String get product_error_not_found => 'المنتج غير موجود.';
+
+  @override
+  String get product_error_sku_taken => 'رمز التخزين (SKU) موجود بالفعل.';
+
+  @override
+  String get vendor_vertical_error_not_found => 'نوع العمل غير موجود.';
+
+  @override
+  String get showMore => 'عرض المزيد';
+
+  @override
+  String get showLess => 'عرض أقل';
+
+  @override
+  String get invalidUrl => 'يرجى إدخال رابط صحيح';
+
+  @override
+  String get imageRequired => 'يرجى اختيار صورة';
+
+  @override
+  String get startDate => 'تاريخ البدء';
+
+  @override
+  String get endDate => 'تاريخ الانتهاء';
+
+  @override
+  String get scheduleOptional => 'الجدول الزمني (اختياري)';
 }

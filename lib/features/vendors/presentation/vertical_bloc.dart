@@ -77,14 +77,16 @@ class VerticalBloc extends Bloc<VerticalEvent, VerticalState> {
       try {
         final result = await _repository.createVertical(event.data);
         if (result != null) {
-          emit(VerticalActionSuccess('Business Type created successfully'));
+          emit(VerticalActionSuccess('common.success.resource_created'));
           add(FetchVerticals());
+
         } else {
           emit(VerticalError('Failed to create business type'));
         }
       } catch (e) {
-        emit(VerticalError('An error occurred while creating business type'));
+        emit(VerticalError(e.toString()));
       }
+
     });
 
     on<UpdateVertical>((event, emit) async {
@@ -92,14 +94,16 @@ class VerticalBloc extends Bloc<VerticalEvent, VerticalState> {
       try {
         final success = await _repository.updateVertical(event.id, event.data);
         if (success) {
-          emit(VerticalActionSuccess('Business Type updated successfully'));
+          emit(VerticalActionSuccess('common.success.resource_updated'));
           add(FetchVerticals());
+
         } else {
           emit(VerticalError('Failed to update business type'));
         }
       } catch (e) {
-        emit(VerticalError('An error occurred while updating business type'));
+        emit(VerticalError(e.toString()));
       }
+
     });
 
     on<DeleteVertical>((event, emit) async {
@@ -107,14 +111,16 @@ class VerticalBloc extends Bloc<VerticalEvent, VerticalState> {
       try {
         final success = await _repository.deleteVertical(event.id);
         if (success) {
-          emit(VerticalActionSuccess('Business Type deleted successfully'));
+          emit(VerticalActionSuccess('common.success.resource_deleted'));
           add(FetchVerticals());
+
         } else {
           emit(VerticalError('Failed to delete business type'));
         }
       } catch (e) {
-        emit(VerticalError('An error occurred while deleting business type'));
+        emit(VerticalError(e.toString()));
       }
+
     });
   }
 }

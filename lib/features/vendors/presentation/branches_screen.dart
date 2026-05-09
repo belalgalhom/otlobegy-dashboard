@@ -4,6 +4,10 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/core/utils/phone_utils.dart';
+import 'package:otlob_admin/core/utils/error_utils.dart';
+
+
 
 class BranchesScreen extends StatefulWidget {
   final String vendorId;
@@ -326,15 +330,36 @@ class _BranchesScreenState extends State<BranchesScreen> {
                             'name': nameController.text,
                             'nameAr': nameArController.text,
                             'address': addressController.text,
-                            'phoneNumber': phoneController.text,
+                            'phoneNumber': PhoneUtils.normalize(phoneController.text),
                           };
-                          bool success;
-                          if (isEdit) {
-                            success = await sl<VendorRepository>().updateBranch(widget.vendorId, branch['id'], data);
-                          } else {
-                            success = await sl<VendorRepository>().createBranch(widget.vendorId, data);
+
+                          try {
+                            bool success;
+                            if (isEdit) {
+                              success = await sl<VendorRepository>().updateBranch(widget.vendorId, branch['id'], data);
+                            } else {
+                              success = await sl<VendorRepository>().createBranch(widget.vendorId, data);
+                            }
+                            if (mounted) {
+                              Navigator.pop(context, success);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(ErrorUtils.translate(context, isEdit ? 'common.success.resource_updated' : 'common.success.resource_created')),
+                                  backgroundColor: AppColors.success,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(ErrorUtils.translate(context, e.toString())),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                            }
                           }
-                          if (mounted) Navigator.pop(context, success);
+
                         },
                         child: Text(isEdit ? AppLocalizations.of(context)!.update : AppLocalizations.of(context)!.create),
                       ),
@@ -404,11 +429,31 @@ class _BranchesScreenState extends State<BranchesScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        final success = await sl<VendorRepository>().deleteBranch(widget.vendorId, branch['id']);
-                        if (mounted) {
-                          Navigator.pop(context);
-                          if (success) _fetchBranches();
+                        try {
+                          final success = await sl<VendorRepository>().deleteBranch(widget.vendorId, branch['id']);
+                          if (mounted) {
+                            Navigator.pop(context);
+                            if (success) {
+                              _fetchBranches();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(ErrorUtils.translate(context, 'common.success.resource_deleted')),
+                                  backgroundColor: AppColors.success,
+                                ),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(ErrorUtils.translate(context, e.toString())),
+                                backgroundColor: AppColors.error,
+                              ),
+                            );
+                          }
                         }
+
                       },
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
                       child: Text(AppLocalizations.of(context)!.delete),

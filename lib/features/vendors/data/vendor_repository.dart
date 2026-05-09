@@ -189,6 +189,7 @@ class VendorRepository {
         ..verticalId = data['verticalId'] ?? ''
         ..taxId = data['taxId'] ?? ''
         ..commissionRate = data['commissionRate'] ?? 10
+        ..phone = data['phone']
       );
       final response = await _apiClient.getVendorsCoreManagementApi().vendorsControllerCreate(createVendorDto: dto);
       
@@ -214,13 +215,13 @@ class VendorRepository {
       }
       return true;
     } catch (e) {
-      if (e is dio.DioException) {
-        print('VendorRepository createVendor Error: ${e.response?.statusCode} - ${e.response?.data}');
-      } else {
-        print('VendorRepository createVendor Error: $e');
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to create vendor';
       }
-      return false;
+      rethrow;
     }
+
   }
 
   Future<bool> updateVendor(String id, Map<String, dynamic> data) async {
@@ -233,6 +234,7 @@ class VendorRepository {
         ..verticalId = data['verticalId']
         ..taxId = data['taxId']
         ..commissionRate = data['commissionRate']
+        ..phone = data['phone']
       );
       await _apiClient.getVendorsCoreManagementApi().vendorsControllerUpdate(vendorId: id, updateVendorDto: dto);
       
@@ -250,13 +252,13 @@ class VendorRepository {
       }
       return true;
     } catch (e) {
-      if (e is dio.DioException) {
-        print('VendorRepository updateVendor Error: ${e.response?.statusCode} - ${e.response?.data}');
-      } else {
-        print('VendorRepository updateVendor Error: $e');
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update vendor';
       }
-      return false;
+      rethrow;
     }
+
   }
 
   Future<bool> updateVendorStatus(String id, String status) async {
@@ -267,9 +269,13 @@ class VendorRepository {
       await _apiClient.getVendorsCoreManagementApi().vendorsControllerUpdateStatus(vendorId: id, updateVendorStatusDto: dto);
       return true;
     } catch (e) {
-      print('VendorRepository updateVendorStatus Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update status';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> deleteVendor(String id) async {
@@ -277,9 +283,13 @@ class VendorRepository {
       await _apiClient.getVendorsCoreManagementApi().vendorsControllerRemove(vendorId: id);
       return true;
     } catch (e) {
-      print('VendorRepository deleteVendor Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to delete vendor';
+      }
+      rethrow;
     }
+
   }
 
   Future<String?> createProduct(Map<String, dynamic> data) async {
@@ -315,13 +325,13 @@ class VendorRepository {
       print('VendorRepository: Product created successfully. ID: $id');
       return id ?? 'success';
     } catch (e) {
-      if (e is dio.DioException) {
-        print('VendorRepository createProduct Error: ${e.response?.statusCode} - ${e.response?.data}');
-      } else {
-        print('VendorRepository createProduct Error: $e');
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to add product';
       }
-      return null;
+      rethrow;
     }
+
   }
 
   Future<PaginatedResult<dynamic>> getProducts(String vendorId, {int page = 1, int limit = 20, String? search}) async {
@@ -370,9 +380,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository updateProduct Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update product';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> deleteProduct(String vendorId, String productId) async {
@@ -383,9 +397,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository deleteProduct Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to delete product';
+      }
+      rethrow;
     }
+
   }
 
   Future<List<dynamic>> getMenuCategories(String vendorId) async {
@@ -418,9 +436,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository createMenuCategory Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to create menu category';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> updateMenuCategory(String vendorId, String categoryId, Map<String, dynamic> data) async {
@@ -439,9 +461,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository updateMenuCategory Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update menu category';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> deleteMenuCategory(String vendorId, String categoryId) async {
@@ -452,9 +478,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository deleteMenuCategory Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to delete menu category';
+      }
+      rethrow;
     }
+
   }
 
   Future<List<dynamic>> getBranches(String vendorId) async {
@@ -488,9 +518,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository createBranch Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to create branch';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> updateBranch(String vendorId, String branchId, Map<String, dynamic> data) async {
@@ -509,9 +543,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository updateBranch Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update branch';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> deleteBranch(String vendorId, String branchId) async {
@@ -522,9 +560,13 @@ class VendorRepository {
       );
       return true;
     } catch (e) {
-      print('VendorRepository deleteBranch Error: $e');
-      return false;
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to delete branch';
+      }
+      rethrow;
     }
+
   }
 
   Future<bool> uploadProductImage(String vendorId, String productId, dio.MultipartFile file) async {
@@ -569,6 +611,8 @@ class VendorRepository {
         'externalUrl': data['externalUrl'],
         'isActive': data['isActive'] ?? true,
         'sortOrder': data['sortOrder'] ?? 0,
+        'startDate': data['startDate'],
+        'endDate': data['endDate'],
       });
       
       final resData = response.data;
@@ -577,8 +621,12 @@ class VendorRepository {
       }
       return 'success';
     } catch (e) {
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to create promotion';
+      }
       print('VendorRepository createPromotion Error: $e');
-      return null;
+      rethrow;
     }
   }
 
@@ -595,11 +643,17 @@ class VendorRepository {
         'externalUrl': data['externalUrl'],
         'isActive': data['isActive'],
         'sortOrder': data['sortOrder'],
+        'startDate': data['startDate'],
+        'endDate': data['endDate'],
       });
       return true;
     } catch (e) {
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update promotion';
+      }
       print('VendorRepository updatePromotion Error: $e');
-      return false;
+      rethrow;
     }
   }
 

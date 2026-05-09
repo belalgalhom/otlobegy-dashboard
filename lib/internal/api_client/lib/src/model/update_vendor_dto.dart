@@ -41,6 +41,9 @@ abstract class UpdateVendorDto implements Built<UpdateVendorDto, UpdateVendorDto
   @BuiltValueField(wireName: r'commissionRate')
   num? get commissionRate;
 
+  @BuiltValueField(wireName: r'phone')
+  String? get phone;
+
   UpdateVendorDto._();
 
   factory UpdateVendorDto([void updates(UpdateVendorDtoBuilder b)]) = _$UpdateVendorDto;
@@ -111,6 +114,13 @@ class _$UpdateVendorDtoSerializer implements PrimitiveSerializer<UpdateVendorDto
       yield serializers.serialize(
         object.commissionRate,
         specifiedType: const FullType(num),
+      );
+    }
+    if (object.phone != null) {
+      yield r'phone';
+      yield serializers.serialize(
+        object.phone,
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -184,6 +194,13 @@ class _$UpdateVendorDtoSerializer implements PrimitiveSerializer<UpdateVendorDto
             specifiedType: const FullType(num),
           ) as num;
           result.commissionRate = valueDes;
+          break;
+        case r'phone':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.phone = valueDes;
           break;
         default:
           unhandled.add(key);
