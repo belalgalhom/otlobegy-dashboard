@@ -351,5 +351,17 @@
   "myVendor": "My Vendor",
   "status": "Status",
   "updateStatus": "Update Status",
-  "changeStatusTitle": "Select New Status"
+  "changeStatusTitle": "Select New Status",
+  "editMessage": "Edit Message",
+  "deleteMessage": "Delete Message",
+  "deleteMessageConfirm": "Are you sure you want to delete this message?",
+  "typeAMessage": "Type a message...",
+  "typeYourMessage": "Type your message...",
+  "enterNewText": "Enter new text",
+  "noConversationsYet": "No conversations yet",
+  "noMessages": "No messages",
+  "onlyImagesAllowed": "Only images are allowed.",
+  "voiceMessage": "Voice Message",
+  "releaseToSend": "Release to send",
+  "recording": "Recording..."
 }

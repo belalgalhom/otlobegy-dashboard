@@ -17,12 +17,16 @@ import 'package:otlob_admin/core/theme/theme_cubit.dart';
 import 'package:otlob_admin/features/settings/data/settings_repository.dart';
 import 'package:otlob_admin/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
+import 'package:otlob_admin/features/chat/data/chat_repository.dart';
+import 'package:otlob_admin/features/chat/presentation/chat_bloc.dart';
+import 'package:otlob_admin/core/services/socket_service.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // External
   sl.registerLazySingleton(() => const FlutterSecureStorage());
+  sl.registerLazySingleton(() => SocketService());
   sl.registerLazySingleton(() {
     final dio = Dio();
     dio.options.baseUrl = 'https://api.otlob-egy.online';
@@ -39,6 +43,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UsersRepository(sl()));
   sl.registerLazySingleton(() => ZonesRepository(sl()));
   sl.registerLazySingleton(() => SettingsRepository(sl()));
+  sl.registerLazySingleton(() => ChatRepository(sl()));
 
   // Blocs
   sl.registerFactory(() => AuthBloc(sl()));
@@ -48,6 +53,7 @@ Future<void> init() async {
   sl.registerFactory(() => VerticalBloc(sl()));
   sl.registerFactory(() => SettingsBloc(sl()));
   sl.registerFactory(() => PromotionBloc(sl()));
+  sl.registerFactory(() => ChatBloc(sl()));
   sl.registerLazySingleton(() => LanguageCubit(sl()));
   sl.registerLazySingleton(() => ThemeCubit(sl()));
 }

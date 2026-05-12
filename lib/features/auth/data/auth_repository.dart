@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:otlob_api/otlob_api.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthRepository {
   final OtlobApi _apiClient;
@@ -73,5 +74,41 @@ class AuthRepository {
 
   Future<String?> getVendorRole() async {
     return await _storage.read(key: 'vendor_role');
+  }
+
+  Future<bool> isTokenExpired() async {
+    final token = await _storage.read(key: 'access_token');
+    if (token == null) return true;
+    return JwtDecoder.isExpired(token);
+  }
+
+  Future<String> refreshToken() async {
+    try {
+      final refreshToken = await _storage.read(key: 'refresh_token');
+      if (refreshToken == null) throw 'NO_REFRESH_TOKEN';
+
+      final dio = Dio(BaseOptions(baseUrl: _apiClient.dio.options.baseUrl));
+      final response = await dio.post(
+        '/auth/refresh',
+        options: Options(headers: {
+          'Authorization': 'Bearer $refreshToken',
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data['data'] as Map<String, dynamic>;
+        final newAccessToken = data['access_token'];
+        final newRefreshToken = data['refresh_token'];
+
+        await _storage.write(key: 'access_token', value: newAccessToken);
+        await _storage.write(key: 'refresh_token', value: newRefreshToken);
+
+        return newAccessToken;
+      }
+      throw 'REFRESH_FAILED';
+    } catch (e) {
+      print('AuthRepository refreshToken error: $e');
+      rethrow;
+    }
   }
 }

@@ -337,6 +337,18 @@
   "myVendor": "متجري",
   "status": "الحالة",
   "updateStatus": "تحديث الحالة",
-  "changeStatusTitle": "اختر الحالة الجديدة"
+  "changeStatusTitle": "اختر الحالة الجديدة",
+  "editMessage": "تعديل الرسالة",
+  "deleteMessage": "حذف الرسالة",
+  "deleteMessageConfirm": "هل أنت متأكد أنك تريد حذف هذه الرسالة؟",
+  "typeAMessage": "اكتب رسالة...",
+  "typeYourMessage": "اكتب رسالتك هنا...",
+  "enterNewText": "أدخل النص الجديد",
+  "noConversationsYet": "لا توجد محادثات بعد",
+  "noMessages": "لا توجد رسائل",
+  "onlyImagesAllowed": "يسمح بالصور فقط.",
+  "voiceMessage": "رسالة صوتية",
+  "releaseToSend": "اترك للإرسال",
+  "recording": "جاري التسجيل..."
 }
 

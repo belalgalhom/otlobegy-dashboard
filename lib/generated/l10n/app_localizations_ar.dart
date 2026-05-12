@@ -874,4 +874,40 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateStatus => 'تحديث الحالة';
+
+  @override
+  String get editMessage => 'تعديل الرسالة';
+
+  @override
+  String get deleteMessage => 'حذف الرسالة';
+
+  @override
+  String get deleteMessageConfirm => 'هل أنت متأكد أنك تريد حذف هذه الرسالة؟';
+
+  @override
+  String get typeAMessage => 'اكتب رسالة...';
+
+  @override
+  String get typeYourMessage => 'اكتب رسالتك هنا...';
+
+  @override
+  String get enterNewText => 'أدخل النص الجديد';
+
+  @override
+  String get noConversationsYet => 'لا توجد محادثات بعد';
+
+  @override
+  String get noMessages => 'لا توجد رسائل';
+
+  @override
+  String get onlyImagesAllowed => 'يسمح بالصور فقط.';
+
+  @override
+  String get voiceMessage => 'رسالة صوتية';
+
+  @override
+  String get releaseToSend => 'اترك للإرسال';
+
+  @override
+  String get recording => 'جاري التسجيل...';
 }

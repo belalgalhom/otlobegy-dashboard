@@ -24,6 +24,8 @@ import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/localization/language_cubit.dart';
 import 'package:otlob_admin/core/theme/theme_cubit.dart';
 import 'package:otlob_admin/features/settings/presentation/settings_screen.dart';
+import 'package:otlob_admin/features/chat/presentation/pages/inbox_screen.dart';
+import 'package:otlob_admin/core/services/socket_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -48,6 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _initData() async {
     await _loadUserInfo();
+    sl<SocketService>().init();
     if (mounted) {
       final vendorBloc = context.read<VendorBloc>();
       final isVendor = _userRole == 'VENDOR_MEMBER';
@@ -130,10 +133,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         Expanded(
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: _buildContent(isMobile),
-                          ),
+                          child: _selectedIndex == 6 
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 24),
+                                child: _buildContent(isMobile),
+                              )
+                            : SingleChildScrollView(
+                                padding: const EdgeInsets.symmetric(horizontal: 24),
+                                child: _buildContent(isMobile),
+                              ),
                         ),
                       ],
                     ),
@@ -211,6 +219,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
                     _buildMenuItem(10, LucideIcons.megaphone, AppLocalizations.of(context)!.promotions, isMobile),
                   ],
+                  _buildMenuItem(6, LucideIcons.messageSquare, AppLocalizations.of(context)!.inbox, isMobile),
                 ],
               ),
             ),
@@ -323,6 +332,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 9: return const VerticalsScreen();
       case 10: return const PromotionsScreen();
       case 7: return const SettingsScreen();
+      case 6: return const InboxScreen();
       default: return _buildComingSoon();
     }
   }

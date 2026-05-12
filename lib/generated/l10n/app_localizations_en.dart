@@ -880,4 +880,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateStatus => 'Update Status';
+
+  @override
+  String get editMessage => 'Edit Message';
+
+  @override
+  String get deleteMessage => 'Delete Message';
+
+  @override
+  String get deleteMessageConfirm =>
+      'Are you sure you want to delete this message?';
+
+  @override
+  String get typeAMessage => 'Type a message...';
+
+  @override
+  String get typeYourMessage => 'Type your message...';
+
+  @override
+  String get enterNewText => 'Enter new text';
+
+  @override
+  String get noConversationsYet => 'No conversations yet';
+
+  @override
+  String get noMessages => 'No messages';
+
+  @override
+  String get onlyImagesAllowed => 'Only images are allowed.';
+
+  @override
+  String get voiceMessage => 'Voice Message';
+
+  @override
+  String get releaseToSend => 'Release to send';
+
+  @override
+  String get recording => 'Recording...';
 }
