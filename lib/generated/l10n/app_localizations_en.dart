@@ -45,6 +45,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appearance => 'Appearance';
 
   @override
+  String get storeAppearance => 'Store Appearance';
+
+  @override
   String get emailAddress => 'Email Address';
 
   @override
@@ -82,6 +85,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inbox => 'Inbox';
+
+  @override
+  String get search => 'Search';
 
   @override
   String get searchHint => 'Search...';
@@ -314,7 +320,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unban => 'Unban';
 
   @override
-  String get changeStatusTitle => 'Change Vendor Status';
+  String get changeStatusTitle => 'Select New Status';
 
   @override
   String get deliveryZones => 'Delivery Zones';
@@ -455,6 +461,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add => 'Add';
+
+  @override
+  String get categoryIcon => 'Category Icon';
 
   @override
   String get deleteCategory => 'Delete Category?';
@@ -838,4 +847,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scheduleOptional => 'Schedule (Optional)';
+
+  @override
+  String get assignToVendor => 'Assign to Vendor';
+
+  @override
+  String get vendorRole => 'Vendor Role';
+
+  @override
+  String get owner => 'Owner';
+
+  @override
+  String get manager => 'Manager';
+
+  @override
+  String get staff => 'Staff';
+
+  @override
+  String get vendorMember => 'Vendor Member';
+
+  @override
+  String get driver => 'Driver';
+
+  @override
+  String get customer => 'Customer';
+
+  @override
+  String get myVendor => 'My Vendor';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get updateStatus => 'Update Status';
 }

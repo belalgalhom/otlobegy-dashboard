@@ -7,6 +7,7 @@ import 'package:otlob_admin/features/vendors/presentation/vertical_bloc.dart';
 import 'package:otlob_admin/features/vendors/presentation/widgets/add_vertical_dialog.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 
 
 class VerticalsScreen extends StatefulWidget {
@@ -19,6 +20,14 @@ class VerticalsScreen extends StatefulWidget {
 class _VerticalsScreenState extends State<VerticalsScreen> {
   int _currentPage = 0;
   final int _pageSize = 10;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +81,24 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
             ],
           ),
           const SizedBox(height: 24),
+          
+          // Search Bar
+          DashboardSearchBar(
+            controller: _searchController,
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+                _currentPage = 0; // Reset pagination on search
+              });
+            },
+            onClear: () {
+              setState(() {
+                _searchQuery = '';
+                _currentPage = 0;
+              });
+            },
+          ),
+          const SizedBox(height: 24),
           _buildVerticalsTable(context),
         ],
       ),
@@ -89,11 +116,18 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
         }
 
         if (state is VerticalsLoaded) {
-          if (state.verticals.isEmpty) {
+          final filteredVerticals = state.verticals.where((v) {
+            final name = (v['name'] ?? '').toString().toLowerCase();
+            final nameAr = (v['nameAr'] ?? '').toString().toLowerCase();
+            final searchLower = _searchQuery.toLowerCase();
+            return name.contains(searchLower) || nameAr.contains(searchLower);
+          }).toList();
+
+          if (filteredVerticals.isEmpty) {
             return _buildEmptyState();
           }
 
-          final totalItems = state.verticals.length;
+          final totalItems = filteredVerticals.length;
           final totalPages = (totalItems / _pageSize).ceil();
           
           // Ensure current page is valid after deletions
@@ -103,7 +137,7 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
 
           final startIndex = _currentPage * _pageSize;
           final endIndex = (startIndex + _pageSize) > totalItems ? totalItems : (startIndex + _pageSize);
-          final pagedItems = state.verticals.sublist(startIndex, endIndex);
+          final pagedItems = filteredVerticals.sublist(startIndex, endIndex);
 
           return Column(
             children: [
@@ -288,7 +322,7 @@ class _VerticalsScreenState extends State<VerticalsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(AppLocalizations.of(context)!.deleteBusinessType),
         content: Text(AppLocalizations.of(context)!.deleteBusinessTypeConfirm(vertical['name'] ?? AppLocalizations.of(context)!.unknown)),
         actions: [

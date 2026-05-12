@@ -5,10 +5,12 @@ import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/core/widgets/stat_card.dart';
 import 'package:otlob_admin/features/auth/data/auth_repository.dart';
 import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
+import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/phone_utils.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -19,6 +21,8 @@ class UsersScreen extends StatefulWidget {
 
 class _UsersScreenState extends State<UsersScreen> {
   String? _currentUserId;
+  List<dynamic> _vendors = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -26,9 +30,21 @@ class _UsersScreenState extends State<UsersScreen> {
     _loadCurrentUserId();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadCurrentUserId() async {
     final id = await sl<AuthRepository>().getUserId();
-    if (mounted) setState(() => _currentUserId = id);
+    final vendorsResult = await sl<VendorRepository>().getVendors(limit: 50);
+    if (mounted) {
+      setState(() {
+        _currentUserId = id;
+        _vendors = vendorsResult.items;
+      });
+    }
   }
 
   @override
@@ -125,6 +141,17 @@ class _UsersScreenState extends State<UsersScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Search Bar
+                    DashboardSearchBar(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        context.read<UserBloc>().add(FetchUsers(search: value));
+                      },
+                      onClear: () {
+                        context.read<UserBloc>().add(FetchUsers());
+                      },
                     ),
                     const SizedBox(height: 24),
                     BlocBuilder<UserBloc, UserState>(
@@ -389,89 +416,162 @@ class _UsersScreenState extends State<UsersScreen> {
     final phoneController = TextEditingController(text: user?['phone']);
     final passwordController = TextEditingController();
     String selectedRole = user?['role'] ?? 'ADMIN';
+    String? selectedVendorId;
+    String selectedVendorRole = 'STAFF';
+
+    if (user != null && user['vendorMemberships'] != null) {
+      final memberships = user['vendorMemberships'] as List;
+      if (memberships.isNotEmpty) {
+        final membership = memberships.first;
+        // Robustly extract the vendor ID from either the direct field or nested object
+        selectedVendorId = (membership['vendorId'] ?? membership['vendor']?['id'])?.toString();
+        selectedVendorRole = membership['role'] ?? 'STAFF';
+      }
+    }
 
     showDialog(
       context: context,
-      builder: (dialogContext) => Dialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500),
-          padding: const EdgeInsets.all(24),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(user == null ? AppLocalizations.of(context)!.createNewUser : AppLocalizations.of(context)!.editUserProfile, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 24),
-                _buildField(AppLocalizations.of(context)!.fullName, LucideIcons.user, nameController, 'e.g. Ahmed Ali'),
-                const SizedBox(height: 16),
-                _buildField(AppLocalizations.of(context)!.emailAddress, LucideIcons.mail, emailController, 'admin@otlob.com'),
-                const SizedBox(height: 16),
-                _buildField(AppLocalizations.of(context)!.phone, LucideIcons.phone, phoneController, '+201100000000'),
-                if (user == null) ...[
-                  const SizedBox(height: 16),
-                  _buildField(AppLocalizations.of(context)!.password, LucideIcons.lock, passwordController, '••••••••', obscure: true),
-                ],
-                const SizedBox(height: 16),
-                Text(AppLocalizations.of(context)!.accountRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  value: selectedRole,
-                  dropdownColor: Theme.of(context).colorScheme.surface,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(LucideIcons.shield, size: 18),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => Dialog(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.all(24),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(user == null ? LucideIcons.userPlus : LucideIcons.user, color: AppColors.primary),
+                      const SizedBox(width: 12),
+                      Text(
+                        user == null ? AppLocalizations.of(context)!.createNewUser : AppLocalizations.of(context)!.editUserProfile, 
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+                      ),
+                    ],
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'SUPER_ADMIN', child: Text('Super Admin')),
-                    DropdownMenuItem(value: 'ADMIN', child: Text('Admin')),
-                    DropdownMenuItem(value: 'CUSTOMER', child: Text('Customer')),
+                  const SizedBox(height: 24),
+                  _buildField(AppLocalizations.of(context)!.fullName, LucideIcons.user, nameController, 'e.g. Ahmed Ali'),
+                  const SizedBox(height: 16),
+                  _buildField(AppLocalizations.of(context)!.emailAddress, LucideIcons.mail, emailController, 'admin@otlob.com'),
+                  const SizedBox(height: 16),
+                  _buildField(AppLocalizations.of(context)!.phone, LucideIcons.phone, phoneController, '+201100000000'),
+                  if (user == null) ...[
+                    const SizedBox(height: 16),
+                    _buildField(AppLocalizations.of(context)!.password, LucideIcons.lock, passwordController, '••••••••', obscure: true),
                   ],
-                  onChanged: (v) => selectedRole = v!,
-                ),
-                const SizedBox(height: 32),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(AppLocalizations.of(context)!.cancel),
-                      ),
+                  const SizedBox(height: 16),
+                  Text(AppLocalizations.of(context)!.accountRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    value: selectedRole,
+                    dropdownColor: Theme.of(context).colorScheme.surface,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(LucideIcons.shield, size: 18),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (user == null) {
-                            context.read<UserBloc>().add(AddUserRequested(
-                              name: nameController.text,
-                              email: emailController.text,
-                              password: passwordController.text,
-                              phone: PhoneUtils.normalize(phoneController.text),
-                              role: selectedRole,
-
-                            ));
-                          } else {
-                            if (user['id'] != null) {
-                              context.read<UserBloc>().add(UpdateUserRequested(
-                                id: user['id'],
-                                name: nameController.text,
-                                email: emailController.text,
-                                phone: PhoneUtils.normalize(phoneController.text),
-                                role: selectedRole,
+                    items: [
+                      DropdownMenuItem(value: 'SUPER_ADMIN', child: Text(AppLocalizations.of(context)!.superAdmin)),
+                      DropdownMenuItem(value: 'ADMIN', child: Text(AppLocalizations.of(context)!.admin)),
+                      DropdownMenuItem(value: 'VENDOR_MEMBER', child: Text(AppLocalizations.of(context)!.vendorMember)),
+                      DropdownMenuItem(value: 'DRIVER', child: Text(AppLocalizations.of(context)!.driver)),
+                      DropdownMenuItem(value: 'CUSTOMER', child: Text(AppLocalizations.of(context)!.customer)),
+                    ],
+                    onChanged: (v) {
+                      setDialogState(() {
+                        selectedRole = v!;
+                      });
+                    },
+                  ),
+                  if (selectedRole == 'VENDOR_MEMBER' || (user != null && user['vendorMemberships'] != null && (user['vendorMemberships'] as List).isNotEmpty)) ...[
+                    const SizedBox(height: 16),
+                    Text(AppLocalizations.of(context)!.assignToVendor, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: selectedVendorId,
+                      dropdownColor: Theme.of(context).colorScheme.surface,
+                      hint: Text(AppLocalizations.of(context)!.selectVendor),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(LucideIcons.store, size: 18),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      items: _vendors.map((v) => DropdownMenuItem<String>(
+                        value: v['id'].toString(),
+                        child: Text(v['storeName'] ?? v['name'] ?? AppLocalizations.of(context)!.unknown),
+                      )).toList(),
+                      onChanged: (v) => setDialogState(() => selectedVendorId = v),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(AppLocalizations.of(context)!.vendorRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: selectedVendorRole,
+                      dropdownColor: Theme.of(context).colorScheme.surface,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(LucideIcons.userCheck, size: 18),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      items: [
+                        DropdownMenuItem(value: 'OWNER', child: Text(AppLocalizations.of(context)!.owner)),
+                        DropdownMenuItem(value: 'MANAGER', child: Text(AppLocalizations.of(context)!.manager)),
+                        DropdownMenuItem(value: 'STAFF', child: Text(AppLocalizations.of(context)!.staff)),
+                      ],
+                      onChanged: (v) => setDialogState(() => selectedVendorRole = v!),
+                    ),
+                  ],
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(dialogContext),
+                          child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppColors.textMuted)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (user == null) {
+                              context.read<UserBloc>().add(AddUserRequested(
+                                 name: nameController.text,
+                                 email: emailController.text,
+                                 password: passwordController.text,
+                                 role: selectedRole,
+                                 phone: PhoneUtils.normalize(phoneController.text),
+                                 vendorId: selectedVendorId,
+                                 vendorRole: selectedVendorRole,
                               ));
+                            } else {
+                              if (user['id'] != null) {
+                                context.read<UserBloc>().add(UpdateUserRequested(
+                                  id: user['id'],
+                                  name: nameController.text,
+                                  email: emailController.text,
+                                  phone: PhoneUtils.normalize(phoneController.text),
+                                  role: selectedRole,
+                                  vendorId: selectedVendorId,
+                                  vendorRole: selectedVendorRole,
+                                ));
+                              }
                             }
-                          }
-                          Navigator.pop(dialogContext);
-                        },
-                        child: Text(user == null ? AppLocalizations.of(context)!.create : AppLocalizations.of(context)!.update),
+                            Navigator.pop(dialogContext);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: Text(user == null ? AppLocalizations.of(context)!.create : AppLocalizations.of(context)!.update),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -566,7 +666,10 @@ class _UsersScreenState extends State<UsersScreen> {
         TextField(
           controller: controller,
           obscureText: obscure,
-          style: const TextStyle(fontSize: 14),
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18),

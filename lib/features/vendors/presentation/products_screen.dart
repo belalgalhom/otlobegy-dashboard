@@ -10,6 +10,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
 import 'package:otlob_admin/core/utils/image_utils.dart';
+import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 
 
 class ProductsScreen extends StatefulWidget {
@@ -30,6 +31,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
   List<dynamic> _products = [];
   bool _isLoading = true;
   int _total = 0;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -37,9 +45,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
     _fetchProducts();
   }
 
-  Future<void> _fetchProducts() async {
+  Future<void> _fetchProducts({String? search}) async {
     setState(() => _isLoading = true);
-    final result = await sl<VendorRepository>().getProducts(widget.vendorId);
+    final result = await sl<VendorRepository>().getProducts(widget.vendorId, search: search);
     if (mounted) {
       setState(() {
         _products = result.items;
@@ -80,7 +88,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(LucideIcons.arrowLeft, color: Theme.of(context).colorScheme.onSurface),
                       style: IconButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.05),
+                        backgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
@@ -119,6 +127,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ],
                 ),
                 const SizedBox(height: 32),
+                
+                // Search Bar
+                DashboardSearchBar(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    _fetchProducts(search: value);
+                  },
+                  onClear: () {
+                    _fetchProducts();
+                  },
+                ),
+                const SizedBox(height: 24),
 
                 // Products List
                 Expanded(
@@ -179,7 +199,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
       ),
@@ -388,7 +408,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           constraints: const BoxConstraints(maxWidth: 400),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: Colors.white.withOpacity(0.08)),
           ),
@@ -399,7 +419,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)!.deleteProduct,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: 12),
               Text(

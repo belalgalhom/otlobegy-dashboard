@@ -37,7 +37,27 @@ class VendorRepository {
       return PaginatedResult.empty();
     } catch (e) {
       print('VendorRepository getVendors Error: $e');
+      if (e is dio.DioException) {
+        print('VendorRepository getVendors Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
+      }
       return PaginatedResult.empty();
+    }
+  }
+
+  Future<dynamic> getVendor(String id) async {
+    try {
+      final response = await _apiClient.getVendorsCoreManagementApi().vendorsControllerFindOne(vendorId: id);
+      final dynamic responseMap = (response as dynamic).data;
+      if (responseMap is Map && responseMap['data'] != null) {
+        return responseMap['data'];
+      }
+      return responseMap;
+    } catch (e) {
+      print('VendorRepository getVendor Error: $e');
+      if (e is dio.DioException) {
+        print('VendorRepository getVendor Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
+      }
+      return null;
     }
   }
 
@@ -311,10 +331,22 @@ class VendorRepository {
       
       print('VendorRepository: DTO built: $dto');
       
-      final response = await _apiClient.getVendorsProductsApi().productsControllerAdminCreate(
-        vendorId: data['vendorId'],
-        createProductDto: dto,
-      );
+      dynamic response;
+      try {
+        response = await _apiClient.getVendorsProductsApi().productsControllerAdminCreate(
+          vendorId: data['vendorId'],
+          createProductDto: dto,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          response = await _apiClient.getVendorsProductsApi().productsControllerCreate(
+            vendorId: data['vendorId'],
+            createProductDto: dto,
+          );
+        } else {
+          rethrow;
+        }
+      }
       
       final responseMap = (response as dynamic).data;
       String? id;
@@ -373,11 +405,23 @@ class VendorRepository {
         ..isActive = data['isActive']
         ..isFeatured = data['isFeatured']
       );
-      await _apiClient.getVendorsProductsApi().productsControllerAdminUpdate(
-        vendorId: vendorId,
-        productId: productId,
-        updateProductDto: dto,
-      );
+      try {
+        await _apiClient.getVendorsProductsApi().productsControllerAdminUpdate(
+          vendorId: vendorId,
+          productId: productId,
+          updateProductDto: dto,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          await _apiClient.getVendorsProductsApi().productsControllerUpdate(
+            vendorId: vendorId,
+            productId: productId,
+            updateProductDto: dto,
+          );
+        } else {
+          rethrow;
+        }
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -391,10 +435,21 @@ class VendorRepository {
 
   Future<bool> deleteProduct(String vendorId, String productId) async {
     try {
-      await _apiClient.getVendorsProductsApi().productsControllerAdminRemove(
-        vendorId: vendorId,
-        productId: productId,
-      );
+      try {
+        await _apiClient.getVendorsProductsApi().productsControllerAdminRemove(
+          vendorId: vendorId,
+          productId: productId,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          await _apiClient.getVendorsProductsApi().productsControllerRemove(
+            vendorId: vendorId,
+            productId: productId,
+          );
+        } else {
+          rethrow;
+        }
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -421,6 +476,41 @@ class VendorRepository {
     }
   }
 
+  Future<bool> uploadMenuCategoryIcon(String vendorId, String categoryId, List<int> bytes, String fileName) async {
+    try {
+      // Try member route first if it's a vendor member, or fallback if admin route fails
+      final upload = () async {
+        final formData = dio.FormData.fromMap({
+          'file': dio.MultipartFile.fromBytes(bytes, filename: fileName),
+        });
+        
+        try {
+          // We try the direct member route first as it's more common for the current users
+          await _apiClient.dio.post(
+            '/vendors/$vendorId/categories/$categoryId/icon',
+            data: formData,
+          );
+          return true;
+        } catch (e) {
+          // If member route fails, try admin route
+          final formDataAdmin = dio.FormData.fromMap({
+            'file': dio.MultipartFile.fromBytes(bytes, filename: fileName),
+          });
+          await _apiClient.dio.post(
+            '/vendors/$vendorId/categories/admin/$categoryId/icon',
+            data: formDataAdmin,
+          );
+          return true;
+        }
+      };
+
+      return await upload();
+    } catch (e) {
+      print('VendorRepository uploadMenuCategoryIcon Error: $e');
+      return false;
+    }
+  }
+
   Future<bool> createMenuCategory(String vendorId, Map<String, dynamic> data) async {
     try {
       final dto = CreateMenuCategoryDto((b) => b
@@ -430,10 +520,26 @@ class VendorRepository {
         ..descriptionAr = data['descriptionAr'] ?? ''
         ..isActive = data['isActive'] ?? true
       );
-      await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerAdminCreate(
-        vendorId: vendorId,
-        createMenuCategoryDto: dto,
-      );
+      try {
+        await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerAdminCreate(
+          vendorId: vendorId,
+          createMenuCategoryDto: dto,
+        );
+      } catch (e) {
+        // Fallback to member route if admin route is forbidden
+        final Map<String, dynamic> body = {
+          'name': data['name'],
+          'nameAr': data['nameAr'],
+          'isActive': data['isActive'] ?? true,
+        };
+        if (data['description'] != null) body['description'] = data['description'];
+        if (data['descriptionAr'] != null) body['descriptionAr'] = data['descriptionAr'];
+        
+        await _apiClient.dio.post(
+          '/vendors/$vendorId/categories',
+          data: body,
+        );
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -454,11 +560,28 @@ class VendorRepository {
         ..descriptionAr = data['descriptionAr']
         ..isActive = data['isActive']
       );
-      await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerAdminUpdate(
-        vendorId: vendorId,
-        categoryId: categoryId,
-        updateMenuCategoryDto: dto,
-      );
+      
+      try {
+        await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerAdminUpdate(
+          vendorId: vendorId,
+          categoryId: categoryId,
+          updateMenuCategoryDto: dto,
+        );
+      } catch (e) {
+        // Fallback to member route if admin route is forbidden
+        final Map<String, dynamic> body = {
+          'name': data['name'],
+          'nameAr': data['nameAr'],
+        };
+        if (data['description'] != null) body['description'] = data['description'];
+        if (data['descriptionAr'] != null) body['descriptionAr'] = data['descriptionAr'];
+        if (data['isActive'] != null) body['isActive'] = data['isActive'];
+        
+        await _apiClient.dio.patch(
+          '/vendors/$vendorId/categories/$categoryId',
+          data: body,
+        );
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -467,15 +590,25 @@ class VendorRepository {
       }
       rethrow;
     }
-
   }
 
   Future<bool> deleteMenuCategory(String vendorId, String categoryId) async {
     try {
-      await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerAdminRemove(
-        vendorId: vendorId,
-        categoryId: categoryId,
-      );
+      try {
+        await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerAdminRemove(
+          vendorId: vendorId,
+          categoryId: categoryId,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          await _apiClient.getVendorsMenuCategoriesApi().menuCategoriesControllerRemove(
+            vendorId: vendorId,
+            categoryId: categoryId,
+          );
+        } else {
+          rethrow;
+        }
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -512,10 +645,21 @@ class VendorRepository {
         ..location.replace(['0.0', '0.0']) // Default location
         ..isOpen = data['isActive'] ?? true
       );
-      await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminCreate(
-        vendorId: vendorId,
-        createVendorBranchDto: dto,
-      );
+      try {
+        await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminCreate(
+          vendorId: vendorId,
+          createVendorBranchDto: dto,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          await _apiClient.getVendorsBranchesApi().vendorBranchesControllerCreate(
+            vendorId: vendorId,
+            createVendorBranchDto: dto,
+          );
+        } else {
+          rethrow;
+        }
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -536,11 +680,23 @@ class VendorRepository {
         ..phone = data['phoneNumber']
         ..isOpen = data['isActive']
       );
-      await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminUpdate(
-        vendorId: vendorId,
-        branchId: branchId,
-        updateVendorBranchDto: dto,
-      );
+      try {
+        await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminUpdate(
+          vendorId: vendorId,
+          branchId: branchId,
+          updateVendorBranchDto: dto,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          await _apiClient.getVendorsBranchesApi().vendorBranchesControllerUpdate(
+            vendorId: vendorId,
+            branchId: branchId,
+            updateVendorBranchDto: dto,
+          );
+        } else {
+          rethrow;
+        }
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {
@@ -554,10 +710,21 @@ class VendorRepository {
 
   Future<bool> deleteBranch(String vendorId, String branchId) async {
     try {
-      await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminRemove(
-        vendorId: vendorId,
-        branchId: branchId,
-      );
+      try {
+        await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminRemove(
+          vendorId: vendorId,
+          branchId: branchId,
+        );
+      } catch (e) {
+        if (e is dio.DioException && e.response?.statusCode == 403) {
+          await _apiClient.getVendorsBranchesApi().vendorBranchesControllerRemove(
+            vendorId: vendorId,
+            branchId: branchId,
+          );
+        } else {
+          rethrow;
+        }
+      }
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {

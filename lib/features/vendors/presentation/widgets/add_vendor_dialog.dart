@@ -11,7 +11,8 @@ import 'package:otlob_admin/core/utils/image_utils.dart';
 
 class AddVendorDialog extends StatefulWidget {
   final dynamic vendor;
-  const AddVendorDialog({super.key, this.vendor});
+  final String? userRole;
+  const AddVendorDialog({super.key, this.vendor, this.userRole});
 
   @override
   State<AddVendorDialog> createState() => _AddVendorDialogState();
@@ -134,7 +135,11 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                         children: [
                           Text(
                             isEdit ? AppLocalizations.of(context)!.editVendor : AppLocalizations.of(context)!.addNewVendor,
-                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                            style: TextStyle(
+                              fontSize: 22, 
+                              fontWeight: FontWeight.w800, 
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                           Text(
                             isEdit ? AppLocalizations.of(context)!.updateVendorDetails : AppLocalizations.of(context)!.registerNewStore,
@@ -246,7 +251,14 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                             children: [
                               Expanded(child: _buildTextField(controller: _taxIdController, label: AppLocalizations.of(context)!.taxId, hint: '123-456-789', icon: LucideIcons.hash)),
                               const SizedBox(width: 16),
-                              Expanded(child: _buildTextField(controller: _commissionController, label: AppLocalizations.of(context)!.commissionPercent, hint: '10', icon: LucideIcons.percent, keyboardType: TextInputType.number)),
+                              Expanded(child: _buildTextField(
+                                controller: _commissionController, 
+                                label: AppLocalizations.of(context)!.commissionPercent, 
+                                hint: '10', 
+                                icon: LucideIcons.percent, 
+                                keyboardType: TextInputType.number,
+                                enabled: widget.userRole != 'VENDOR_MEMBER',
+                              )),
                             ],
                           ),
                         const SizedBox(height: 16),
@@ -258,7 +270,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                           keyboardType: TextInputType.phone,
                         ),
                         const SizedBox(height: 24),
-                        _buildSectionHeader(LucideIcons.image, 'STORE APPEARANCE'),
+                        _buildSectionHeader(LucideIcons.image, AppLocalizations.of(context)!.storeAppearance),
                         const SizedBox(height: 12),
                         _buildImagePicker(),
                       ],
@@ -306,6 +318,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   }
 
   Widget _buildVerticalDropdown() {
+    final isVendor = widget.userRole == 'VENDOR_MEMBER';
     return _isLoadingVerticals
         ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
         : _buildDropdownField(
@@ -317,7 +330,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
               value: v['id'] as String?,
               child: Text(v['name'] ?? 'Unknown'),
             )).toList(),
-            onChanged: (val) => setState(() => _selectedVerticalId = val),
+            onChanged: isVendor ? null : (val) => setState(() => _selectedVerticalId = val),
           );
   }
 
@@ -348,6 +361,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     String? Function(String?)? validator,
     TextInputType? keyboardType,
     TextAlign textAlign = TextAlign.start,
+    bool enabled = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,7 +374,13 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
           validator: validator,
           keyboardType: keyboardType,
           textAlign: textAlign,
-          style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+          enabled: enabled,
+          style: TextStyle(
+            fontSize: 14, 
+            color: enabled 
+                ? Theme.of(context).colorScheme.onSurface 
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+          ),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),
@@ -377,7 +397,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     required IconData icon,
     required String? value,
     required List<DropdownMenuItem<String>> items,
-    required void Function(String?) onChanged,
+    required void Function(String?)? onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,8 +409,8 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
           items: items,
           onChanged: onChanged,
           isExpanded: true,
-          dropdownColor: AppColors.surface,
-          style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+          dropdownColor: Theme.of(context).colorScheme.surface,
+          style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),

@@ -14,10 +14,31 @@ import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
 import 'package:otlob_admin/core/utils/image_utils.dart';
+import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 
 
-class VendorsScreen extends StatelessWidget {
-  const VendorsScreen({super.key});
+class VendorsScreen extends StatefulWidget {
+  final String? userRole;
+  final String? vendorRole;
+  
+  const VendorsScreen({
+    super.key,
+    this.userRole,
+    this.vendorRole,
+  });
+
+  @override
+  State<VendorsScreen> createState() => _VendorsScreenState();
+}
+
+class _VendorsScreenState extends State<VendorsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +84,19 @@ class VendorsScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 24),
+              
+              // Search Bar
+              DashboardSearchBar(
+                controller: _searchController,
+                onChanged: (value) {
+                  context.read<VendorBloc>().add(FetchVendors(search: value));
+                },
+                onClear: () {
+                  context.read<VendorBloc>().add(FetchVendors());
+                },
+              ),
+              const SizedBox(height: 24),
+
               BlocListener<VendorBloc, VendorState>(
                 listener: (context, state) {
                   if (state is VendorActionSuccess) {
@@ -102,26 +136,27 @@ class VendorsScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            final result = await showDialog<Map<String, dynamic>>(
-                              context: context,
-                              builder: (context) => const AddVendorDialog(),
-                            );
-                            if (result != null && context.mounted) {
-                              context.read<VendorBloc>().add(CreateVendor(result));
-                            }
-                          },
-                          icon: const Icon(LucideIcons.plus, size: 16),
-                          label: Text(AppLocalizations.of(context)!.addVendor),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(120, 48),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        if (widget.userRole != 'VENDOR_MEMBER')
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              final result = await showDialog<Map<String, dynamic>>(
+                                context: context,
+                                builder: (context) => const AddVendorDialog(),
+                              );
+                              if (result != null && context.mounted) {
+                                context.read<VendorBloc>().add(CreateVendor(result));
+                              }
+                            },
+                            icon: const Icon(LucideIcons.plus, size: 16),
+                            label: Text(AppLocalizations.of(context)!.addVendor),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size(120, 48),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -230,7 +265,9 @@ class VendorsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         InkWell(
-                          onTap: () => _confirmStatusChange(context, v),
+                          onTap: (widget.userRole == 'VENDOR_MEMBER' && widget.vendorRole == 'STAFF') 
+                              ? null 
+                              : () => _confirmStatusChange(context, v),
                           borderRadius: BorderRadius.circular(8),
                           child: _buildStatusChip(context, v['status'] ?? 'CLOSED'),
                         ),
@@ -277,20 +314,22 @@ class VendorsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.products,
             onPressed: () => _viewProducts(context, v),
           ),
-          _buildActionItem(
-            context: context,
-            icon: LucideIcons.edit3,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            label: AppLocalizations.of(context)!.editVendor,
-            onPressed: () => _showEditVendorDialog(context, v),
-          ),
-          _buildActionItem(
-            context: context,
-            icon: LucideIcons.trash2,
-            color: AppColors.error,
-            label: AppLocalizations.of(context)!.deleteVendor,
-            onPressed: () => _confirmDelete(context, v),
-          ),
+          if (widget.userRole != 'VENDOR_MEMBER' || (widget.vendorRole == 'OWNER' || widget.vendorRole == 'MANAGER'))
+            _buildActionItem(
+              context: context,
+              icon: LucideIcons.edit3,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              label: AppLocalizations.of(context)!.editVendor,
+              onPressed: () => _showEditVendorDialog(context, v),
+            ),
+          if (widget.userRole != 'VENDOR_MEMBER' || widget.vendorRole == 'OWNER')
+            _buildActionItem(
+              context: context,
+              icon: LucideIcons.trash2,
+              color: AppColors.error,
+              label: AppLocalizations.of(context)!.deleteVendor,
+              onPressed: () => _confirmDelete(context, v),
+            ),
           _buildActionItem(
             context: context,
             icon: LucideIcons.phone,
@@ -463,7 +502,7 @@ class VendorsScreen extends StatelessWidget {
   void _showEditVendorDialog(BuildContext context, dynamic v) async {
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
-      builder: (context) => AddVendorDialog(vendor: v),
+      builder: (context) => AddVendorDialog(vendor: v, userRole: widget.userRole),
     );
     if (result != null && context.mounted) {
       context.read<VendorBloc>().add(UpdateVendor(v['id'], result));
@@ -475,7 +514,7 @@ class VendorsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(AppLocalizations.of(context)!.deleteConfirmTitle),
         content: Text(AppLocalizations.of(context)!.deleteConfirmContent(v['storeName'] ?? '')),
         actions: [
@@ -500,7 +539,7 @@ class VendorsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(AppLocalizations.of(context)!.changeStatusTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,

@@ -32,6 +32,12 @@ abstract class RegisterDto implements Built<RegisterDto, RegisterDtoBuilder> {
   @BuiltValueField(wireName: r'role')
   String? get role;
 
+  @BuiltValueField(wireName: r'vendorId')
+  String? get vendorId;
+
+  @BuiltValueField(wireName: r'vendorRole')
+  String? get vendorRole;
+
 
   RegisterDto._();
 
@@ -82,6 +88,20 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
       yield r'role';
       yield serializers.serialize(
         object.role,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.vendorId != null) {
+      yield r'vendorId';
+      yield serializers.serialize(
+        object.vendorId,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.vendorRole != null) {
+      yield r'vendorRole';
+      yield serializers.serialize(
+        object.vendorRole,
         specifiedType: const FullType(String),
       );
     }
@@ -144,7 +164,22 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
           ) as String;
           result.role = valueDes;
           break;
+        case r'vendorId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.vendorId = valueDes;
+          break;
+        case r'vendorRole':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.vendorRole = valueDes;
+          break;
 
+        default:
           unhandled.add(key);
           unhandled.add(value);
           break;

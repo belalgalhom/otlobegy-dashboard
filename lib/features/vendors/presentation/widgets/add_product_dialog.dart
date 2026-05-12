@@ -165,7 +165,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                             style: TextStyle(
                               fontSize: isMobile ? 20 : 22,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -393,9 +393,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
           value: _selectedCategoryId,
           hint: Text(_isLoadingCategories ? AppLocalizations.of(context)!.loadingCategories : AppLocalizations.of(context)!.selectMenuCategory, style: const TextStyle(color: AppColors.textMuted, fontSize: 14)),
           isExpanded: true,
-          dropdownColor: AppColors.surface,
+          dropdownColor: Theme.of(context).colorScheme.surface,
           icon: const Icon(LucideIcons.chevronDown, size: 16, color: AppColors.textSecondary),
-          style: const TextStyle(color: AppColors.textPrimary, fontSize: 15),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15),
           items: _categories.map((cat) {
             return DropdownMenuItem<String>(
               value: cat['id'].toString(),
@@ -438,7 +438,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           keyboardType: keyboardType,
           validator: validator,
           textAlign: textAlign,
-          style: const TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),
@@ -492,7 +492,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                                 child: const Icon(LucideIcons.image, color: AppColors.primary, size: 32),
                               ),
                               const SizedBox(height: 12),
-                              Text(AppLocalizations.of(context)!.uploadProductImage, style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text(AppLocalizations.of(context)!.uploadProductImage, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 14)),
                               const SizedBox(height: 4),
                               Text(AppLocalizations.of(context)!.imageFormatSupport, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
                             ],
@@ -536,7 +536,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Widget _buildImageActionButton({
     required IconData icon,
     required VoidCallback onTap,
-    Color color = AppColors.textPrimary,
+    Color? color,
     String? tooltip,
   }) {
     return Material(
@@ -547,7 +547,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         borderRadius: BorderRadius.circular(10),
         child: Container(
           padding: const EdgeInsets.all(8),
-          child: Icon(icon, color: color, size: 18),
+          child: Icon(icon, color: color ?? Theme.of(context).colorScheme.onSurface, size: 18),
         ),
       ),
     );
@@ -562,7 +562,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   }) {
     return ListTile(
       leading: Icon(icon, color: value ? AppColors.primary : AppColors.textMuted, size: 20),
-      title: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+      title: Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
       trailing: Switch(
         value: value,

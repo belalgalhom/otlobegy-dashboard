@@ -15,6 +15,7 @@
   "tickets": "تذاكر الدعم",
   "inbox": "الوارد",
   "settings": "الإعدادات",
+  "search": "بحث",
   "searchHint": "بحث...",
   "admin": "أدمن",
   "superAdmin": "مدير عام",
@@ -28,6 +29,7 @@
   "uploadError": "فشل رفع الصورة",
   "generalSettings": "الإعدادات العامة",
   "appearance": "المظهر",
+  "storeAppearance": "مظهر المتجر",
   "comingSoon": "الصفحة ستتوفر قريباً",
   "totalVendors": "إجمالي التجار",
   "totalUsers": "إجمالي المستخدمين",
@@ -175,6 +177,7 @@
   "newCategory": "تصنيف جديد",
   "editCategory": "تعديل التصنيف",
   "add": "إضافة",
+  "categoryIcon": "أيقونة القسم",
   "deleteCategory": "حذف التصنيف؟",
   "deleteCategoryConfirm": "هل أنت متأكد من حذف \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء.",
   "@deleteCategoryConfirm": {
@@ -322,6 +325,18 @@
   "imageRequired": "يرجى اختيار صورة",
   "startDate": "تاريخ البدء",
   "endDate": "تاريخ الانتهاء",
-  "scheduleOptional": "الجدول الزمني (اختياري)"
+  "scheduleOptional": "الجدول الزمني (اختياري)",
+  "assignToVendor": "تعيين إلى تاجر",
+  "vendorRole": "رتبة التاجر",
+  "owner": "مالك",
+  "manager": "مدير",
+  "staff": "موظف",
+  "vendorMember": "عضو تاجر",
+  "driver": "سائق",
+  "customer": "عميل",
+  "myVendor": "متجري",
+  "status": "الحالة",
+  "updateStatus": "تحديث الحالة",
+  "changeStatusTitle": "اختر الحالة الجديدة"
 }
 

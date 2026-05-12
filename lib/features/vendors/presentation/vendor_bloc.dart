@@ -8,7 +8,13 @@ abstract class VendorEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchVendors extends VendorEvent {}
+class FetchVendors extends VendorEvent {
+  final String? vendorId;
+  final String? search;
+  FetchVendors({this.vendorId, this.search});
+  @override
+  List<Object?> get props => [vendorId, search];
+}
 class CreateVendor extends VendorEvent {
   final Map<String, dynamic> data;
   CreateVendor(this.data);
@@ -92,8 +98,17 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
     on<FetchVendors>((event, emit) async {
       emit(VendorLoading(vendors: state.vendors, total: state.total));
       try {
-        final result = await _repository.getVendors();
-        emit(VendorsLoaded(result.items, total: result.total));
+        if (event.vendorId != null) {
+          final vendor = await _repository.getVendor(event.vendorId!);
+          if (vendor != null) {
+            emit(VendorsLoaded([vendor], total: 1));
+          } else {
+            emit(const VendorsLoaded([], total: 0));
+          }
+        } else {
+          final result = await _repository.getVendors(search: event.search);
+          emit(VendorsLoaded(result.items, total: result.total));
+        }
       } catch (e) {
         emit(VendorError('Failed to fetch vendors', vendors: state.vendors, total: state.total));
       }

@@ -15,6 +15,7 @@
   "uploadError": "Failed to upload image",
   "generalSettings": "General Settings",
   "appearance": "Appearance",
+  "storeAppearance": "Store Appearance",
   "emailAddress": "Email Address",
   "emailHint": "admin@otlob.com",
   "password": "Password",
@@ -29,6 +30,7 @@
   "tickets": "Support Tickets",
   "inbox": "Inbox",
   "settings": "Settings",
+  "search": "Search",
   "searchHint": "Search...",
   "admin": "Admin",
   "superAdmin": "Super Admin",
@@ -189,6 +191,7 @@
   "newCategory": "New Category",
   "editCategory": "Edit Category",
   "add": "Add",
+  "categoryIcon": "Category Icon",
   "deleteCategory": "Delete Category?",
   "deleteCategoryConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
   "@deleteCategoryConfirm": {
@@ -336,5 +339,17 @@
   "imageRequired": "Please select an image",
   "startDate": "Start Date",
   "endDate": "End Date",
-  "scheduleOptional": "Schedule (Optional)"
+  "scheduleOptional": "Schedule (Optional)",
+  "assignToVendor": "Assign to Vendor",
+  "vendorRole": "Vendor Role",
+  "owner": "Owner",
+  "manager": "Manager",
+  "staff": "Staff",
+  "vendorMember": "Vendor Member",
+  "driver": "Driver",
+  "customer": "Customer",
+  "myVendor": "My Vendor",
+  "status": "Status",
+  "updateStatus": "Update Status",
+  "changeStatusTitle": "Select New Status"
 }

@@ -65,6 +65,8 @@ class UsersRepository {
     required String password,
     required String role,
     String? phone,
+    String? vendorId,
+    String? vendorRole,
   }) async {
     try {
       final dto = RegisterDto((b) => b
@@ -73,6 +75,8 @@ class UsersRepository {
         ..password = password
         ..phone = phone
         ..role = role
+        ..vendorId = vendorId
+        ..vendorRole = vendorRole
       );
 
       
@@ -95,6 +99,8 @@ class UsersRepository {
     String? email,
     String? phone,
     String? role,
+    String? vendorId,
+    String? vendorRole,
   }) async {
     try {
       final dto = AdminUpdateUserDto((b) {
@@ -102,6 +108,8 @@ class UsersRepository {
         if (email != null) b.email = email;
         if (phone != null) b.phone = phone;
         if (role != null) b.role = AdminUpdateUserDtoRoleEnum.valueOf(role);
+        if (vendorId != null) b.vendorId = vendorId;
+        if (vendorRole != null) b.vendorRole = vendorRole;
       });
       await _apiClient.getUsersApi().usersControllerAdminUpdate(
         userId: id,

@@ -12,6 +12,11 @@ import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/localization/language_cubit.dart';
 
 import 'package:otlob_admin/core/theme/theme_cubit.dart';
+import 'package:otlob_admin/features/vendors/presentation/vendor_bloc.dart';
+import 'package:otlob_admin/features/vendors/presentation/vertical_bloc.dart';
+import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
+import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
+import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +24,13 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => di.sl<LanguageCubit>(),),
-        BlocProvider(create: (context) => di.sl<ThemeCubit>(),),
+        BlocProvider(create: (context) => di.sl<LanguageCubit>()),
+        BlocProvider(create: (context) => di.sl<ThemeCubit>()),
+        BlocProvider(create: (context) => di.sl<VendorBloc>()),
+        BlocProvider(create: (context) => di.sl<UserBloc>()),
+        BlocProvider(create: (context) => di.sl<ZoneBloc>()),
+        BlocProvider(create: (context) => di.sl<VerticalBloc>()),
+        BlocProvider(create: (context) => di.sl<PromotionBloc>()),
       ],
       child: const OtlobAdminApp(),
     ),

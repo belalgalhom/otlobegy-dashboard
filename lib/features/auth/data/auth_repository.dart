@@ -30,6 +30,13 @@ class AuthRepository {
         await _storage.write(key: 'access_token', value: data['access_token']);
         await _storage.write(key: 'refresh_token', value: data['refresh_token']);
         await _storage.write(key: 'user_id', value: userData['id']?.toString());
+        await _storage.write(key: 'user_role', value: role);
+        
+        if (userData['vendorMemberships'] != null && (userData['vendorMemberships'] as List).isNotEmpty) {
+          final membership = userData['vendorMemberships'][0];
+          await _storage.write(key: 'vendor_id', value: membership['vendorId'].toString());
+          await _storage.write(key: 'vendor_role', value: membership['role'].toString());
+        }
         return true;
       }
       return false;
@@ -54,5 +61,17 @@ class AuthRepository {
 
   Future<String?> getUserId() async {
     return await _storage.read(key: 'user_id');
+  }
+
+  Future<String?> getUserRole() async {
+    return await _storage.read(key: 'user_role');
+  }
+
+  Future<String?> getVendorId() async {
+    return await _storage.read(key: 'vendor_id');
+  }
+
+  Future<String?> getVendorRole() async {
+    return await _storage.read(key: 'vendor_role');
   }
 }

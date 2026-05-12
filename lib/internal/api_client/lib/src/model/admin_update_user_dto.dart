@@ -58,6 +58,12 @@ abstract class AdminUpdateUserDto implements Built<AdminUpdateUserDto, AdminUpda
   @BuiltValueField(wireName: r'isPhoneVerified')
   bool? get isPhoneVerified;
 
+  @BuiltValueField(wireName: r'vendorId')
+  String? get vendorId;
+
+  @BuiltValueField(wireName: r'vendorRole')
+  String? get vendorRole;
+
   AdminUpdateUserDto._();
 
   factory AdminUpdateUserDto([void updates(AdminUpdateUserDtoBuilder b)]) = _$AdminUpdateUserDto;
@@ -149,6 +155,20 @@ class _$AdminUpdateUserDtoSerializer implements PrimitiveSerializer<AdminUpdateU
       yield serializers.serialize(
         object.isPhoneVerified,
         specifiedType: const FullType(bool),
+      );
+    }
+    if (object.vendorId != null) {
+      yield r'vendorId';
+      yield serializers.serialize(
+        object.vendorId,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.vendorRole != null) {
+      yield r'vendorRole';
+      yield serializers.serialize(
+        object.vendorRole,
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -243,6 +263,20 @@ class _$AdminUpdateUserDtoSerializer implements PrimitiveSerializer<AdminUpdateU
             specifiedType: const FullType(bool),
           ) as bool;
           result.isPhoneVerified = valueDes;
+          break;
+        case r'vendorId':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.vendorId = valueDes;
+          break;
+        case r'vendorRole':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.vendorRole = valueDes;
           break;
         default:
           unhandled.add(key);

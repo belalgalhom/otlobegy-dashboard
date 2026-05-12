@@ -6,6 +6,7 @@ import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/phone_utils.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 
 
 
@@ -25,7 +26,15 @@ class BranchesScreen extends StatefulWidget {
 
 class _BranchesScreenState extends State<BranchesScreen> {
   List<dynamic> _branches = [];
+  List<dynamic> _filteredBranches = [];
   bool _isLoading = true;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -39,9 +48,26 @@ class _BranchesScreenState extends State<BranchesScreen> {
     if (mounted) {
       setState(() {
         _branches = branches;
+        _filteredBranches = branches;
         _isLoading = false;
       });
     }
+  }
+
+  void _filterBranches(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredBranches = _branches;
+      } else {
+        _filteredBranches = _branches.where((branch) {
+          final name = (branch['name'] ?? '').toString().toLowerCase();
+          final nameAr = (branch['nameAr'] ?? '').toString().toLowerCase();
+          final address = (branch['address'] ?? '').toString().toLowerCase();
+          final searchLower = query.toLowerCase();
+          return name.contains(searchLower) || nameAr.contains(searchLower) || address.contains(searchLower);
+        }).toList();
+      }
+    });
   }
 
   @override
@@ -94,7 +120,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                           ),
                           Text(
                             widget.vendorName,
-                            style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                            style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
@@ -112,17 +138,25 @@ class _BranchesScreenState extends State<BranchesScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                 const SizedBox(height: 32),
+                
+                // Search Bar
+                DashboardSearchBar(
+                  controller: _searchController,
+                  onChanged: _filterBranches,
+                  onClear: () => _filterBranches(''),
+                ),
+                const SizedBox(height: 24),
                 Expanded(
                   child: _isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : _branches.isEmpty
+                      : _filteredBranches.isEmpty
                           ? _buildEmptyState()
                           : ListView.separated(
-                              itemCount: _branches.length,
+                              itemCount: _filteredBranches.length,
                               separatorBuilder: (context, index) => const SizedBox(height: 12),
                               itemBuilder: (context, index) {
-                                final branch = _branches[index];
+                                final branch = _filteredBranches[index];
                                 return _buildBranchCard(branch);
                               },
                             ),
@@ -294,7 +328,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       const SizedBox(width: 12),
                       Text(
                         isEdit ? AppLocalizations.of(context)!.editBranch : AppLocalizations.of(context)!.newBranch,
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ],
                   ),
@@ -387,13 +421,13 @@ class _BranchesScreenState extends State<BranchesScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+        Text(label, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface)),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
           textAlign: textAlign,
           keyboardType: keyboardType,
-          style: const TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),
@@ -412,13 +446,13 @@ class _BranchesScreenState extends State<BranchesScreen> {
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(24)),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(24)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(LucideIcons.alertTriangle, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
-              Text(AppLocalizations.of(context)!.deleteBranch, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              Text(AppLocalizations.of(context)!.deleteBranch, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
               const SizedBox(height: 12),
               Text(AppLocalizations.of(context)!.deleteBranchConfirm(branch['name'] ?? AppLocalizations.of(context)!.unnamedBranch), textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
               const SizedBox(height: 24),

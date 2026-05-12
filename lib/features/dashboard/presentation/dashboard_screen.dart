@@ -35,19 +35,55 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
   bool _isStatsExpanded = false;
+  String? _userRole;
+  String? _vendorId;
+  String? _vendorRole;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    await _loadUserInfo();
+    if (mounted) {
+      final vendorBloc = context.read<VendorBloc>();
+      final isVendor = _userRole == 'VENDOR_MEMBER';
+      
+      if (isVendor && _vendorId != null && _vendorId != 'null') {
+        vendorBloc.add(FetchVendors(vendorId: _vendorId));
+      } else if (!isVendor) {
+        vendorBloc.add(FetchVendors());
+      }
+      
+      // Administrative data only for admins
+      if (!isVendor) {
+        context.read<VerticalBloc>().add(FetchVerticals());
+        context.read<UserBloc>().add(FetchUsers());
+        context.read<ZoneBloc>().add(FetchZones());
+        context.read<PromotionBloc>().add(FetchPromotions());
+      }
+    }
+  }
+
+  Future<void> _loadUserInfo() async {
+    final role = await sl<AuthRepository>().getUserRole();
+    final vId = await sl<AuthRepository>().getVendorId();
+    final vRole = await sl<AuthRepository>().getVendorRole();
+    if (mounted) {
+      setState(() {
+        _userRole = role;
+        _vendorId = vId;
+        _vendorRole = vRole;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => sl<VendorBloc>()..add(FetchVendors())),
-        BlocProvider(create: (context) => sl<VerticalBloc>()..add(FetchVerticals())),
-        BlocProvider(create: (context) => sl<UserBloc>()..add(FetchUsers())),
-        BlocProvider(create: (context) => sl<ZoneBloc>()..add(FetchZones())),
-        BlocProvider(create: (context) => sl<PromotionBloc>()..add(FetchPromotions())),
-      ],
-      child: LayoutBuilder(
+    return LayoutBuilder(
         builder: (context, constraints) {
           bool isMobile = constraints.maxWidth < 1100;
 
@@ -107,8 +143,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         },
-      ),
-    );
+      );
   }
 
   Widget _buildSidebar({required bool isMobile}) {
@@ -166,13 +201,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   _buildMenuItem(0, LucideIcons.layoutDashboard, AppLocalizations.of(context)!.dashboard, isMobile),
                   _buildMenuItem(1, LucideIcons.shoppingBag, AppLocalizations.of(context)!.orders, isMobile),
-                  _buildMenuItem(2, LucideIcons.store, AppLocalizations.of(context)!.vendors, isMobile),
-                  _buildMenuItem(9, LucideIcons.layers, AppLocalizations.of(context)!.businessTypes, isMobile),
-                  _buildMenuItem(3, LucideIcons.truck, AppLocalizations.of(context)!.drivers, isMobile),
-                  _buildMenuItem(4, LucideIcons.userPlus, AppLocalizations.of(context)!.users, isMobile),
-                  _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile),
-                  _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
-                  _buildMenuItem(10, LucideIcons.megaphone, AppLocalizations.of(context)!.promotions, isMobile),
+                  _buildMenuItem(2, LucideIcons.store, _userRole == 'VENDOR_MEMBER' ? AppLocalizations.of(context)!.myVendor : AppLocalizations.of(context)!.vendors, isMobile),
+                  
+                  if (_userRole != 'VENDOR_MEMBER') ...[
+                    _buildMenuItem(9, LucideIcons.layers, AppLocalizations.of(context)!.businessTypes, isMobile),
+                    _buildMenuItem(3, LucideIcons.truck, AppLocalizations.of(context)!.drivers, isMobile),
+                    _buildMenuItem(4, LucideIcons.userPlus, AppLocalizations.of(context)!.users, isMobile),
+                    _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile),
+                    _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
+                    _buildMenuItem(10, LucideIcons.megaphone, AppLocalizations.of(context)!.promotions, isMobile),
+                  ],
                 ],
               ),
             ),
@@ -234,8 +272,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppLocalizations.of(context)!.admin, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                    Text(AppLocalizations.of(context)!.superAdmin, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11)),
+                    Text(_userRole == 'VENDOR_MEMBER' ? 'Vendor Panel' : AppLocalizations.of(context)!.admin, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                    Text(_userRole?.replaceAll('_', ' ') ?? 'User', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11)),
                   ],
                 ),
               ),
@@ -277,7 +315,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     switch (_selectedIndex) {
       case 0: return _buildDashboardContent(isMobile);
       case 1: return const OrdersScreen();
-      case 2: return const VendorsScreen();
+      case 2: return VendorsScreen(userRole: _userRole, vendorRole: _vendorRole);
       case 3: return const DriversScreen();
       case 4: return const UsersScreen();
       case 5: return const TicketsScreen();
@@ -330,101 +368,126 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
               },
             ),
-            BlocBuilder<UserBloc, UserState>(
+            if (_userRole != 'VENDOR_MEMBER')
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  String count = '...';
+                  if (state is UsersLoaded) count = state.total.toString();
+                  return StatCard(
+                    title: l10n.systemUsers,
+                    value: count,
+                    icon: LucideIcons.users,
+                    color: AppColors.info,
+                    isMobile: isMobile,
+                    onTap: () => setState(() => _selectedIndex = 4),
+                  );
+                },
+              ),
+            BlocBuilder<VendorBloc, VendorState>(
               builder: (context, state) {
-                String count = '...';
-                if (state is UsersLoaded) count = state.total.toString();
+                String orderCount = '0';
+                if (state is VendorsLoaded && _userRole == 'VENDOR_MEMBER') {
+                  // Sum orders for the loaded vendor(s)
+                  int totalOrders = 0;
+                  for (var v in state.vendors) {
+                    final dynamic countObj = v['_count'];
+                    if (countObj != null) {
+                      totalOrders += (countObj['orders'] as num? ?? 0).toInt();
+                    }
+                  }
+                  orderCount = totalOrders.toString();
+                }
+                
                 return StatCard(
-                  title: l10n.systemUsers,
-                  value: count,
-                  icon: LucideIcons.users,
-                  color: AppColors.info,
+                  title: l10n.orders,
+                  value: orderCount,
+                  icon: LucideIcons.shoppingBag,
+                  color: AppColors.warning,
                   isMobile: isMobile,
-                  onTap: () => setState(() => _selectedIndex = 4),
+                  onTap: () => setState(() => _selectedIndex = 1),
                 );
               },
             ),
-            StatCard(
-              title: l10n.orders,
-              value: '0',
-              icon: LucideIcons.shoppingBag,
-              color: AppColors.warning,
-              isMobile: isMobile,
-              onTap: () => setState(() => _selectedIndex = 1),
-            ),
-            StatCard(
-              title: l10n.drivers,
-              value: '0',
-              icon: LucideIcons.truck,
-              color: AppColors.success,
-              isMobile: isMobile,
-              onTap: () => setState(() => _selectedIndex = 3),
-            ),
+            if (_userRole != 'VENDOR_MEMBER')
+              StatCard(
+                title: l10n.drivers,
+                value: '0',
+                icon: LucideIcons.truck,
+                color: AppColors.success,
+                isMobile: isMobile,
+                onTap: () => setState(() => _selectedIndex = 3),
+              ),
 
             if (_isStatsExpanded) ...[
-              StatCard(
-                title: l10n.tickets,
-                value: '0',
-                icon: LucideIcons.helpCircle,
-                color: AppColors.error,
-                isMobile: isMobile,
-                onTap: () => setState(() => _selectedIndex = 5),
-              ),
-              BlocBuilder<ZoneBloc, ZoneState>(
-                builder: (context, state) {
-                  String count = '0';
-                  if (state is ZonesLoaded) count = state.total.toString();
-                  return StatCard(
-                    title: l10n.deliveryZones,
-                    value: count,
-                    icon: LucideIcons.map,
-                    color: Colors.teal,
-                    isMobile: isMobile,
-                    onTap: () => setState(() => _selectedIndex = 8),
-                  );
-                },
-              ),
-              BlocBuilder<VerticalBloc, VerticalState>(
-                builder: (context, state) {
-                  String count = '0';
-                  if (state is VerticalsLoaded) count = state.verticals.length.toString();
-                  return StatCard(
-                    title: l10n.businessTypes,
-                    value: count,
-                    icon: LucideIcons.layers,
-                    color: Colors.purple,
-                    isMobile: isMobile,
-                    onTap: () => setState(() => _selectedIndex = 9),
-                  );
-                },
-              ),
-              BlocBuilder<PromotionBloc, PromotionState>(
-                builder: (context, state) {
-                  String count = '0';
-                  if (state is PromotionLoaded) count = state.total.toString();
-                  return StatCard(
-                    title: l10n.promotions,
-                    value: count,
-                    icon: LucideIcons.megaphone,
-                    color: Colors.orange,
-                    isMobile: isMobile,
-                    onTap: () => setState(() => _selectedIndex = 10),
-                  );
-                },
-              ),
+              if (_userRole != 'VENDOR_MEMBER')
+                StatCard(
+                  title: l10n.tickets,
+                  value: '0',
+                  icon: LucideIcons.helpCircle,
+                  color: AppColors.error,
+                  isMobile: isMobile,
+                  onTap: () => setState(() => _selectedIndex = 5),
+                ),
+              if (_userRole != 'VENDOR_MEMBER')
+                BlocBuilder<ZoneBloc, ZoneState>(
+                  builder: (context, state) {
+                    String count = '0';
+                    if (state is ZonesLoaded) count = state.total.toString();
+                    return StatCard(
+                      title: l10n.deliveryZones,
+                      value: count,
+                      icon: LucideIcons.map,
+                      color: Colors.teal,
+                      isMobile: isMobile,
+                      onTap: () => setState(() => _selectedIndex = 8),
+                    );
+                  },
+                ),
+              if (_userRole != 'VENDOR_MEMBER')
+                BlocBuilder<VerticalBloc, VerticalState>(
+                  builder: (context, state) {
+                    String count = '0';
+                    if (state is VerticalsLoaded) count = state.verticals.length.toString();
+                    return StatCard(
+                      title: l10n.businessTypes,
+                      value: count,
+                      icon: LucideIcons.layers,
+                      color: Colors.purple,
+                      isMobile: isMobile,
+                      onTap: () => setState(() => _selectedIndex = 9),
+                    );
+                  },
+                ),
+              if (_userRole != 'VENDOR_MEMBER')
+                BlocBuilder<PromotionBloc, PromotionState>(
+                  builder: (context, state) {
+                    String count = '0';
+                    if (state is PromotionLoaded) count = state.total.toString();
+                    return StatCard(
+                      title: l10n.promotions,
+                      value: count,
+                      icon: LucideIcons.megaphone,
+                      color: Colors.orange,
+                      isMobile: isMobile,
+                      onTap: () => setState(() => _selectedIndex = 10),
+                    );
+                  },
+                ),
             ],
           ],
         ),
-        const SizedBox(height: 16),
-        TextButton.icon(
-          onPressed: () => setState(() => _isStatsExpanded = !_isStatsExpanded),
-          icon: Icon(_isStatsExpanded ? LucideIcons.chevronUp : LucideIcons.chevronDown, size: 16),
-          label: Text(_isStatsExpanded ? l10n.showLess : l10n.showMore),
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.primary,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        if (_userRole != 'VENDOR_MEMBER') ...[
+          const SizedBox(height: 16),
+          TextButton.icon(
+            onPressed: () => setState(() => _isStatsExpanded = !_isStatsExpanded),
+            icon: Icon(_isStatsExpanded ? LucideIcons.chevronUp : LucideIcons.chevronDown, size: 16),
+            label: Text(_isStatsExpanded ? l10n.showLess : l10n.showMore),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
           ),
-        ),
+        ],
         const SizedBox(height: 24),
         if (!isMobile)
           Row(

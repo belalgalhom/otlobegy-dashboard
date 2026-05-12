@@ -170,6 +170,12 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get appearance;
 
+  /// No description provided for @storeAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Store Appearance'**
+  String get storeAppearance;
+
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
@@ -247,6 +253,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inbox'**
   String get inbox;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
 
   /// No description provided for @searchHint.
   ///
@@ -701,7 +713,7 @@ abstract class AppLocalizations {
   /// No description provided for @changeStatusTitle.
   ///
   /// In en, this message translates to:
-  /// **'Change Vendor Status'**
+  /// **'Select New Status'**
   String get changeStatusTitle;
 
   /// No description provided for @deliveryZones.
@@ -961,6 +973,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
+
+  /// No description provided for @categoryIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Icon'**
+  String get categoryIcon;
 
   /// No description provided for @deleteCategory.
   ///
@@ -1681,6 +1699,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Schedule (Optional)'**
   String get scheduleOptional;
+
+  /// No description provided for @assignToVendor.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign to Vendor'**
+  String get assignToVendor;
+
+  /// No description provided for @vendorRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Vendor Role'**
+  String get vendorRole;
+
+  /// No description provided for @owner.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get owner;
+
+  /// No description provided for @manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get manager;
+
+  /// No description provided for @staff.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff'**
+  String get staff;
+
+  /// No description provided for @vendorMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Vendor Member'**
+  String get vendorMember;
+
+  /// No description provided for @driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get driver;
+
+  /// No description provided for @customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get customer;
+
+  /// No description provided for @myVendor.
+  ///
+  /// In en, this message translates to:
+  /// **'My Vendor'**
+  String get myVendor;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @updateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Status'**
+  String get updateStatus;
 }
 
 class _AppLocalizationsDelegate

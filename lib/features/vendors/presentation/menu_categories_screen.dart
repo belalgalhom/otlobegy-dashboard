@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:otlob_admin/core/theme/app_theme.dart';
@@ -5,6 +6,9 @@ import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:otlob_admin/core/utils/image_utils.dart';
+import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 
 
 class MenuCategoriesScreen extends StatefulWidget {
@@ -23,7 +27,15 @@ class MenuCategoriesScreen extends StatefulWidget {
 
 class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
   List<dynamic> _categories = [];
+  List<dynamic> _filteredCategories = [];
   bool _isLoading = true;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -37,9 +49,25 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
     if (mounted) {
       setState(() {
         _categories = categories;
+        _filteredCategories = categories;
         _isLoading = false;
       });
     }
+  }
+
+  void _filterCategories(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredCategories = _categories;
+      } else {
+        _filteredCategories = _categories.where((cat) {
+          final name = (cat['name'] ?? '').toString().toLowerCase();
+          final nameAr = (cat['nameAr'] ?? '').toString().toLowerCase();
+          final searchLower = query.toLowerCase();
+          return name.contains(searchLower) || nameAr.contains(searchLower);
+        }).toList();
+      }
+    });
   }
 
   @override
@@ -113,17 +141,25 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                 ),
                 const SizedBox(height: 32),
                 
+                // Search Bar
+                DashboardSearchBar(
+                  controller: _searchController,
+                  onChanged: _filterCategories,
+                  onClear: () => _filterCategories(''),
+                ),
+                const SizedBox(height: 24),
+                
                 // List Content
                 Expanded(
                   child: _isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : _categories.isEmpty
+                      : _filteredCategories.isEmpty
                           ? _buildEmptyState()
                           : ListView.separated(
-                              itemCount: _categories.length,
+                              itemCount: _filteredCategories.length,
                               separatorBuilder: (context, index) => const SizedBox(height: 12),
                               itemBuilder: (context, index) {
-                                final category = _categories[index];
+                                final category = _filteredCategories[index];
                                 return _buildCategoryCard(category);
                               },
                             ),
@@ -187,12 +223,22 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
           child: ListTile(
             contentPadding: const EdgeInsets.all(16),
             leading: Container(
-              padding: const EdgeInsets.all(12),
+              width: 50,
+              height: 50,
               decoration: BoxDecoration(
                 color: AppColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(LucideIcons.layers, color: AppColors.primary, size: 20),
+              child: (category['iconUrl'] ?? category['icon']) != null && (category['iconUrl'] ?? category['icon']).toString().isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        '${ImageUtils.formatImageUrl(category['iconUrl'] ?? category['icon'])}?t=${DateTime.now().millisecondsSinceEpoch}',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.layers, color: AppColors.primary, size: 20),
+                      ),
+                    )
+                  : const Icon(LucideIcons.layers, color: AppColors.primary, size: 20),
             ),
             title: Text(
               category['name'] ?? AppLocalizations.of(context)!.unnamedCategory,
@@ -270,6 +316,8 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
     final isEdit = category != null;
     final nameController = TextEditingController(text: category?['name'] ?? '');
     final nameArController = TextEditingController(text: category?['nameAr'] ?? '');
+    PlatformFile? selectedIcon;
+    bool isUploading = false;
     
     final result = await showDialog<bool>(
       context: context,
@@ -296,30 +344,88 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                     const SizedBox(width: 12),
                     Text(
                       isEdit ? AppLocalizations.of(context)!.editCategory : AppLocalizations.of(context)!.newCategory,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
                     ),
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    _buildDialogTextField(
-                      controller: nameController,
-                      label: AppLocalizations.of(context)!.nameEn,
-                      hint: 'e.g. Main Dishes',
-                      icon: LucideIcons.type,
-                    ),
-                    const SizedBox(height: 20),
-                    _buildDialogTextField(
-                      controller: nameArController,
-                      label: AppLocalizations.of(context)!.nameAr,
-                      hint: 'مثال: الأطباق الرئيسية',
-                      icon: LucideIcons.languages,
-                      textAlign: TextAlign.right,
-                    ),
-                  ],
+                child: StatefulBuilder(
+                  builder: (context, setDialogState) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Icon Picker
+                          GestureDetector(
+                            onTap: () async {
+                              try {
+                                final result = await FilePicker.pickFiles(
+                                  type: FileType.image,
+                                  allowMultiple: false,
+                                );
+                                if (result != null && result.files.isNotEmpty) {
+                                  setDialogState(() => selectedIcon = result.files.first);
+                                }
+                              } catch (e) {
+                                debugPrint('Error picking icon: $e');
+                              }
+                            },
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.05),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                              ),
+                              child: selectedIcon != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: selectedIcon!.bytes != null 
+                                        ? Image.memory(selectedIcon!.bytes!, fit: BoxFit.cover)
+                                        : Image.file(File(selectedIcon!.path!), fit: BoxFit.cover),
+                                    )
+                                  : (category?['iconUrl'] ?? category?['icon']) != null
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(20),
+                                          child: Image.network(
+                                            '${ImageUtils.formatImageUrl(category?['iconUrl'] ?? category?['icon'])}?t=${DateTime.now().millisecondsSinceEpoch}', 
+                                            fit: BoxFit.cover
+                                          ),
+                                        )
+                                      : const Icon(LucideIcons.imagePlus, color: AppColors.primary, size: 30),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            AppLocalizations.of(context)!.categoryIcon,
+                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          ),
+                          const SizedBox(height: 24),
+                          _buildDialogTextField(
+                            controller: nameController,
+                            label: AppLocalizations.of(context)!.nameEn,
+                            hint: 'e.g. Main Dishes',
+                            icon: LucideIcons.type,
+                          ),
+                          const SizedBox(height: 20),
+                          _buildDialogTextField(
+                            controller: nameArController,
+                            label: AppLocalizations.of(context)!.nameAr,
+                            hint: 'مثال: الأطباق الرئيسية',
+                            icon: LucideIcons.languages,
+                            textAlign: TextAlign.right,
+                          ),
+                          if (isUploading) ...[
+                            const SizedBox(height: 20),
+                            const LinearProgressIndicator(),
+                          ],
+                        ],
+                      ),
+                    );
+                  }
                 ),
               ),
               Container(
@@ -341,14 +447,43 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
                         final data = {
                           'name': nameController.text,
                           'nameAr': nameArController.text,
+                          'isActive': category?['isActive'] ?? true,
+                          'description': category?['description'],
+                          'descriptionAr': category?['descriptionAr'],
                         };
                         try {
                           bool success;
+                          String? categoryId = category?['id'];
+                          
                           if (isEdit) {
-                            success = await sl<VendorRepository>().updateMenuCategory(widget.vendorId, category['id'], data);
+                            success = await sl<VendorRepository>().updateMenuCategory(widget.vendorId, categoryId!, data);
                           } else {
+                            // When creating, we need to get the ID from the response to upload the icon
+                            // But createMenuCategory returns bool currently.
+                            // Wait, I should check if it returns ID.
+                            // Let's check VendorRepository.createMenuCategory.
                             success = await sl<VendorRepository>().createMenuCategory(widget.vendorId, data);
                           }
+                          
+                          if (success && selectedIcon != null) {
+                            // If we don't have categoryId (it was new), we need to refetch to find it
+                            // This is a bit suboptimal but works.
+                            if (!isEdit) {
+                              final categories = await sl<VendorRepository>().getMenuCategories(widget.vendorId);
+                              final newCat = categories.firstWhere((c) => c['name'] == data['name']);
+                              categoryId = newCat['id'];
+                            }
+                            
+                            final iconBytes = selectedIcon!.bytes ?? await File(selectedIcon!.path!).readAsBytes();
+                            
+                            await sl<VendorRepository>().uploadMenuCategoryIcon(
+                              widget.vendorId, 
+                              categoryId!, 
+                              iconBytes.toList(), 
+                              selectedIcon!.name
+                            );
+                          }
+
                           if (mounted) {
                             Navigator.pop(context, success);
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -407,7 +542,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
         TextField(
           controller: controller,
           textAlign: textAlign,
-          style: const TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),
@@ -438,7 +573,7 @@ class _MenuCategoriesScreenState extends State<MenuCategoriesScreen> {
               const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)!.deleteCategory,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: 12),
               Text(

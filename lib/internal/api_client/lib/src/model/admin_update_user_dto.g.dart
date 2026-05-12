@@ -330,6 +330,10 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
   final bool? isEmailVerified;
   @override
   final bool? isPhoneVerified;
+  @override
+  final String? vendorId;
+  @override
+  final String? vendorRole;
 
   factory _$AdminUpdateUserDto([
     void Function(AdminUpdateUserDtoBuilder)? updates,
@@ -346,6 +350,8 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
     this.permissions,
     this.isEmailVerified,
     this.isPhoneVerified,
+    this.vendorId,
+    this.vendorRole,
   }) : super._();
   @override
   AdminUpdateUserDto rebuild(
@@ -369,7 +375,9 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
         titleAr == other.titleAr &&
         permissions == other.permissions &&
         isEmailVerified == other.isEmailVerified &&
-        isPhoneVerified == other.isPhoneVerified;
+        isPhoneVerified == other.isPhoneVerified &&
+        vendorId == other.vendorId &&
+        vendorRole == other.vendorRole;
   }
 
   @override
@@ -385,6 +393,8 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
     _$hash = $jc(_$hash, permissions.hashCode);
     _$hash = $jc(_$hash, isEmailVerified.hashCode);
     _$hash = $jc(_$hash, isPhoneVerified.hashCode);
+    _$hash = $jc(_$hash, vendorId.hashCode);
+    _$hash = $jc(_$hash, vendorRole.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -401,7 +411,9 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
           ..add('titleAr', titleAr)
           ..add('permissions', permissions)
           ..add('isEmailVerified', isEmailVerified)
-          ..add('isPhoneVerified', isPhoneVerified))
+          ..add('isPhoneVerified', isPhoneVerified)
+          ..add('vendorId', vendorId)
+          ..add('vendorRole', vendorRole))
         .toString();
   }
 }
@@ -456,6 +468,14 @@ class AdminUpdateUserDtoBuilder
   set isPhoneVerified(bool? isPhoneVerified) =>
       _$this._isPhoneVerified = isPhoneVerified;
 
+  String? _vendorId;
+  String? get vendorId => _$this._vendorId;
+  set vendorId(String? vendorId) => _$this._vendorId = vendorId;
+
+  String? _vendorRole;
+  String? get vendorRole => _$this._vendorRole;
+  set vendorRole(String? vendorRole) => _$this._vendorRole = vendorRole;
+
   AdminUpdateUserDtoBuilder() {
     AdminUpdateUserDto._defaults(this);
   }
@@ -473,6 +493,8 @@ class AdminUpdateUserDtoBuilder
       _permissions = $v.permissions?.toBuilder();
       _isEmailVerified = $v.isEmailVerified;
       _isPhoneVerified = $v.isPhoneVerified;
+      _vendorId = $v.vendorId;
+      _vendorRole = $v.vendorRole;
       _$v = null;
     }
     return this;
@@ -507,6 +529,8 @@ class AdminUpdateUserDtoBuilder
             permissions: _permissions?.build(),
             isEmailVerified: isEmailVerified,
             isPhoneVerified: isPhoneVerified,
+            vendorId: vendorId,
+            vendorRole: vendorRole,
           );
     } catch (_) {
       late String _$failedField;

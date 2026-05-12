@@ -17,6 +17,10 @@ class _$RegisterDto extends RegisterDto {
   final String? phone;
   @override
   final String? role;
+  @override
+  final String? vendorId;
+  @override
+  final String? vendorRole;
 
   factory _$RegisterDto([void Function(RegisterDtoBuilder)? updates]) =>
       (RegisterDtoBuilder()..update(updates))._build();
@@ -27,6 +31,8 @@ class _$RegisterDto extends RegisterDto {
     required this.name,
     this.phone,
     this.role,
+    this.vendorId,
+    this.vendorRole,
   }) : super._();
   @override
   RegisterDto rebuild(void Function(RegisterDtoBuilder) updates) =>
@@ -43,7 +49,9 @@ class _$RegisterDto extends RegisterDto {
         password == other.password &&
         name == other.name &&
         phone == other.phone &&
-        role == other.role;
+        role == other.role &&
+        vendorId == other.vendorId &&
+        vendorRole == other.vendorRole;
   }
 
   @override
@@ -54,6 +62,8 @@ class _$RegisterDto extends RegisterDto {
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, phone.hashCode);
     _$hash = $jc(_$hash, role.hashCode);
+    _$hash = $jc(_$hash, vendorId.hashCode);
+    _$hash = $jc(_$hash, vendorRole.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -65,7 +75,9 @@ class _$RegisterDto extends RegisterDto {
           ..add('password', password)
           ..add('name', name)
           ..add('phone', phone)
-          ..add('role', role))
+          ..add('role', role)
+          ..add('vendorId', vendorId)
+          ..add('vendorRole', vendorRole))
         .toString();
   }
 }
@@ -93,6 +105,14 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
   String? get role => _$this._role;
   set role(String? role) => _$this._role = role;
 
+  String? _vendorId;
+  String? get vendorId => _$this._vendorId;
+  set vendorId(String? vendorId) => _$this._vendorId = vendorId;
+
+  String? _vendorRole;
+  String? get vendorRole => _$this._vendorRole;
+  set vendorRole(String? vendorRole) => _$this._vendorRole = vendorRole;
+
   RegisterDtoBuilder() {
     RegisterDto._defaults(this);
   }
@@ -105,6 +125,8 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
       _name = $v.name;
       _phone = $v.phone;
       _role = $v.role;
+      _vendorId = $v.vendorId;
+      _vendorRole = $v.vendorRole;
       _$v = null;
     }
     return this;
@@ -144,6 +166,8 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
           ),
           phone: phone,
           role: role,
+          vendorId: vendorId,
+          vendorRole: vendorRole,
         );
     replace(_$result);
     return _$result;

@@ -45,6 +45,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appearance => 'المظهر';
 
   @override
+  String get storeAppearance => 'مظهر المتجر';
+
+  @override
   String get emailAddress => 'البريد الإلكتروني';
 
   @override
@@ -82,6 +85,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get inbox => 'الوارد';
+
+  @override
+  String get search => 'بحث';
 
   @override
   String get searchHint => 'بحث...';
@@ -313,7 +319,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get unban => 'إلغاء الحظر';
 
   @override
-  String get changeStatusTitle => 'تغيير حالة التاجر';
+  String get changeStatusTitle => 'اختر الحالة الجديدة';
 
   @override
   String get deliveryZones => 'مناطق التوصيل';
@@ -450,6 +456,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get add => 'إضافة';
+
+  @override
+  String get categoryIcon => 'أيقونة القسم';
 
   @override
   String get deleteCategory => 'حذف التصنيف؟';
@@ -832,4 +841,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scheduleOptional => 'الجدول الزمني (اختياري)';
+
+  @override
+  String get assignToVendor => 'تعيين إلى تاجر';
+
+  @override
+  String get vendorRole => 'رتبة التاجر';
+
+  @override
+  String get owner => 'مالك';
+
+  @override
+  String get manager => 'مدير';
+
+  @override
+  String get staff => 'موظف';
+
+  @override
+  String get vendorMember => 'عضو تاجر';
+
+  @override
+  String get driver => 'سائق';
+
+  @override
+  String get customer => 'عميل';
+
+  @override
+  String get myVendor => 'متجري';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get updateStatus => 'تحديث الحالة';
 }
