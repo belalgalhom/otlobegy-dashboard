@@ -917,4 +917,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recording => 'Recording...';
+
+  @override
+  String get pushToMenu => 'Push to Menu List';
+
+  @override
+  String get pushToMenuSubtitle =>
+      'Make this product available permanently in your menu';
+
+  @override
+  String get sendOffer => 'Send Offer';
+
+  @override
+  String get createOrderOffer => 'Create Order Offer';
 }

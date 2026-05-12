@@ -363,5 +363,9 @@
   "onlyImagesAllowed": "Only images are allowed.",
   "voiceMessage": "Voice Message",
   "releaseToSend": "Release to send",
-  "recording": "Recording..."
+  "recording": "Recording...",
+  "pushToMenu": "Push to Menu List",
+  "pushToMenuSubtitle": "Make this product available permanently in your menu",
+  "sendOffer": "Send Offer",
+  "createOrderOffer": "Create Order Offer"
 }

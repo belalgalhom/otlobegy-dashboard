@@ -9,6 +9,10 @@ import 'package:otlob_admin/injection_container.dart';
 import 'package:intl/intl.dart';
 import 'package:otlob_admin/core/services/socket_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:otlob_admin/features/chat/presentation/widgets/add_product_in_chat_dialog.dart';
+import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,6 +28,7 @@ class AdminChatScreen extends StatefulWidget {
   final String? avatar;
   final String? phoneNumber;
   final String? vendorName;
+  final String? vendorId;
   final String? type;
 
   const AdminChatScreen({
@@ -33,6 +38,7 @@ class AdminChatScreen extends StatefulWidget {
     this.avatar,
     this.phoneNumber,
     this.vendorName,
+    this.vendorId,
     this.type,
   });
 
@@ -124,6 +130,80 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showAddProductDialog() async {
+    if (widget.vendorId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Vendor ID not found for this conversation")),
+      );
+      return;
+    }
+
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => AddProductInChatDialog(
+        vendorId: widget.vendorId!,
+        vendorName: widget.vendorName ?? "Vendor",
+      ),
+    );
+
+    if (result != null) {
+      setState(() => _isLoading = true);
+      try {
+        String? productId;
+
+        if (result['pushToMenu'] == true) {
+          productId = await sl<VendorRepository>().createProduct(result);
+          
+          if (productId != null && result['imageFile'] != null) {
+            final xFile = result['imageFile'] as XFile;
+            final multipartFile = await dio.MultipartFile.fromFile(
+              xFile.path,
+              filename: xFile.name,
+            );
+            await sl<VendorRepository>().uploadProductImage(widget.vendorId!, productId, multipartFile);
+          }
+        }
+
+        String? offerImageUrl;
+        if (result['imageFile'] != null) {
+          final xFile = result['imageFile'] as XFile;
+          offerImageUrl = await sl<ChatRepository>().uploadMedia(widget.conversationId, xFile.path);
+        }
+
+        final metadata = {
+          'type': 'OFFER',
+          'product': {
+            'id': productId,
+            'name': result['name'],
+            'nameAr': result['nameAr'],
+            'description': result['description'],
+            'descriptionAr': result['descriptionAr'],
+            'price': result['basePrice'],
+            'comparePrice': result['comparePrice'],
+            'sku': result['sku'],
+            'image': offerImageUrl,
+          }
+        };
+
+        final text = "Offer: ${result['name']} - ${result['basePrice']} EGP";
+        
+        await sl<ChatRepository>().sendMessage(
+          widget.conversationId, 
+          text,
+          metadata: metadata,
+        );
+
+        _loadMessages();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      } finally {
+        if (mounted) setState(() => _isLoading = false);
+      }
+    }
   }
 
   Future<void> _pickFile() async {
@@ -415,7 +495,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
             ),
           IconButton(
             icon: const Icon(LucideIcons.plus, size: 20),
-            onPressed: () {},
+            onPressed: _showAddProductDialog,
           ),
         ],
       ),

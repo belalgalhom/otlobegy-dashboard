@@ -40,7 +40,7 @@ class ChatRepository {
     }
   }
 
-  Future<bool> sendMessage(String conversationId, String text, {String type = 'TEXT', String? mediaUrl}) async {
+  Future<bool> sendMessage(String conversationId, String text, {String type = 'TEXT', String? mediaUrl, Map<String, dynamic>? metadata}) async {
     try {
       await _apiClient.dio.post(
         '/chat/conversations/$conversationId/messages',
@@ -48,6 +48,7 @@ class ChatRepository {
           'type': type,
           'text': text.isEmpty ? null : text,
           'mediaUrl': mediaUrl,
+          if (metadata != null) 'metadata': metadata,
         },
       );
       return true;

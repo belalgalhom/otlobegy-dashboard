@@ -910,4 +910,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get recording => 'جاري التسجيل...';
+
+  @override
+  String get pushToMenu => 'إضافة للقائمة الدائمة';
+
+  @override
+  String get pushToMenuSubtitle => 'اجعل هذا المنتج متاحاً بشكل دائم في قائمتك';
+
+  @override
+  String get sendOffer => 'إرسال العرض';
+
+  @override
+  String get createOrderOffer => 'إنشاء عرض طلب';
 }

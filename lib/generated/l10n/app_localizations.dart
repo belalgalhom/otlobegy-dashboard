@@ -1837,6 +1837,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recording...'**
   String get recording;
+
+  /// No description provided for @pushToMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Push to Menu List'**
+  String get pushToMenu;
+
+  /// No description provided for @pushToMenuSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Make this product available permanently in your menu'**
+  String get pushToMenuSubtitle;
+
+  /// No description provided for @sendOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Offer'**
+  String get sendOffer;
+
+  /// No description provided for @createOrderOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Order Offer'**
+  String get createOrderOffer;
 }
 
 class _AppLocalizationsDelegate

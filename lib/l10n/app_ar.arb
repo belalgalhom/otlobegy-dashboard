@@ -349,6 +349,10 @@
   "onlyImagesAllowed": "يسمح بالصور فقط.",
   "voiceMessage": "رسالة صوتية",
   "releaseToSend": "اترك للإرسال",
-  "recording": "جاري التسجيل..."
+  "recording": "جاري التسجيل...",
+  "pushToMenu": "إضافة للقائمة الدائمة",
+  "pushToMenuSubtitle": "اجعل هذا المنتج متاحاً بشكل دائم في قائمتك",
+  "sendOffer": "إرسال العرض",
+  "createOrderOffer": "إنشاء عرض طلب"
 }
 

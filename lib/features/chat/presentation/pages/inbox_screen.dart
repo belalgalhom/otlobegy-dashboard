@@ -91,6 +91,7 @@ class _InboxScreenState extends State<InboxScreen> {
               avatar: avatar,
               phoneNumber: phoneNumber,
               vendorName: vendorName,
+              vendorId: conversation['vendorId'],
             ),
           ),
         ).then((_) => context.read<ChatBloc>().add(FetchConversations()));
