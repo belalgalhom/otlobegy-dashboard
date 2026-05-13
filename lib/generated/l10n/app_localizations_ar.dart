@@ -922,4 +922,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createOrderOffer => 'إنشاء عرض طلب';
+
+  @override
+  String get sellByStrip => 'بيع بالشريط';
+
+  @override
+  String get stripsPerPackage => 'عدد الشرائط في العبوة';
+
+  @override
+  String get stripPrice => 'سعر الشريط الواحد';
+
+  @override
+  String get sellingOptions => 'خيارات البيع';
 }

@@ -1861,6 +1861,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Order Offer'**
   String get createOrderOffer;
+
+  /// No description provided for @sellByStrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell by Strip'**
+  String get sellByStrip;
+
+  /// No description provided for @stripsPerPackage.
+  ///
+  /// In en, this message translates to:
+  /// **'Strips per Package'**
+  String get stripsPerPackage;
+
+  /// No description provided for @stripPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per Strip'**
+  String get stripPrice;
+
+  /// No description provided for @sellingOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling Options'**
+  String get sellingOptions;
 }
 
 class _AppLocalizationsDelegate

@@ -110,7 +110,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
               'text': data['text'],
               'type': data['type'],
               'mediaUrl': data['mediaUrl'],
-              'sender': {'id': data['senderId'], 'role': 'CUSTOMER', 'name': data['senderName'] ?? 'Customer'},
+              'sender': {'id': data['senderId'], 'role': data['senderRole'] ?? 'CUSTOMER', 'name': data['senderName'] ?? 'Customer'},
               'createdAt': data['createdAt'],
             });
           });
@@ -667,10 +667,12 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     final time = _formatTime(DateTime.parse(message['createdAt']));
 
     String displaySenderName = senderName;
-    final isAdmin = _currentUserRole == 'SUPER_ADMIN';
-    if (!isMe && senderRole == 'VENDOR_MEMBER' && widget.vendorName != null && isAdmin) {
-      displaySenderName = '${widget.vendorName} ($senderName)';
+    if (senderRole != null) {
+      final formattedRole = senderRole.toString().replaceAll('_', ' ').toLowerCase().split(' ').map((word) => word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}').join(' ');
+      displaySenderName = '$senderName ($formattedRole)';
     }
+    
+    final isAdmin = _currentUserRole == 'SUPER_ADMIN';
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
@@ -685,7 +687,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: senderRole == 'VENDOR_MEMBER' ? AppColors.primary : AppColors.textSecondary.withOpacity(0.8),
+                  color: senderRole.toString().startsWith('VENDOR_') ? AppColors.primary : AppColors.textSecondary.withOpacity(0.8),
                   letterSpacing: 0.5,
                 ),
               ),

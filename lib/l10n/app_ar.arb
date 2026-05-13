@@ -353,6 +353,10 @@
   "pushToMenu": "إضافة للقائمة الدائمة",
   "pushToMenuSubtitle": "اجعل هذا المنتج متاحاً بشكل دائم في قائمتك",
   "sendOffer": "إرسال العرض",
-  "createOrderOffer": "إنشاء عرض طلب"
+  "createOrderOffer": "إنشاء عرض طلب",
+  "sellByStrip": "بيع بالشريط",
+  "stripsPerPackage": "عدد الشرائط في العبوة",
+  "stripPrice": "سعر الشريط الواحد",
+  "sellingOptions": "خيارات البيع"
 }
 

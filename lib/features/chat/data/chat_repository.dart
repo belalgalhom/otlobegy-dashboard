@@ -23,6 +23,19 @@ class ChatRepository {
     }
   }
 
+  Future<Map<String, dynamic>?> createDirectConversation(String userId) async {
+    try {
+      final response = await _apiClient.dio.post(
+        '/chat/conversations/direct',
+        data: {'userId': userId},
+      );
+      return response.data['data'];
+    } catch (e) {
+      print('ChatRepository createDirectConversation Error: $e');
+      return null;
+    }
+  }
+
   Future<List<dynamic>> getMessages(String conversationId, {String? before}) async {
     try {
       final response = await _apiClient.dio.get(

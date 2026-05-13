@@ -367,5 +367,9 @@
   "pushToMenu": "Push to Menu List",
   "pushToMenuSubtitle": "Make this product available permanently in your menu",
   "sendOffer": "Send Offer",
-  "createOrderOffer": "Create Order Offer"
+  "createOrderOffer": "Create Order Offer",
+  "sellByStrip": "Sell by Strip",
+  "stripsPerPackage": "Strips per Package",
+  "stripPrice": "Price per Strip",
+  "sellingOptions": "Selling Options"
 }

@@ -246,9 +246,27 @@ class _ProductsScreenState extends State<ProductsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 4),
-                Text(
-                  '\$${price.toStringAsFixed(2)}',
-                  style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Text(
+                      '\$${price.toStringAsFixed(2)}',
+                      style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold),
+                    ),
+                    if (product['sellByStrip'] == true && product['stripsPerPackage'] != null) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '${(price / (product['stripsPerPackage'] as int)).toStringAsFixed(2)} / ${AppLocalizations.of(context)!.sellByStrip}',
+                          style: const TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Row(

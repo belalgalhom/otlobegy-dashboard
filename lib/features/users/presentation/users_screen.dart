@@ -11,6 +11,8 @@ import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/phone_utils.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
 import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
+import 'package:otlob_admin/features/chat/data/chat_repository.dart';
+import 'package:otlob_admin/features/chat/presentation/pages/admin_chat_screen.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -44,6 +46,26 @@ class _UsersScreenState extends State<UsersScreen> {
         _currentUserId = id;
         _vendors = vendorsResult.items;
       });
+    }
+  }
+
+  void _openChat(dynamic user) async {
+    final chatRepo = sl<ChatRepository>();
+    final conversation = await chatRepo.createDirectConversation(user['id']);
+    if (conversation != null && mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdminChatScreen(
+            conversationId: conversation['id'],
+            title: user['name'] ?? 'Chat',
+            avatar: user['avatar'],
+            vendorId: conversation['vendorId'],
+            vendorName: conversation['vendorName'],
+            type: conversation['type'],
+          ),
+        ),
+      );
     }
   }
 
@@ -291,6 +313,14 @@ class _UsersScreenState extends State<UsersScreen> {
                       const SizedBox(width: 8),
                       _buildActionItem(
                         context: context,
+                        icon: LucideIcons.messageCircle, 
+                        color: AppColors.primary,
+                        label: Localizations.localeOf(context).languageCode == 'ar' ? 'دردشة' : 'Chat',
+                        onPressed: () => _openChat(u),
+                      ),
+                      const SizedBox(width: 8),
+                      _buildActionItem(
+                        context: context,
                         icon: LucideIcons.edit3, 
                         color: AppColors.info,
                         label: AppLocalizations.of(context)!.edit,
@@ -365,6 +395,14 @@ class _UsersScreenState extends State<UsersScreen> {
                     color: u['isBanned'] == true ? AppColors.success : AppColors.warning,
                     label: u['isBanned'] == true ? AppLocalizations.of(context)!.unban : AppLocalizations.of(context)!.ban,
                     onPressed: () => _handleBanToggle(context, u),
+                  ),
+                  const SizedBox(width: 8),
+                  _buildActionItem(
+                    context: context,
+                    icon: LucideIcons.messageCircle, 
+                    color: AppColors.primary,
+                    label: Localizations.localeOf(context).languageCode == 'ar' ? 'دردشة' : 'Chat',
+                    onPressed: () => _openChat(u),
                   ),
                   const SizedBox(width: 8),
                   _buildActionItem(

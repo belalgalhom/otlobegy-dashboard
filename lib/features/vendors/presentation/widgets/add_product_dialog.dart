@@ -34,9 +34,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
   late TextEditingController _comparePriceController;
   late TextEditingController _skuController;
   late TextEditingController _stockController;
+  late TextEditingController _stripsCountController;
+  late TextEditingController _stripPriceController;
   
   late bool _isActive;
   late bool _isFeatured;
+  late bool _sellByStrip;
   bool _isLoading = false;
   
   List<dynamic> _categories = [];
@@ -59,9 +62,44 @@ class _AddProductDialogState extends State<AddProductDialog> {
     _stockController = TextEditingController(text: p?['stock']?.toString() ?? '');
     _isActive = p?['isActive'] ?? true;
     _isFeatured = p?['isFeatured'] ?? false;
+    _sellByStrip = p?['sellByStrip'] ?? false;
+    _stripsCountController = TextEditingController(text: p?['stripsPerPackage']?.toString() ?? '');
+    _stripPriceController = TextEditingController();
     _selectedCategoryId = p?['categoryId']?.toString();
 
+    _updateStripPrice();
+    _priceController.addListener(_updateStripPrice);
+    _stripsCountController.addListener(_updateStripPrice);
+
     _fetchCategories();
+  }
+
+  void _updateStripPrice() {
+    final price = double.tryParse(_priceController.text) ?? 0;
+    final strips = int.tryParse(_stripsCountController.text) ?? 0;
+    if (strips > 0) {
+      final stripPrice = price / strips;
+      _stripPriceController.text = stripPrice.toStringAsFixed(2);
+    } else {
+      _stripPriceController.text = '';
+    }
+  }
+
+  @override
+  void dispose() {
+    _priceController.removeListener(_updateStripPrice);
+    _stripsCountController.removeListener(_updateStripPrice);
+    _nameController.dispose();
+    _nameArController.dispose();
+    _descriptionController.dispose();
+    _descriptionArController.dispose();
+    _priceController.dispose();
+    _comparePriceController.dispose();
+    _skuController.dispose();
+    _stockController.dispose();
+    _stripsCountController.dispose();
+    _stripPriceController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchCategories() async {
@@ -296,6 +334,64 @@ class _AddProductDialogState extends State<AddProductDialog> {
                           ],
                         ),
                         
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(LucideIcons.layers, size: 20, color: AppColors.primary),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.sellByStrip,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                    ),
+                                  ),
+                                  Switch(
+                                    value: _sellByStrip,
+                                    onChanged: (v) => setState(() => _sellByStrip = v),
+                                    activeColor: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                              if (_sellByStrip) ...[
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _buildTextField(
+                                        controller: _stripsCountController,
+                                        label: AppLocalizations.of(context)!.stripsPerPackage,
+                                        hint: '0',
+                                        icon: LucideIcons.hash,
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: _buildTextField(
+                                        controller: _stripPriceController,
+                                        label: AppLocalizations.of(context)!.stripPrice,
+                                        hint: '0.00',
+                                        icon: LucideIcons.tag,
+                                        readOnly: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        
                         const SizedBox(height: 24),
                         _buildSectionHeader(AppLocalizations.of(context)!.settings),
                         const SizedBox(height: 12),
@@ -426,6 +522,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
     TextInputType? keyboardType,
     String? Function(String?)? validator,
     TextAlign textAlign = TextAlign.start,
+    bool readOnly = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,11 +535,14 @@ class _AddProductDialogState extends State<AddProductDialog> {
           keyboardType: keyboardType,
           validator: validator,
           textAlign: textAlign,
+          readOnly: readOnly,
           style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),
             contentPadding: const EdgeInsets.all(16),
+            filled: readOnly,
+            fillColor: readOnly ? Colors.white.withOpacity(0.05) : null,
           ),
         ),
       ],
@@ -588,6 +688,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
         'stock': double.tryParse(_stockController.text),
         'isActive': _isActive,
         'isFeatured': _isFeatured,
+        'sellByStrip': _sellByStrip,
+        'stripsPerPackage': int.tryParse(_stripsCountController.text),
         'imageFile': _imageFile,
       });
     }

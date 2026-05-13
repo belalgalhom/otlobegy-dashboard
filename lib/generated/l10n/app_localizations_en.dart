@@ -930,4 +930,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createOrderOffer => 'Create Order Offer';
+
+  @override
+  String get sellByStrip => 'Sell by Strip';
+
+  @override
+  String get stripsPerPackage => 'Strips per Package';
+
+  @override
+  String get stripPrice => 'Price per Strip';
+
+  @override
+  String get sellingOptions => 'Selling Options';
 }

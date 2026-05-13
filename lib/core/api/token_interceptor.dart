@@ -75,21 +75,34 @@ class TokenInterceptor extends Interceptor {
           }
         } catch (e) {
           print('TokenInterceptor Refresh Error: $e');
+          
+          // Reject all queued requests with the current error
+          for (var request in _requestsQueue) {
+            final requestHandler = request['handler'] as ErrorInterceptorHandler;
+            requestHandler.next(err);
+          }
+          _requestsQueue.clear();
+
           // Refresh failed, clear tokens
           await _storage.deleteAll();
           _isRefreshing = false;
-          _requestsQueue.clear();
           return handler.next(err);
         }
         
+        // If we reach here, it means refreshToken was null or session is gone
+        for (var request in _requestsQueue) {
+          final requestHandler = request['handler'] as ErrorInterceptorHandler;
+          requestHandler.next(err);
+        }
+        _requestsQueue.clear();
+
         await _storage.deleteAll();
         _isRefreshing = false;
-        _requestsQueue.clear();
         return handler.next(err);
       } else {
         // Queue this request while refreshing
         _requestsQueue.add({'options': err.requestOptions, 'handler': handler});
-        return; // Don't call handler.next here
+        return; 
       }
     }
     

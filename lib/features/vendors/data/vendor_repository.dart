@@ -315,33 +315,33 @@ class VendorRepository {
   Future<String?> createProduct(Map<String, dynamic> data) async {
     try {
       print('VendorRepository: Creating product with data: $data');
-      final dto = CreateProductDto((b) => b
-        ..categoryId = data['categoryId']
-        ..name = data['name'] ?? ''
-        ..nameAr = data['nameAr']
-        ..description = data['description']
-        ..descriptionAr = data['descriptionAr']
-        ..basePrice = (data['basePrice'] as num?)?.toDouble()
-        ..comparePrice = (data['comparePrice'] as num?)?.toDouble()
-        ..sku = data['sku']
-        ..stock = (data['stock'] as num?)?.toInt() ?? 0
-        ..isActive = data['isActive'] ?? true
-        ..isFeatured = data['isFeatured'] ?? false
-      );
-      
-      print('VendorRepository: DTO built: $dto');
+      final Map<String, dynamic> body = {
+        'categoryId': data['categoryId'],
+        'name': data['name'],
+        'nameAr': data['nameAr'],
+        'description': data['description'],
+        'descriptionAr': data['descriptionAr'],
+        'basePrice': (data['basePrice'] as num?)?.toDouble(),
+        'comparePrice': (data['comparePrice'] as num?)?.toDouble(),
+        'sku': data['sku'],
+        'stock': (data['stock'] as num?)?.toInt() ?? 0,
+        'isActive': data['isActive'] ?? true,
+        'isFeatured': data['isFeatured'] ?? false,
+        'sellByStrip': data['sellByStrip'] ?? false,
+        'stripsPerPackage': data['stripsPerPackage'],
+      };
       
       dynamic response;
       try {
-        response = await _apiClient.getVendorsProductsApi().productsControllerAdminCreate(
-          vendorId: data['vendorId'],
-          createProductDto: dto,
+        response = await _apiClient.dio.post(
+          '/vendors/${data['vendorId']}/products/admin',
+          data: body,
         );
       } catch (e) {
         if (e is dio.DioException && e.response?.statusCode == 403) {
-          response = await _apiClient.getVendorsProductsApi().productsControllerCreate(
-            vendorId: data['vendorId'],
-            createProductDto: dto,
+          response = await _apiClient.dio.post(
+            '/vendors/${data['vendorId']}/products',
+            data: body,
           );
         } else {
           rethrow;
@@ -392,31 +392,32 @@ class VendorRepository {
 
   Future<bool> updateProduct(String vendorId, String productId, Map<String, dynamic> data) async {
     try {
-      final dto = UpdateProductDto((b) => b
-        ..categoryId = data['categoryId'] != null ? JsonObject(data['categoryId']) : null
-        ..name = data['name']
-        ..nameAr = data['nameAr']
-        ..description = data['description']
-        ..descriptionAr = data['descriptionAr']
-        ..basePrice = (data['basePrice'] as num?)?.toDouble()
-        ..comparePrice = (data['comparePrice'] as num?)?.toDouble()
-        ..sku = data['sku']
-        ..stock = (data['stock'] as num?)?.toInt()
-        ..isActive = data['isActive']
-        ..isFeatured = data['isFeatured']
-      );
+      final Map<String, dynamic> body = {
+        if (data['categoryId'] != null) 'categoryId': data['categoryId'],
+        if (data['name'] != null) 'name': data['name'],
+        if (data['nameAr'] != null) 'nameAr': data['nameAr'],
+        if (data['description'] != null) 'description': data['description'],
+        if (data['descriptionAr'] != null) 'descriptionAr': data['descriptionAr'],
+        if (data['basePrice'] != null) 'basePrice': (data['basePrice'] as num?)?.toDouble(),
+        if (data['comparePrice'] != null) 'comparePrice': (data['comparePrice'] as num?)?.toDouble(),
+        if (data['sku'] != null) 'sku': data['sku'],
+        if (data['stock'] != null) 'stock': (data['stock'] as num?)?.toInt(),
+        if (data['isActive'] != null) 'isActive': data['isActive'],
+        if (data['isFeatured'] != null) 'isFeatured': data['isFeatured'],
+        if (data['sellByStrip'] != null) 'sellByStrip': data['sellByStrip'],
+        if (data['stripsPerPackage'] != null) 'stripsPerPackage': data['stripsPerPackage'],
+      };
+
       try {
-        await _apiClient.getVendorsProductsApi().productsControllerAdminUpdate(
-          vendorId: vendorId,
-          productId: productId,
-          updateProductDto: dto,
+        await _apiClient.dio.patch(
+          '/vendors/$vendorId/products/admin/$productId',
+          data: body,
         );
       } catch (e) {
         if (e is dio.DioException && e.response?.statusCode == 403) {
-          await _apiClient.getVendorsProductsApi().productsControllerUpdate(
-            vendorId: vendorId,
-            productId: productId,
-            updateProductDto: dto,
+          await _apiClient.dio.patch(
+            '/vendors/$vendorId/products/$productId',
+            data: body,
           );
         } else {
           rethrow;

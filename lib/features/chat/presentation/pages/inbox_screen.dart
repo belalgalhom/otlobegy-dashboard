@@ -7,6 +7,8 @@ import 'package:otlob_admin/features/chat/presentation/pages/admin_chat_screen.d
 import 'package:intl/intl.dart';
 import 'package:otlob_admin/core/utils/image_utils.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
+import 'package:otlob_admin/features/auth/data/auth_repository.dart';
+import 'package:otlob_admin/injection_container.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -16,10 +18,22 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
+  String? _currentUserId;
+
   @override
   void initState() {
     super.initState();
+    _loadCurrentUserId();
     context.read<ChatBloc>().add(FetchConversations());
+  }
+
+  Future<void> _loadCurrentUserId() async {
+    final id = await sl<AuthRepository>().getUserId();
+    if (mounted) {
+      setState(() {
+        _currentUserId = id;
+      });
+    }
   }
 
   @override
@@ -70,9 +84,23 @@ class _InboxScreenState extends State<InboxScreen> {
 
     final creator = conversation['creator'];
     
-    final target = creator ?? (participants.isNotEmpty ? participants.first : null);
+    // Find the target (the other person in the chat)
+    dynamic target = creator;
     
-    final String name = target?['name'] ?? 'Unknown User';
+    // If I am the creator, look for the other participant
+    if (creator != null && creator['id'] == _currentUserId) {
+      target = participants.firstWhere(
+        (p) => p['userId'] != _currentUserId, 
+        orElse: () => null
+      );
+    } else if (creator == null && participants.isNotEmpty) {
+      target = participants.firstWhere(
+        (p) => p['userId'] != _currentUserId, 
+        orElse: () => participants.first
+      );
+    }
+    
+    final String name = target?['name'] ?? target?['user']?['name'] ?? 'Unknown User';
     final String? avatar = target?['avatar'];
     final String? phoneNumber = target?['phoneNumber'];
     final String? vendorName = conversation['vendorName'];
