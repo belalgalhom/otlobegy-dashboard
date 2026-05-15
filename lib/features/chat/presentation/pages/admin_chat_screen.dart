@@ -64,8 +64,8 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
   void initState() {
     super.initState();
     _loadUserInfo();
-    _loadMessages();
     _setupSocket();
+    _loadMessages();
     _initRecorder();
     _controller.addListener(() {
       if (mounted) setState(() {});
@@ -97,28 +97,34 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     }
   }
 
+  Function(dynamic)? _messageListener;
+
   void _setupSocket() async {
     await sl<SocketService>().init();
-    sl<SocketService>().on('chat.message', (data) {
+    _messageListener = (data) {
       print('📥 Admin Socket Message Received: $data');
       if (mounted && data['conversationId'] == widget.conversationId) {
-        if (data['senderId'] != _currentUserId) {
+        if (data['senderId']?.toString() != _currentUserId?.toString()) {
           print('✅ Adding real-time message to admin list');
           setState(() {
-            _messages.insert(0, {
-              'id': data['messageId'],
-              'text': data['text'],
-              'type': data['type'],
-              'mediaUrl': data['mediaUrl'],
-              'sender': {'id': data['senderId'], 'role': data['senderRole'] ?? 'CUSTOMER', 'name': data['senderName'] ?? 'Customer'},
-              'createdAt': data['createdAt'],
-            });
+            // Check for duplicates
+            if (!_messages.any((m) => m['id']?.toString() == data['messageId']?.toString())) {
+              _messages.insert(0, {
+                'id': data['messageId'],
+                'text': data['text'],
+                'type': data['type'],
+                'mediaUrl': data['mediaUrl'],
+                'sender': {'id': data['senderId'], 'role': data['senderRole'] ?? 'CUSTOMER', 'name': data['senderName'] ?? 'Customer'},
+                'createdAt': data['createdAt'],
+              });
+              _scrollToBottom();
+            }
           });
-          _scrollToBottom();
           sl<ChatRepository>().markAsRead(widget.conversationId);
         }
       }
-    });
+    };
+    sl<SocketService>().on('chat.message', _messageListener!);
   }
 
   @override
@@ -126,7 +132,9 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     _recordingSubscription?.cancel();
     _recorder?.closeRecorder();
     _recorder = null;
-    sl<SocketService>().off('chat.message');
+    if (_messageListener != null) {
+      sl<SocketService>().off('chat.message', _messageListener!);
+    }
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -409,7 +417,19 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     final messages = await repository.getMessages(widget.conversationId);
     if (mounted) {
       setState(() {
-        _messages = messages.reversed.toList();
+        final fetchedMessages = messages.reversed.toList();
+        
+        // Merge with existing messages (avoid duplicates from socket)
+        for (var msg in fetchedMessages) {
+          if (!_messages.any((m) => m['id']?.toString() == msg['id']?.toString())) {
+            _messages.add(msg);
+          }
+        }
+        
+        // Sort by date newest first
+        _messages.sort((a, b) => 
+          DateTime.parse(b['createdAt']).compareTo(DateTime.parse(a['createdAt'])));
+          
         _isLoading = false;
       });
       _scrollToBottom();

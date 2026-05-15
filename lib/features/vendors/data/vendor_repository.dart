@@ -779,6 +779,8 @@ class VendorRepository {
         'externalUrl': data['externalUrl'],
         'isActive': data['isActive'] ?? true,
         'sortOrder': data['sortOrder'] ?? 0,
+        'offerPrice': data['offerPrice'],
+        'originalPrice': data['originalPrice'],
         'startDate': data['startDate'],
         'endDate': data['endDate'],
       });
@@ -811,6 +813,8 @@ class VendorRepository {
         'externalUrl': data['externalUrl'],
         'isActive': data['isActive'],
         'sortOrder': data['sortOrder'],
+        'offerPrice': data['offerPrice'],
+        'originalPrice': data['originalPrice'],
         'startDate': data['startDate'],
         'endDate': data['endDate'],
       });
@@ -844,6 +848,79 @@ class VendorRepository {
       return true;
     } catch (e) {
       print('VendorRepository uploadPromotionImage Error: $e');
+      return false;
+    }
+  }
+
+  // --- Offers ---
+
+  Future<List<dynamic>> getOffers() async {
+    try {
+      final response = await _apiClient.dio.get('/offers/admin');
+      final data = response.data;
+      if (data is List) return data;
+      if (data is Map && data['data'] != null) return data['data'] as List<dynamic>;
+      return [];
+    } catch (e) {
+      print('VendorRepository getOffers Error: $e');
+      return [];
+    }
+  }
+
+  Future<String?> createOffer(Map<String, dynamic> data) async {
+    try {
+      final response = await _apiClient.dio.post('/offers/admin', data: {
+        'productId': data['productId'],
+        'vendorId': data['vendorId'],
+        'originalPrice': data['originalPrice'],
+        'offerPrice': data['offerPrice'],
+        'sortOrder': data['sortOrder'] ?? 0,
+        'startDate': data['startDate'],
+        'endDate': data['endDate'],
+      });
+      
+      final resData = response.data;
+      if (resData is Map) {
+        return resData['id']?.toString() ?? resData['data']?['id']?.toString();
+      }
+      return 'success';
+    } catch (e) {
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to create offer';
+      }
+      print('VendorRepository createOffer Error: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> updateOffer(String id, Map<String, dynamic> data) async {
+    try {
+      await _apiClient.dio.patch('/offers/admin/$id', data: {
+        'originalPrice': data['originalPrice'],
+        'offerPrice': data['offerPrice'],
+        'isActive': data['isActive'],
+        'sortOrder': data['sortOrder'],
+        'startDate': data['startDate'],
+        'endDate': data['endDate'],
+      });
+      return true;
+    } catch (e) {
+      if (e is dio.DioException && e.response?.data != null) {
+        final data = e.response?.data as Map<String, dynamic>;
+        throw data['message'] ?? 'Failed to update offer';
+      }
+      print('VendorRepository updateOffer Error: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteOffer(String id) async {
+    try {
+      await _apiClient.dio.delete('/offers/admin/$id');
+      return true;
+    } catch (e) {
+      print('VendorRepository deleteOffer Error: $e');
       return false;
     }
   }

@@ -86,72 +86,83 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (context, constraints) {
-          bool isMobile = constraints.maxWidth < 1100;
-
-          return Scaffold(
-            key: _scaffoldKey,
-            drawer: isMobile ? _buildSidebar(isMobile: true) : null,
-            body: Row(
-              children: [
-                if (!isMobile) _buildSidebar(isMobile: false),
-                Expanded(
-                  child: Container(
-                    color: Theme.of(context).colorScheme.background,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Row(
-                            children: [
-                              if (isMobile) 
-                                IconButton(
-                                  icon: Icon(LucideIcons.menu, color: Theme.of(context).colorScheme.onBackground),
-                                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                                ),
-                              if (isMobile) const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  _getMenuTitle(context, _selectedIndex),
-                                  style: TextStyle(
-                                    fontSize: isMobile ? 20 : 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).colorScheme.onBackground,
+    return PopScope(
+      canPop: _selectedIndex == 0,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        if (_selectedIndex != 0) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+        }
+      },
+      child: LayoutBuilder(
+          builder: (context, constraints) {
+            bool isMobile = constraints.maxWidth < 1100;
+  
+            return Scaffold(
+              key: _scaffoldKey,
+              drawer: isMobile ? _buildSidebar(isMobile: true) : null,
+              body: Row(
+                children: [
+                  if (!isMobile) _buildSidebar(isMobile: false),
+                  Expanded(
+                    child: Container(
+                      color: Theme.of(context).colorScheme.background,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Row(
+                              children: [
+                                if (isMobile) 
+                                  IconButton(
+                                    icon: Icon(LucideIcons.menu, color: Theme.of(context).colorScheme.onBackground),
+                                    onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                                  ),
+                                if (isMobile) const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    _getMenuTitle(context, _selectedIndex),
+                                    style: TextStyle(
+                                      fontSize: isMobile ? 20 : 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).colorScheme.onBackground,
+                                    ),
                                   ),
                                 ),
-                              ),
-
-                              if (!isMobile) _buildSearchBar(),
-                              if (!isMobile) const SizedBox(width: 16),
-                              _buildHeaderAction(LucideIcons.bell),
-                              const SizedBox(width: 8),
-                              _buildThemeToggle(),
-                              const SizedBox(width: 8),
-                              _buildLanguageToggle(),
-                            ],
+  
+                                if (!isMobile) _buildSearchBar(),
+                                if (!isMobile) const SizedBox(width: 16),
+                                _buildHeaderAction(LucideIcons.bell),
+                                const SizedBox(width: 8),
+                                _buildThemeToggle(),
+                                const SizedBox(width: 8),
+                                _buildLanguageToggle(),
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: _selectedIndex == 6 
-                            ? Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 24),
-                                child: _buildContent(isMobile),
-                              )
-                            : SingleChildScrollView(
-                                padding: const EdgeInsets.symmetric(horizontal: 24),
-                                child: _buildContent(isMobile),
-                              ),
-                        ),
-                      ],
+                          Expanded(
+                            child: _selectedIndex == 6 
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  child: _buildContent(isMobile),
+                                )
+                              : SingleChildScrollView(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  child: _buildContent(isMobile),
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
+                ],
+              ),
+            );
+          },
+        ),
+    );
   }
 
   Widget _buildSidebar({required bool isMobile}) {

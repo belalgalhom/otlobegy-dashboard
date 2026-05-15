@@ -9,6 +9,7 @@ import 'package:otlob_admin/core/utils/image_utils.dart';
 import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/features/auth/data/auth_repository.dart';
 import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/core/services/socket_service.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -25,6 +26,27 @@ class _InboxScreenState extends State<InboxScreen> {
     super.initState();
     _loadCurrentUserId();
     context.read<ChatBloc>().add(FetchConversations());
+    _setupSocket();
+  }
+
+  Function(dynamic)? _messageListener;
+
+  void _setupSocket() async {
+    await sl<SocketService>().init();
+    _messageListener = (data) {
+      if (mounted) {
+        context.read<ChatBloc>().add(FetchConversations());
+      }
+    };
+    sl<SocketService>().on('chat.message', _messageListener!);
+  }
+
+  @override
+  void dispose() {
+    if (_messageListener != null) {
+      sl<SocketService>().off('chat.message', _messageListener!);
+    }
+    super.dispose();
   }
 
   Future<void> _loadCurrentUserId() async {

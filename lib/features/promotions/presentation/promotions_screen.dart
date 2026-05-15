@@ -12,6 +12,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
+import 'package:otlob_admin/features/auth/data/auth_repository.dart';
+import 'widgets/add_promotion_dialog.dart';
+import 'widgets/add_offer_dialog.dart';
 
 class PromotionsScreen extends StatefulWidget {
   const PromotionsScreen({super.key});
@@ -22,16 +25,30 @@ class PromotionsScreen extends StatefulWidget {
 
 class _PromotionsScreenState extends State<PromotionsScreen> {
   Timer? _refreshTimer;
+  String? _userRole;
+  String? _vendorId;
 
   @override
   void initState() {
     super.initState();
+    _loadUserInfo();
     // Refresh every 30 seconds to catch auto-deactivated promotions
     _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (mounted) {
         context.read<PromotionBloc>().add(FetchPromotions());
       }
     });
+  }
+
+  Future<void> _loadUserInfo() async {
+    final role = await sl<AuthRepository>().getUserRole();
+    final vId = await sl<AuthRepository>().getVendorId();
+    if (mounted) {
+      setState(() {
+        _userRole = role;
+        _vendorId = vId;
+      });
+    }
   }
 
   @override
@@ -65,9 +82,12 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: AppColors.primary.withOpacity(0.05)),
             ),
-            child: Row(
+            child: Flex(
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
+              crossAxisAlignment: isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
               children: [
                 Expanded(
+                  flex: isMobile ? 0 : 1,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -92,18 +112,44 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                     ],
                   ),
                 ),
-                ElevatedButton.icon(
-                  onPressed: () => _showAddPromotionDialog(context),
-                  icon: const Icon(LucideIcons.plus, size: 18),
-                  label: Text(l10n.addPromotion),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    elevation: 8,
-                    shadowColor: AppColors.primary.withOpacity(0.4),
-                  ),
+                if (isMobile) const SizedBox(height: 24),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _showAddOfferDialog(context),
+                      icon: const Icon(LucideIcons.tag, size: 18),
+                      label: Text(l10n.addOffer),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange.shade700,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 16 : 24, 
+                          vertical: isMobile ? 14 : 18
+                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        elevation: 8,
+                        shadowColor: Colors.orange.withOpacity(0.4),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _showAddPromotionDialog(context),
+                      icon: const Icon(LucideIcons.plus, size: 18),
+                      label: Text(l10n.addPromotion),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 16 : 24, 
+                          vertical: isMobile ? 14 : 18
+                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        elevation: 8,
+                        shadowColor: AppColors.primary.withOpacity(0.4),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -113,14 +159,19 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           // List Grid
           BlocBuilder<PromotionBloc, PromotionState>(
             builder: (context, state) {
-              if (state is PromotionLoading && state.promotions.isEmpty) {
+              var promotions = state.promotions;
+              if (_userRole == 'VENDOR' && _vendorId != null) {
+                promotions = promotions.where((p) => p['vendorId']?.toString() == _vendorId).toList();
+              }
+
+              if (state is PromotionLoading && promotions.isEmpty) {
                 return const SizedBox(
                   height: 400,
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
 
-              if (state.promotions.isEmpty) {
+              if (promotions.isEmpty) {
                 return _buildEmptyState(context, l10n);
               }
 
@@ -133,9 +184,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                   mainAxisSpacing: 24,
                   childAspectRatio: 1.7,
                 ),
-                itemCount: state.promotions.length,
+                itemCount: promotions.length,
                 itemBuilder: (context, index) {
-                  final promo = state.promotions[index];
+                  final promo = promotions[index];
                   return _buildPromotionCard(context, promo, l10n);
                 },
               );
@@ -181,10 +232,16 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   }
 
   Widget _buildPromotionCard(BuildContext context, dynamic promo, AppLocalizations l10n) {
+    final bool isOffer = promo['_isOffer'] == true;
     final bool isActive = promo['isActive'] ?? true;
-    final String type = promo['type'] ?? 'BANNER';
+    final String type = isOffer ? 'OFFER' : (promo['type'] ?? 'BANNER');
     final bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    final title = (isArabic && promo['titleAr'] != null) ? promo['titleAr'] : promo['title'];
+    final product = promo['product'] as Map?;
+    final title = isOffer 
+        ? (isArabic ? (product?['nameAr'] ?? '') : (product?['name'] ?? ''))
+        : ((isArabic && promo['titleAr'] != null) ? promo['titleAr'] : promo['title']);
+    
+    final String? imageUrl = isOffer ? (product?['imageUrl']) : (promo['imageUrl']);
 
     return Container(
       decoration: BoxDecoration(
@@ -204,9 +261,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           children: [
             // Banner Image with Ken Burns-like zoom feel
             Positioned.fill(
-              child: promo['imageUrl'] != null && promo['imageUrl'].toString().isNotEmpty
+              child: imageUrl != null && imageUrl.toString().isNotEmpty
                   ? CachedNetworkImage(
-                      imageUrl: _formatImageUrl(promo['imageUrl']),
+                      imageUrl: _formatImageUrl(imageUrl),
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(color: Colors.grey.withOpacity(0.05)),
                       errorWidget: (context, url, error) => Container(
@@ -215,8 +272,8 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                       ),
                     )
                   : Container(
-                      color: AppColors.primary.withOpacity(0.05),
-                      child: const Icon(LucideIcons.megaphone, color: AppColors.primary, size: 40),
+                      color: isOffer ? Colors.orange.withOpacity(0.05) : AppColors.primary.withOpacity(0.05),
+                      child: Icon(isOffer ? LucideIcons.tag : LucideIcons.megaphone, color: isOffer ? Colors.orange : AppColors.primary, size: 40),
                     ),
             ),
 
@@ -274,6 +331,34 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13),
                       ),
                     ),
+                   if (isOffer || (type == 'PRODUCT' && (promo['offerPrice'] != null || promo['originalPrice'] != null)))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          if (promo['offerPrice'] != null)
+                            Text(
+                              '${promo['offerPrice']} EGP',
+                              style: const TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 16,
+                              ),
+                            ),
+                          if (promo['originalPrice'] != null) ...[
+                            const SizedBox(width: 8),
+                            Text(
+                              '${promo['originalPrice']} EGP',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                                decoration: TextDecoration.lineThrough,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -286,7 +371,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                 children: [
                   _buildActionCircle(
                     icon: LucideIcons.edit3,
-                    onTap: () => _showAddPromotionDialog(context, promotion: promo),
+                    onTap: () => isOffer 
+                        ? _showAddOfferDialog(context, offer: promo)
+                        : _showAddPromotionDialog(context, promotion: promo),
                   ),
                   const SizedBox(width: 10),
                   _buildActionCircle(
@@ -391,22 +478,68 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
     }
   }
 
-  void _confirmDelete(BuildContext context, dynamic promo, AppLocalizations l10n) {
+  void _showAddOfferDialog(BuildContext context, {dynamic offer}) async {
+    final l10n = AppLocalizations.of(context)!;
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => AddOfferDialog(offer: offer, userRole: _userRole, vendorId: _vendorId),
+    );
+
+    if (result != null && context.mounted) {
+      final bloc = context.read<PromotionBloc>();
+      try {
+        if (offer != null) {
+          await sl<VendorRepository>().updateOffer(offer['id'], result);
+        } else {
+          await sl<VendorRepository>().createOffer(result);
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(offer != null ? l10n.offerUpdated : l10n.offerCreated),
+              backgroundColor: AppColors.success,
+            ),
+          );
+          bloc.add(FetchPromotions());
+        }
+      } catch (e) {
+        if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+  }
+
+  void _confirmDelete(BuildContext context, dynamic item, AppLocalizations l10n) {
     final bloc = context.read<PromotionBloc>();
+    final isOffer = item['_isOffer'] == true;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text(l10n.deletePromotion, style: const TextStyle(fontWeight: FontWeight.w900)),
-        content: Text(l10n.deletePromotionConfirm(promo['title'] ?? '')),
+        title: Text(isOffer ? l10n.deleteOffer : l10n.deletePromotion, style: const TextStyle(fontWeight: FontWeight.w900)),
+        content: Text(isOffer ? l10n.deleteOfferConfirm : l10n.deletePromotionConfirm(item['title'] ?? '')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
           TextButton(
             onPressed: () async {
-              final success = await sl<VendorRepository>().deletePromotion(promo['id']);
-              if (context.mounted) {
-                Navigator.pop(context);
-                if (success) bloc.add(FetchPromotions());
+              Navigator.pop(context);
+              final bloc = context.read<PromotionBloc>();
+              try {
+                if (isOffer) {
+                  await sl<VendorRepository>().deleteOffer(item['id']);
+                } else {
+                  await sl<VendorRepository>().deletePromotion(item['id']);
+                }
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(isOffer ? l10n.offerDeleted : l10n.deletePromotion),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                  bloc.add(FetchPromotions());
+                }
+              } catch (e) {
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),

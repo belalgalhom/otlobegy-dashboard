@@ -60,6 +60,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signIn => 'تسجيل الدخول';
 
   @override
+  String get rememberMe => 'تذكرني';
+
+  @override
+  String get orLoginWithAnother => 'أو تسجيل الدخول بحساب آخر';
+
+  @override
   String get dashboard => 'لوحة التحكم';
 
   @override
@@ -202,6 +208,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fieldRequired => 'مطلوب';
+
+  @override
+  String get optional => 'اختياري';
 
   @override
   String get businessCategory => 'فئة العمل';
@@ -708,6 +717,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get linkType => 'رابط خارجي';
 
   @override
+  String get popupType => 'نافذة منبثقة';
+
+  @override
+  String get notificationType => 'إشعار';
+
+  @override
   String get externalUrl => 'رابط خارجي';
 
   @override
@@ -937,4 +952,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get sellingOptions => 'خيارات البيع';
+
+  @override
+  String get addOffer => 'إضافة خصم';
+
+  @override
+  String get editOffer => 'تعديل العرض';
+
+  @override
+  String get deleteOffer => 'حذف العرض';
+
+  @override
+  String get offerPrice => 'سعر العرض';
+
+  @override
+  String get originalPrice => 'السعر الأصلي';
+
+  @override
+  String get deleteOfferConfirm => 'هل أنت متأكد من حذف هذا العرض؟';
+
+  @override
+  String get noExpiry => 'بدون تاريخ انتهاء';
+
+  @override
+  String get offerCreated => 'تم إضافة الخصم بنجاح';
+
+  @override
+  String get offerUpdated => 'تم تحديث الخصم بنجاح';
+
+  @override
+  String get offerDeleted => 'تم حذف الخصم بنجاح';
 }

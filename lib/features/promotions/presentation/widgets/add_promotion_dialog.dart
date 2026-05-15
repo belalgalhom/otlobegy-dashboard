@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
@@ -77,7 +76,6 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
           _isLoadingVendors = false;
         });
         
-        // If editing and has a vendor selected, fetch products
         if (_selectedVendorId != null && _type == 'PRODUCT') {
           _fetchProducts(_selectedVendorId!);
         }
@@ -105,42 +103,28 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
     }
   }
 
-  Future<void> _pickImage() async {
-    try {
-      final result = await FilePicker.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
-      );
-      
-      if (result != null && result.files.single.path != null) {
-        setState(() => _imageFile = XFile(result.files.single.path!));
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final isMobile = size.width < 600;
-    final isVeryNarrow = size.width < 500;
     final l10n = AppLocalizations.of(context)!;
     final isEdit = widget.promotion != null;
+    final mediaQuery = MediaQuery.of(context);
+    final isMobile = mediaQuery.size.width < 600;
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : mediaQuery.size.width * 0.15,
+        vertical: 24,
+      ),
       child: Container(
-        constraints: BoxConstraints(maxWidth: 600, maxHeight: size.height * 0.9),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
-              blurRadius: 40,
-              offset: const Offset(0, 20),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
@@ -149,10 +133,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Header
               _buildHeader(l10n, isEdit),
-
-              // Form Body
               Flexible(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 32, vertical: 24),
@@ -178,7 +159,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                             _buildProductDropdown(l10n),
                           ],
                         ],
-                        
+
                         if (_type == 'EXTERNAL_LINK') ...[
                           const SizedBox(height: 16),
                           _buildTextField(
@@ -198,117 +179,69 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                         _buildSectionHeader(l10n.generalInformation, LucideIcons.info),
                         const SizedBox(height: 12),
                         
-                        if (isVeryNarrow) ...[
-                          _buildTextField(
-                            controller: _titleController,
-                            label: l10n.titleEn,
-                            hint: 'Summer Sale',
-                            icon: LucideIcons.type,
-                            validator: (v) => v?.isEmpty ?? true ? l10n.fieldRequired : null,
-                          ),
-                          const SizedBox(height: 16),
-                          _buildTextField(
-                            controller: _titleArController,
-                            label: l10n.titleAr,
-                            hint: 'عروض الصيف',
-                            icon: LucideIcons.languages,
-                            textAlign: TextAlign.right,
-                          ),
-                        ] else 
-                          Row(
-                            children: [
-                              Expanded(child: _buildTextField(
-                                controller: _titleController,
-                                label: l10n.titleEn,
-                                hint: 'Summer Sale',
-                                icon: LucideIcons.type,
-                                validator: (v) => v?.isEmpty ?? true ? l10n.fieldRequired : null,
-                              )),
-                              const SizedBox(width: 16),
-                              Expanded(child: _buildTextField(
-                                controller: _titleArController,
-                                label: l10n.titleAr,
-                                hint: 'عروض الصيف',
-                                icon: LucideIcons.languages,
-                                textAlign: TextAlign.right,
-                              )),
-                            ],
-                          ),
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField(
+                              controller: _titleController,
+                              label: l10n.titleEn,
+                              hint: 'Summer Sale',
+                              icon: LucideIcons.type,
+                              validator: (v) => (v == null || v.isEmpty) ? l10n.fieldRequired : null,
+                            )),
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField(
+                              controller: _titleArController,
+                              label: l10n.titleAr,
+                              hint: 'عروض الصيف',
+                              icon: LucideIcons.languages,
+                              textAlign: TextAlign.right,
+                            )),
+                          ],
+                        ),
                         
                         const SizedBox(height: 16),
                         
-                        if (isVeryNarrow) ...[
-                          _buildTextField(
-                            controller: _descriptionController,
-                            label: l10n.descriptionEn,
-                            hint: 'Optional...',
-                            icon: LucideIcons.alignLeft,
-                          ),
-                          const SizedBox(height: 16),
-                          _buildTextField(
-                            controller: _descriptionArController,
-                            label: l10n.descriptionAr,
-                            hint: 'اختياري...',
-                            icon: LucideIcons.languages,
-                            textAlign: TextAlign.right,
-                          ),
-                        ] else
-                          Row(
-                            children: [
-                              Expanded(child: _buildTextField(
-                                controller: _descriptionController,
-                                label: l10n.descriptionEn,
-                                hint: 'Optional...',
-                                icon: LucideIcons.alignLeft,
-                              )),
-                              const SizedBox(width: 16),
-                              Expanded(child: _buildTextField(
-                                controller: _descriptionArController,
-                                label: l10n.descriptionAr,
-                                hint: 'اختياري...',
-                                icon: LucideIcons.languages,
-                                textAlign: TextAlign.right,
-                              )),
-                            ],
-                          ),
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField(
+                              controller: _descriptionController,
+                              label: l10n.descriptionEn,
+                              hint: 'Optional...',
+                              icon: LucideIcons.alignLeft,
+                            )),
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField(
+                              controller: _descriptionArController,
+                              label: l10n.descriptionAr,
+                              hint: 'اختياري...',
+                              icon: LucideIcons.languages,
+                              textAlign: TextAlign.right,
+                            )),
+                          ],
+                        ),
                         
                         const SizedBox(height: 16),
                         _buildDateSelectors(l10n),
                         const SizedBox(height: 32),
                         
-                        if (isVeryNarrow) ...[
-                          _buildTextField(
-                            controller: _sortOrderController,
-                            label: l10n.sortOrder,
-                            hint: '0',
-                            icon: LucideIcons.listOrdered,
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: 16),
-                          _buildSwitchTile(l10n),
-                        ] else
-                          Row(
-                            children: [
-                              Expanded(child: _buildTextField(
-                                controller: _sortOrderController,
-                                label: l10n.sortOrder,
-                                hint: '0',
-                                icon: LucideIcons.listOrdered,
-                                keyboardType: TextInputType.number,
-                              )),
-                              const SizedBox(width: 32),
-                              Expanded(
-                                child: _buildSwitchTile(l10n),
-                              ),
-                            ],
-                          ),
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField(
+                              controller: _sortOrderController,
+                              label: l10n.sortOrder,
+                              hint: '0',
+                              icon: LucideIcons.listOrdered,
+                              keyboardType: TextInputType.number,
+                            )),
+                            const SizedBox(width: 32),
+                            Expanded(child: _buildSwitchTile(l10n)),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-
-              // Footer
               _buildFooter(l10n, isEdit, isMobile),
             ],
           ),
@@ -319,7 +252,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
 
   Widget _buildHeader(AppLocalizations l10n, bool isEdit) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
         color: AppColors.primary.withOpacity(0.05),
         border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05))),
@@ -327,12 +260,9 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: const Icon(LucideIcons.megaphone, color: AppColors.primary),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(12)),
+            child: const Icon(LucideIcons.megaphone, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 16),
           Text(
@@ -340,169 +270,8 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, letterSpacing: -0.5),
           ),
           const Spacer(),
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(LucideIcons.x),
-            style: IconButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
-            ),
-          ),
+          IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(LucideIcons.x, size: 20)),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDateSelectors(AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader(l10n.scheduleOptional, LucideIcons.calendar),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildDatePickerTile(
-                label: l10n.startDate,
-                value: _startDate,
-                onTap: () async {
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: _startDate ?? DateTime.now(),
-                    firstDate: DateTime(2024),
-                    lastDate: DateTime(2030),
-                  );
-                  if (date != null) {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(_startDate ?? DateTime.now()),
-                    );
-                    if (time != null) {
-                      setState(() {
-                        _startDate = DateTime(
-                          date.year,
-                          date.month,
-                          date.day,
-                          time.hour,
-                          time.minute,
-                        );
-                      });
-                    }
-                  }
-                },
-                onClear: () => setState(() => _startDate = null),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildDatePickerTile(
-                label: l10n.endDate,
-                value: _endDate,
-                onTap: () async {
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: _endDate ?? (_startDate ?? DateTime.now()),
-                    firstDate: _startDate ?? DateTime(2024),
-                    lastDate: DateTime(2030),
-                  );
-                  if (date != null) {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(_endDate ?? DateTime.now()),
-                    );
-                    if (time != null) {
-                      setState(() {
-                        _endDate = DateTime(
-                          date.year,
-                          date.month,
-                          date.day,
-                          time.hour,
-                          time.minute,
-                        );
-                      });
-                    }
-                  }
-                },
-                onClear: () => setState(() => _endDate = null),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDatePickerTile({
-    required String label,
-    required DateTime? value,
-    required VoidCallback onTap,
-    required VoidCallback onClear,
-  }) {
-    final dateFormat = DateFormat('MMM dd, yyyy');
-    final timeFormat = DateFormat('hh:mm a');
-    
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.02),
-          border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.08)),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  LucideIcons.calendar, 
-                  size: 14, 
-                  color: value != null ? AppColors.primary : AppColors.textSecondary
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  label, 
-                  style: const TextStyle(
-                    color: AppColors.textSecondary, 
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
-                if (value != null) ...[
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: onClear,
-                    child: Icon(LucideIcons.x, size: 14, color: AppColors.error.withOpacity(0.7)),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (value != null) ...[
-              Text(
-                dateFormat.format(value),
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              Text(
-                timeFormat.format(value),
-                style: TextStyle(
-                  color: AppColors.primary.withOpacity(0.8), 
-                  fontSize: 12, 
-                  fontWeight: FontWeight.w600
-                ),
-              ),
-            ] else
-              Text(
-                'Set Schedule',
-                style: TextStyle(
-                  color: AppColors.textSecondary.withOpacity(0.5),
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }
@@ -510,55 +279,51 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
   Widget _buildSectionHeader(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 14, color: AppColors.primary),
+        Icon(icon, size: 16, color: AppColors.primary),
         const SizedBox(width: 8),
-        Text(
-          title.toUpperCase(),
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            color: AppColors.primary.withOpacity(0.8),
-            letterSpacing: 1.2,
-          ),
-        ),
+        Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, letterSpacing: 0.5)),
       ],
     );
   }
 
   Widget _buildImagePicker(AppLocalizations l10n) {
-    return GestureDetector(
+    return InkWell(
       onTap: _pickImage,
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        height: 180,
+        height: 160,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.02),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1), style: BorderStyle.solid),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
         ),
         child: _imageFile != null
-            ? ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.file(File(_imageFile!.path), fit: BoxFit.cover))
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.file(File(_imageFile!.path), fit: BoxFit.cover),
+              )
             : widget.promotion?['imageUrl'] != null
-                ? ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.network('https://api.otlob-egy.online${widget.promotion!['imageUrl']}', fit: BoxFit.cover))
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(widget.promotion['imageUrl'], fit: BoxFit.cover),
+                  )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.05),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(LucideIcons.upload, color: AppColors.primary, size: 32),
-                      ),
+                      Icon(LucideIcons.uploadCloud, size: 32, color: AppColors.primary.withOpacity(0.5)),
                       const SizedBox(height: 12),
-                      Text(l10n.uploadBannerImage, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                      const SizedBox(height: 4),
-                      Text('All image formats supported', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4), fontSize: 11)),
+                      Text(l10n.uploadBannerImage, style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 13)),
                     ],
                   ),
       ),
     );
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) setState(() => _imageFile = image);
   }
 
   Widget _buildTypeDropdown(AppLocalizations l10n) {
@@ -595,34 +360,18 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
         onChanged: (v) {
           setState(() {
             _selectedVendorId = v;
-            _selectedProductId = null; // Reset product when vendor changes
+            _selectedProductId = null;
           });
-          if (v != null && _type == 'PRODUCT') {
-            _fetchProducts(v);
-          }
+          if (v != null && _type == 'PRODUCT') _fetchProducts(v);
         },
       ),
     );
   }
 
   Widget _buildProductDropdown(AppLocalizations l10n) {
-    if (_isLoadingProducts) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (_products.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: Text(
-          'No products found for this vendor',
-          style: TextStyle(color: AppColors.error, fontSize: 13),
-        ),
-      );
-    }
-
+    if (_isLoadingProducts) return const Padding(padding: EdgeInsets.only(top: 16), child: Center(child: CircularProgressIndicator()));
+    if (_products.isEmpty) return const Padding(padding: EdgeInsets.only(top: 16), child: Text('No products found', style: TextStyle(color: Colors.red)));
+    
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: DropdownButtonFormField<String>(
@@ -646,109 +395,67 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
     required String label,
     required String hint,
     required IconData icon,
-    int maxLines = 1,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
     TextAlign textAlign = TextAlign.start,
   }) {
     return TextFormField(
       controller: controller,
-      maxLines: maxLines,
       keyboardType: keyboardType,
       validator: validator,
       textAlign: textAlign,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(icon, size: 18),
+      decoration: InputDecoration(labelText: label, hintText: hint, prefixIcon: Icon(icon, size: 18)),
+    );
+  }
+
+  Widget _buildDateSelectors(AppLocalizations l10n) {
+    return Row(
+      children: [
+        Expanded(child: _buildDatePicker(l10n.startDate, _startDate, (d) => setState(() => _startDate = d))),
+        const SizedBox(width: 16),
+        Expanded(child: _buildDatePicker(l10n.endDate, _endDate, (d) => setState(() => _endDate = d))),
+      ],
+    );
+  }
+
+  Widget _buildDatePicker(String label, DateTime? date, Function(DateTime) onSelect) {
+    return InkWell(
+      onTap: () async {
+        final d = await showDatePicker(
+          context: context, 
+          initialDate: date ?? DateTime.now(), 
+          firstDate: DateTime.now().subtract(const Duration(days: 365)), 
+          lastDate: DateTime.now().add(const Duration(days: 365))
+        );
+        if (d != null) onSelect(d);
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(labelText: label, prefixIcon: const Icon(LucideIcons.calendar, size: 18)),
+        child: Text(date != null ? DateFormat('MMM dd, yyyy').format(date) : 'Set date', style: const TextStyle(fontSize: 14)),
       ),
     );
   }
 
   Widget _buildSwitchTile(AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.02),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
-      ),
-      child: Row(
-        children: [
-          Icon(LucideIcons.power, size: 16, color: _isActive ? AppColors.success : AppColors.error),
-          const SizedBox(width: 12),
-          Text(l10n.active, style: const TextStyle(fontWeight: FontWeight.w600)),
-          const Spacer(),
-          Switch(
-            value: _isActive,
-            onChanged: (v) => setState(() => _isActive = v),
-            activeColor: AppColors.primary,
-          ),
-        ],
-      ),
+    return SwitchListTile(
+      title: Text(l10n.active, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      value: _isActive,
+      onChanged: (v) => setState(() => _isActive = v),
+      activeColor: AppColors.primary,
+      contentPadding: EdgeInsets.zero,
     );
   }
 
   Widget _buildFooter(AppLocalizations l10n, bool isEdit, bool isMobile) {
-    return Container(
+    return Padding(
       padding: EdgeInsets.all(isMobile ? 20 : 32),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05))),
+      child: Row(
+        children: [
+          Expanded(child: TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel))),
+          const SizedBox(width: 16),
+          Expanded(child: ElevatedButton(onPressed: _submit, child: Text(isEdit ? l10n.update : l10n.create))),
+        ],
       ),
-      child: isMobile 
-        ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 56),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  elevation: 0,
-                ),
-                child: Text(isEdit ? l10n.update : l10n.create),
-              ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 56),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                ),
-                child: Text(l10n.cancel),
-              ),
-            ],
-          )
-        : Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size(0, 56),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  ),
-                  child: Text(l10n.cancel),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(0, 56),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    elevation: 0,
-                  ),
-                  child: Text(isEdit ? l10n.update : l10n.create),
-                ),
-              ),
-            ],
-          ),
     );
   }
 
@@ -759,41 +466,15 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.imageRequired)));
         return;
       }
-
-      // Convert empty strings to null for optional fields to satisfy backend validation
-      final titleAr = _titleArController.text.trim();
-      final description = _descriptionController.text.trim();
-      final descriptionAr = _descriptionArController.text.trim();
-      final externalUrl = _urlController.text.trim();
-
-      // Clean up data based on type
-      String? finalVendorId = _selectedVendorId;
-      String? finalProductId = _selectedProductId;
-      String? finalExternalUrl = externalUrl.isNotEmpty ? externalUrl : null;
-
-      if (_type == 'BANNER') {
-        finalVendorId = null;
-        finalProductId = null;
-        finalExternalUrl = null;
-      } else if (_type == 'VENDOR') {
-        finalProductId = null;
-        finalExternalUrl = null;
-      } else if (_type == 'PRODUCT') {
-        finalExternalUrl = null;
-      } else if (_type == 'EXTERNAL_LINK') {
-        finalVendorId = null;
-        finalProductId = null;
-      }
-
       Navigator.pop(context, {
         'title': _titleController.text.trim(),
-        'titleAr': titleAr.isNotEmpty ? titleAr : null,
-        'description': description.isNotEmpty ? description : null,
-        'descriptionAr': descriptionAr.isNotEmpty ? descriptionAr : null,
+        'titleAr': _titleArController.text.trim(),
+        'description': _descriptionController.text.trim(),
+        'descriptionAr': _descriptionArController.text.trim(),
         'type': _type,
-        'vendorId': finalVendorId,
-        'productId': finalProductId,
-        'externalUrl': finalExternalUrl,
+        'vendorId': _selectedVendorId,
+        'productId': _selectedProductId,
+        'externalUrl': _urlController.text.trim(),
         'isActive': _isActive,
         'sortOrder': int.tryParse(_sortOrderController.text) ?? 0,
         'imageFile': _imageFile,

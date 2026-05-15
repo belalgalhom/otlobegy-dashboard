@@ -200,6 +200,18 @@ abstract class AppLocalizations {
   /// **'Sign In'**
   String get signIn;
 
+  /// No description provided for @rememberMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember Me'**
+  String get rememberMe;
+
+  /// No description provided for @orLoginWithAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Or login with another account'**
+  String get orLoginWithAnother;
+
   /// No description provided for @dashboard.
   ///
   /// In en, this message translates to:
@@ -487,6 +499,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Required'**
   String get fieldRequired;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
 
   /// No description provided for @businessCategory.
   ///
@@ -1448,6 +1466,18 @@ abstract class AppLocalizations {
   /// **'External Link'**
   String get linkType;
 
+  /// No description provided for @popupType.
+  ///
+  /// In en, this message translates to:
+  /// **'Popup'**
+  String get popupType;
+
+  /// No description provided for @notificationType.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get notificationType;
+
   /// No description provided for @externalUrl.
   ///
   /// In en, this message translates to:
@@ -1891,6 +1921,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Selling Options'**
   String get sellingOptions;
+
+  /// No description provided for @addOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add offer'**
+  String get addOffer;
+
+  /// No description provided for @editOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit offer'**
+  String get editOffer;
+
+  /// No description provided for @deleteOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete offer'**
+  String get deleteOffer;
+
+  /// No description provided for @offerPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer Price'**
+  String get offerPrice;
+
+  /// No description provided for @originalPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Original Price'**
+  String get originalPrice;
+
+  /// No description provided for @deleteOfferConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this offer?'**
+  String get deleteOfferConfirm;
+
+  /// No description provided for @noExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'No expiry'**
+  String get noExpiry;
+
+  /// No description provided for @offerCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer created successfully'**
+  String get offerCreated;
+
+  /// No description provided for @offerUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer updated successfully'**
+  String get offerUpdated;
+
+  /// No description provided for @offerDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer deleted successfully'**
+  String get offerDeleted;
 }
 
 class _AppLocalizationsDelegate

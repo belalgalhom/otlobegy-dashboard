@@ -5,6 +5,8 @@
   "emailHint": "admin@otlob.com",
   "password": "كلمة المرور",
   "signIn": "تسجيل الدخول",
+  "rememberMe": "تذكرني",
+  "orLoginWithAnother": "أو تسجيل الدخول بحساب آخر",
   "dashboard": "لوحة التحكم",
   "orders": "الطلبات",
   "vendors": "التجار",
@@ -65,6 +67,7 @@
   "updateVendor": "تحديث التاجر",
   "registerStore": "تسجيل المتجر",
   "fieldRequired": "مطلوب",
+  "optional": "اختياري",
   "businessCategory": "فئة العمل",
   "businessType": "نوع العمل",
   "financials": "الماليات",
@@ -282,6 +285,8 @@
   "vendorType": "رابط لمتجر",
   "productType": "رابط لمنتج",
   "linkType": "رابط خارجي",
+  "popupType": "نافذة منبثقة",
+  "notificationType": "إشعار",
   "externalUrl": "رابط خارجي",
   "selectVendor": "اختر المتجر",
   "selectProduct": "اختر المنتج",
@@ -358,6 +363,16 @@
   "sellByStrip": "بيع بالشريط",
   "stripsPerPackage": "عدد الشرائط في العبوة",
   "stripPrice": "سعر الشريط الواحد",
-  "sellingOptions": "خيارات البيع"
+  "sellingOptions": "خيارات البيع",
+  "addOffer": "إضافة خصم",
+  "editOffer": "تعديل العرض",
+  "deleteOffer": "حذف العرض",
+  "offerPrice": "سعر العرض",
+  "originalPrice": "السعر الأصلي",
+  "deleteOfferConfirm": "هل أنت متأكد من حذف هذا العرض؟",
+  "noExpiry": "بدون تاريخ انتهاء",
+  "offerCreated": "تم إضافة الخصم بنجاح",
+  "offerUpdated": "تم تحديث الخصم بنجاح",
+  "offerDeleted": "تم حذف الخصم بنجاح"
 }
 

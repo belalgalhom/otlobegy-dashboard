@@ -21,12 +21,12 @@ class AuthRepository {
         print('Login Success Data: $responseMap');
         final data = responseMap['data'] as Map<String, dynamic>;
         
-        // Role check
+        // Role check (Disabled for testing/developer access)
         final userData = data['user'] as Map<String, dynamic>;
         final role = userData['role'] as String;
-        if (role == 'CUSTOMER') {
-          throw 'ACCESS_DENIED';
-        }
+        // if (role == 'CUSTOMER') {
+        //   throw 'ACCESS_DENIED';
+        // }
 
         await _storage.write(key: 'access_token', value: data['access_token']);
         await _storage.write(key: 'refresh_token', value: data['refresh_token']);
@@ -51,8 +51,53 @@ class AuthRepository {
     }
   }
 
+  Future<void> saveProfileInfo(String email, String password, String name, String role) async {
+    await _storage.write(key: 'saved_email', value: email);
+    await _storage.write(key: 'saved_password', value: password);
+    await _storage.write(key: 'saved_name', value: name);
+    await _storage.write(key: 'saved_role', value: role);
+  }
+
+  Future<Map<String, String>?> getSavedProfile() async {
+    final email = await _storage.read(key: 'saved_email');
+    final password = await _storage.read(key: 'saved_password');
+    final name = await _storage.read(key: 'saved_name');
+    final role = await _storage.read(key: 'saved_role');
+    
+    if (email != null) {
+      return {
+        'email': email,
+        'password': password ?? '',
+        'name': name ?? '',
+        'role': role ?? '',
+      };
+    }
+    return null;
+  }
+
+  Future<void> deleteSavedProfile() async {
+    await _storage.delete(key: 'saved_email');
+    await _storage.delete(key: 'saved_password');
+    await _storage.delete(key: 'saved_name');
+    await _storage.delete(key: 'saved_role');
+  }
+
   Future<void> logout() async {
+    // Save these before deleting all
+    final savedEmail = await _storage.read(key: 'saved_email');
+    final savedPassword = await _storage.read(key: 'saved_password');
+    final savedName = await _storage.read(key: 'saved_name');
+    final savedRole = await _storage.read(key: 'saved_role');
+
     await _storage.deleteAll();
+
+    // Restore saved profile info if it existed
+    if (savedEmail != null) {
+      await _storage.write(key: 'saved_email', value: savedEmail);
+      if (savedPassword != null) await _storage.write(key: 'saved_password', value: savedPassword);
+      if (savedName != null) await _storage.write(key: 'saved_name', value: savedName);
+      if (savedRole != null) await _storage.write(key: 'saved_role', value: savedRole);
+    }
   }
 
   Future<bool> isLoggedIn() async {

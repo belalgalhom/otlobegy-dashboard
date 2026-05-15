@@ -44,8 +44,15 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
     on<FetchPromotions>((event, emit) async {
       emit(PromotionLoading(promotions: state.promotions, total: state.total));
       try {
-        final result = await _repository.getPromotions();
-        emit(PromotionLoaded(result));
+        final results = await Future.wait([
+          _repository.getPromotions(),
+          _repository.getOffers(),
+        ]);
+        
+        final promos = results[0].map((p) => {...p, '_isOffer': false}).toList();
+        final offers = results[1].map((o) => {...o, '_isOffer': true}).toList();
+        
+        emit(PromotionLoaded([...promos, ...offers]));
       } catch (e) {
         emit(PromotionError(e.toString(), promotions: state.promotions, total: state.total));
       }

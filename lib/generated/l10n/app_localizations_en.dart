@@ -60,6 +60,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signIn => 'Sign In';
 
   @override
+  String get rememberMe => 'Remember Me';
+
+  @override
+  String get orLoginWithAnother => 'Or login with another account';
+
+  @override
   String get dashboard => 'Dashboard';
 
   @override
@@ -202,6 +208,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fieldRequired => 'Required';
+
+  @override
+  String get optional => 'Optional';
 
   @override
   String get businessCategory => 'Business Category';
@@ -714,6 +723,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get linkType => 'External Link';
 
   @override
+  String get popupType => 'Popup';
+
+  @override
+  String get notificationType => 'Notification';
+
+  @override
   String get externalUrl => 'External URL';
 
   @override
@@ -945,4 +960,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sellingOptions => 'Selling Options';
+
+  @override
+  String get addOffer => 'Add offer';
+
+  @override
+  String get editOffer => 'Edit offer';
+
+  @override
+  String get deleteOffer => 'Delete offer';
+
+  @override
+  String get offerPrice => 'Offer Price';
+
+  @override
+  String get originalPrice => 'Original Price';
+
+  @override
+  String get deleteOfferConfirm =>
+      'Are you sure you want to delete this offer?';
+
+  @override
+  String get noExpiry => 'No expiry';
+
+  @override
+  String get offerCreated => 'Offer created successfully';
+
+  @override
+  String get offerUpdated => 'Offer updated successfully';
+
+  @override
+  String get offerDeleted => 'Offer deleted successfully';
 }
