@@ -93,6 +93,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchHint => 'بحث...';
 
   @override
+  String get all => 'الكل';
+
+  @override
   String get admin => 'أدمن';
 
   @override

@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:otlob_admin/injection_container.dart';
+import 'package:otlob_admin/features/auth/presentation/auth_bloc.dart';
 
 class TokenInterceptor extends Interceptor {
   final FlutterSecureStorage _storage;
@@ -83,8 +85,11 @@ class TokenInterceptor extends Interceptor {
           }
           _requestsQueue.clear();
 
-          // Refresh failed, clear tokens
+          // Refresh failed, clear tokens and notify UI
           await _storage.deleteAll();
+          if (sl.isRegistered<AuthBloc>()) {
+            sl<AuthBloc>().add(LogoutRequested());
+          }
           _isRefreshing = false;
           return handler.next(err);
         }
@@ -97,6 +102,9 @@ class TokenInterceptor extends Interceptor {
         _requestsQueue.clear();
 
         await _storage.deleteAll();
+        if (sl.isRegistered<AuthBloc>()) {
+          sl<AuthBloc>().add(LogoutRequested());
+        }
         _isRefreshing = false;
         return handler.next(err);
       } else {

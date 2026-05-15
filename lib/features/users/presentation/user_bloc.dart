@@ -58,6 +58,7 @@ class UpdateUserRequested extends UserEvent {
   final String? role;
   final String? vendorId;
   final String? vendorRole;
+  final String? password;
 
   UpdateUserRequested({
     required this.id,
@@ -67,10 +68,11 @@ class UpdateUserRequested extends UserEvent {
     this.role,
     this.vendorId,
     this.vendorRole,
+    this.password,
   });
 
   @override
-  List<Object?> get props => [id, name, email, phone, role, vendorId, vendorRole];
+  List<Object?> get props => [id, name, email, phone, role, vendorId, vendorRole, password];
 }
 
 class DeleteUserRequested extends UserEvent {
@@ -179,6 +181,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           role: event.role,
           vendorId: event.vendorId,
           vendorRole: event.vendorRole,
+          password: event.password,
         );
         if (success) {
           emit(UserOperationSuccess('common.success.resource_updated'));

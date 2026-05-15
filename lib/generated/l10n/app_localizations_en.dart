@@ -93,6 +93,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search...';
 
   @override
+  String get all => 'All';
+
+  @override
   String get admin => 'Admin';
 
   @override

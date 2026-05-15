@@ -63,10 +63,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthCheckRequested>((event, emit) async {
       final loggedIn = await _repository.isLoggedIn();
-      if (loggedIn) {
+      if (!loggedIn) {
+        emit(Unauthenticated());
+        return;
+      }
+
+      final isExpired = await _repository.isTokenExpired();
+      if (!isExpired) {
         emit(Authenticated());
       } else {
-        emit(Unauthenticated());
+        try {
+          await _repository.refreshToken();
+          emit(Authenticated());
+        } catch (e) {
+          await _repository.logout();
+          emit(Unauthenticated());
+        }
       }
     });
 

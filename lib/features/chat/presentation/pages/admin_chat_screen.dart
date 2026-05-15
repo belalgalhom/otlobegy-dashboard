@@ -328,6 +328,24 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     });
   }
 
+  Future<void> _cancelRecording() async {
+    if (!_isRecording) return;
+    await _recorder!.stopRecorder();
+    _recordingSubscription?.cancel();
+    
+    if (_recordingPath != null) {
+      final file = File(_recordingPath!);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+
+    setState(() {
+      _isRecording = false;
+      _recordingDuration = Duration.zero;
+    });
+  }
+
   Future<void> _stopRecording() async {
     if (!_isRecording) return;
     await _recorder!.stopRecorder();
@@ -843,8 +861,13 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
         child: Row(
           children: [
             GestureDetector(
-              onLongPress: _startRecording,
-              onLongPressUp: _stopRecording,
+              onTap: () {
+                if (_isRecording) {
+                  _stopRecording();
+                } else {
+                  _startRecording();
+                }
+              },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.all(10),
@@ -857,7 +880,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
                   ),
                 ),
                 child: Icon(
-                  _isRecording ? LucideIcons.stopCircle : LucideIcons.mic,
+                  _isRecording ? LucideIcons.send : LucideIcons.mic,
                   color: _isRecording ? AppColors.error : AppColors.primary,
                   size: 22,
                 ),
@@ -896,18 +919,15 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
                                   ),
                                 ),
                                 const Spacer(),
-                                Flexible(
-                                  child: Text(
-                                    AppLocalizations.of(context)!.releaseToSend,
-                                    style: const TextStyle(
-                                      color: AppColors.textMuted,
-                                      fontSize: 11,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                TextButton.icon(
+                                  onPressed: _cancelRecording,
+                                  icon: const Icon(LucideIcons.x, size: 14, color: AppColors.error),
+                                  label: Text(
+                                    AppLocalizations.of(context)!.cancel,
+                                    style: const TextStyle(color: AppColors.error, fontSize: 12),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: 8),
                               ],
                             ),
                           )

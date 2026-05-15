@@ -101,8 +101,24 @@ class UsersRepository {
     String? role,
     String? vendorId,
     String? vendorRole,
+    String? password,
   }) async {
     try {
+      // If password is provided, we use a manual patch request because the generated DTO might not have the password field yet
+      if (password != null && password.isNotEmpty) {
+        final Map<String, dynamic> data = {};
+        if (name != null) data['name'] = name;
+        if (email != null) data['email'] = email;
+        if (phone != null) data['phone'] = phone;
+        if (role != null) data['role'] = role;
+        if (vendorId != null) data['vendorId'] = vendorId;
+        if (vendorRole != null) data['vendorRole'] = vendorRole;
+        data['password'] = password;
+
+        await _apiClient.dio.patch('/users/$id', data: data);
+        return true;
+      }
+
       final dto = AdminUpdateUserDto((b) {
         if (name != null) b.name = name;
         if (email != null) b.email = email;

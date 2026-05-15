@@ -25,6 +25,7 @@ class _UsersScreenState extends State<UsersScreen> {
   String? _currentUserId;
   List<dynamic> _vendors = [];
   final TextEditingController _searchController = TextEditingController();
+  String? _selectedRole;
 
   @override
   void initState() {
@@ -169,11 +170,73 @@ class _UsersScreenState extends State<UsersScreen> {
                     DashboardSearchBar(
                       controller: _searchController,
                       onChanged: (value) {
-                        context.read<UserBloc>().add(FetchUsers(search: value));
+                        context.read<UserBloc>().add(FetchUsers(search: value, role: _selectedRole));
                       },
                       onClear: () {
-                        context.read<UserBloc>().add(FetchUsers());
+                        context.read<UserBloc>().add(FetchUsers(role: _selectedRole));
                       },
+                    ),
+                    const SizedBox(height: 16),
+                    // Role Filter Chips
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _buildFilterChip(
+                            label: AppLocalizations.of(context)!.all,
+                            isSelected: _selectedRole == null,
+                            onSelected: (selected) {
+                              setState(() => _selectedRole = null);
+                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text));
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          _buildFilterChip(
+                            label: AppLocalizations.of(context)!.superAdmin,
+                            isSelected: _selectedRole == 'SUPER_ADMIN',
+                            onSelected: (selected) {
+                              setState(() => _selectedRole = selected ? 'SUPER_ADMIN' : null);
+                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          _buildFilterChip(
+                            label: AppLocalizations.of(context)!.admin,
+                            isSelected: _selectedRole == 'ADMIN',
+                            onSelected: (selected) {
+                              setState(() => _selectedRole = selected ? 'ADMIN' : null);
+                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          _buildFilterChip(
+                            label: AppLocalizations.of(context)!.vendorMember,
+                            isSelected: _selectedRole == 'VENDOR_MEMBER',
+                            onSelected: (selected) {
+                              setState(() => _selectedRole = selected ? 'VENDOR_MEMBER' : null);
+                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          _buildFilterChip(
+                            label: AppLocalizations.of(context)!.driver,
+                            isSelected: _selectedRole == 'DRIVER',
+                            onSelected: (selected) {
+                              setState(() => _selectedRole = selected ? 'DRIVER' : null);
+                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          _buildFilterChip(
+                            label: AppLocalizations.of(context)!.customer,
+                            isSelected: _selectedRole == 'CUSTOMER',
+                            onSelected: (selected) {
+                              setState(() => _selectedRole = selected ? 'CUSTOMER' : null);
+                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 24),
                     BlocBuilder<UserBloc, UserState>(
@@ -221,7 +284,12 @@ class _UsersScreenState extends State<UsersScreen> {
         IconButton(
           icon: const Icon(LucideIcons.chevronLeft),
           onPressed: state.page > 1 
-            ? () => context.read<UserBloc>().add(FetchUsers(page: state.page - 1, limit: state.limit))
+            ? () => context.read<UserBloc>().add(FetchUsers(
+                page: state.page - 1, 
+                limit: state.limit,
+                search: _searchController.text,
+                role: _selectedRole,
+              ))
             : null,
         ),
         const SizedBox(width: 16),
@@ -230,7 +298,12 @@ class _UsersScreenState extends State<UsersScreen> {
         IconButton(
           icon: const Icon(LucideIcons.chevronRight),
           onPressed: state.page < totalPages 
-            ? () => context.read<UserBloc>().add(FetchUsers(page: state.page + 1, limit: state.limit))
+            ? () => context.read<UserBloc>().add(FetchUsers(
+                page: state.page + 1, 
+                limit: state.limit,
+                search: _searchController.text,
+                role: _selectedRole,
+              ))
             : null,
         ),
       ],
@@ -497,10 +570,14 @@ class _UsersScreenState extends State<UsersScreen> {
                   _buildField(AppLocalizations.of(context)!.emailAddress, LucideIcons.mail, emailController, 'admin@otlob.com'),
                   const SizedBox(height: 16),
                   _buildField(AppLocalizations.of(context)!.phone, LucideIcons.phone, phoneController, '+201100000000'),
-                  if (user == null) ...[
-                    const SizedBox(height: 16),
-                    _buildField(AppLocalizations.of(context)!.password, LucideIcons.lock, passwordController, '••••••••', obscure: true),
-                  ],
+                  const SizedBox(height: 16),
+                  _buildField(
+                    user == null ? AppLocalizations.of(context)!.password : (Localizations.localeOf(context).languageCode == 'ar' ? 'كلمة المرور الجديدة' : 'New Password'), 
+                    LucideIcons.lock, 
+                    passwordController, 
+                    user == null ? '••••••••' : (Localizations.localeOf(context).languageCode == 'ar' ? 'اتركها فارغة للإبقاء على الحالية' : 'Leave blank to keep current'), 
+                    obscure: true
+                  ),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.accountRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                   const SizedBox(height: 8),
@@ -585,15 +662,16 @@ class _UsersScreenState extends State<UsersScreen> {
                               ));
                             } else {
                               if (user['id'] != null) {
-                                context.read<UserBloc>().add(UpdateUserRequested(
-                                  id: user['id'],
-                                  name: nameController.text,
-                                  email: emailController.text,
-                                  phone: PhoneUtils.normalize(phoneController.text),
-                                  role: selectedRole,
-                                  vendorId: selectedVendorId,
-                                  vendorRole: selectedVendorRole,
-                                ));
+                                  context.read<UserBloc>().add(UpdateUserRequested(
+                                    id: user['id'],
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    phone: PhoneUtils.normalize(phoneController.text),
+                                    role: selectedRole,
+                                    vendorId: selectedVendorId,
+                                    vendorRole: selectedVendorRole,
+                                    password: passwordController.text.isNotEmpty ? passwordController.text : null,
+                                  ));
                               }
                             }
                             Navigator.pop(dialogContext);
@@ -749,6 +827,32 @@ class _UsersScreenState extends State<UsersScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFilterChip({
+    required String label,
+    required bool isSelected,
+    required Function(bool) onSelected,
+  }) {
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: onSelected,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      selectedColor: AppColors.primary.withOpacity(0.2),
+      checkmarkColor: AppColors.primary,
+      labelStyle: TextStyle(
+        color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+        fontSize: 12,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(
+          color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        ),
       ),
     );
   }
