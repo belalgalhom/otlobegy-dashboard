@@ -143,7 +143,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                           Expanded(
-                            child: _selectedIndex == 6 
+                            child: (_selectedIndex == 6 || _selectedIndex == 5)
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 24),
                                   child: _buildContent(isMobile),

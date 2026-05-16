@@ -387,5 +387,15 @@
   "noExpiry": "No expiry",
   "offerCreated": "Offer created successfully",
   "offerUpdated": "Offer updated successfully",
-  "offerDeleted": "Offer deleted successfully"
+  "offerDeleted": "Offer deleted successfully",
+  "escalated": "Escalated",
+  "waitingOnUser": "Waiting on User",
+  "ticketCategoryDelivery": "Delivery Issue",
+  "ticketCategoryVendor": "Store/Restaurant Issue",
+  "ticketCategoryPayment": "Payment Issue",
+  "ticketCategoryAccount": "Account Issue",
+  "ticketCategoryReturn": "Return/Complaint",
+  "ticketCategoryOther": "Other",
+  "refresh": "Refresh",
+  "ticketNumber": "Ticket No."
 }

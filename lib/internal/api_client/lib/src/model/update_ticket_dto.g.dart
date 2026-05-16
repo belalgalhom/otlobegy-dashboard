@@ -36,12 +36,12 @@ UpdateTicketDtoStatusEnum _$updateTicketDtoStatusEnumValueOf(String name) {
 
 final BuiltSet<UpdateTicketDtoStatusEnum> _$updateTicketDtoStatusEnumValues =
     BuiltSet<UpdateTicketDtoStatusEnum>(const <UpdateTicketDtoStatusEnum>[
-      _$updateTicketDtoStatusEnum_OPEN,
-      _$updateTicketDtoStatusEnum_IN_PROGRESS,
-      _$updateTicketDtoStatusEnum_WAITING_ON_USER,
-      _$updateTicketDtoStatusEnum_RESOLVED,
-      _$updateTicketDtoStatusEnum_CLOSED,
-    ]);
+  _$updateTicketDtoStatusEnum_OPEN,
+  _$updateTicketDtoStatusEnum_IN_PROGRESS,
+  _$updateTicketDtoStatusEnum_WAITING_ON_USER,
+  _$updateTicketDtoStatusEnum_RESOLVED,
+  _$updateTicketDtoStatusEnum_CLOSED,
+]);
 
 const UpdateTicketDtoPriorityEnum _$updateTicketDtoPriorityEnum_LOW =
     const UpdateTicketDtoPriorityEnum._('LOW');
@@ -68,13 +68,13 @@ UpdateTicketDtoPriorityEnum _$updateTicketDtoPriorityEnumValueOf(String name) {
 }
 
 final BuiltSet<UpdateTicketDtoPriorityEnum>
-_$updateTicketDtoPriorityEnumValues =
+    _$updateTicketDtoPriorityEnumValues =
     BuiltSet<UpdateTicketDtoPriorityEnum>(const <UpdateTicketDtoPriorityEnum>[
-      _$updateTicketDtoPriorityEnum_LOW,
-      _$updateTicketDtoPriorityEnum_MEDIUM,
-      _$updateTicketDtoPriorityEnum_HIGH,
-      _$updateTicketDtoPriorityEnum_URGENT,
-    ]);
+  _$updateTicketDtoPriorityEnum_LOW,
+  _$updateTicketDtoPriorityEnum_MEDIUM,
+  _$updateTicketDtoPriorityEnum_HIGH,
+  _$updateTicketDtoPriorityEnum_URGENT,
+]);
 
 const UpdateTicketDtoCategoryEnum _$updateTicketDtoCategoryEnum_GENERAL =
     const UpdateTicketDtoCategoryEnum._('GENERAL');
@@ -83,7 +83,7 @@ const UpdateTicketDtoCategoryEnum _$updateTicketDtoCategoryEnum_ORDER_ISSUE =
 const UpdateTicketDtoCategoryEnum _$updateTicketDtoCategoryEnum_PAYMENT_ISSUE =
     const UpdateTicketDtoCategoryEnum._('PAYMENT_ISSUE');
 const UpdateTicketDtoCategoryEnum
-_$updateTicketDtoCategoryEnum_TECHNICAL_ISSUE =
+    _$updateTicketDtoCategoryEnum_TECHNICAL_ISSUE =
     const UpdateTicketDtoCategoryEnum._('TECHNICAL_ISSUE');
 const UpdateTicketDtoCategoryEnum _$updateTicketDtoCategoryEnum_COMPLAINT =
     const UpdateTicketDtoCategoryEnum._('COMPLAINT');
@@ -106,22 +106,22 @@ UpdateTicketDtoCategoryEnum _$updateTicketDtoCategoryEnumValueOf(String name) {
 }
 
 final BuiltSet<UpdateTicketDtoCategoryEnum>
-_$updateTicketDtoCategoryEnumValues =
+    _$updateTicketDtoCategoryEnumValues =
     BuiltSet<UpdateTicketDtoCategoryEnum>(const <UpdateTicketDtoCategoryEnum>[
-      _$updateTicketDtoCategoryEnum_GENERAL,
-      _$updateTicketDtoCategoryEnum_ORDER_ISSUE,
-      _$updateTicketDtoCategoryEnum_PAYMENT_ISSUE,
-      _$updateTicketDtoCategoryEnum_TECHNICAL_ISSUE,
-      _$updateTicketDtoCategoryEnum_COMPLAINT,
-    ]);
+  _$updateTicketDtoCategoryEnum_GENERAL,
+  _$updateTicketDtoCategoryEnum_ORDER_ISSUE,
+  _$updateTicketDtoCategoryEnum_PAYMENT_ISSUE,
+  _$updateTicketDtoCategoryEnum_TECHNICAL_ISSUE,
+  _$updateTicketDtoCategoryEnum_COMPLAINT,
+]);
 
 Serializer<UpdateTicketDtoStatusEnum> _$updateTicketDtoStatusEnumSerializer =
     _$UpdateTicketDtoStatusEnumSerializer();
 Serializer<UpdateTicketDtoPriorityEnum>
-_$updateTicketDtoPriorityEnumSerializer =
+    _$updateTicketDtoPriorityEnumSerializer =
     _$UpdateTicketDtoPriorityEnumSerializer();
 Serializer<UpdateTicketDtoCategoryEnum>
-_$updateTicketDtoCategoryEnumSerializer =
+    _$updateTicketDtoCategoryEnumSerializer =
     _$UpdateTicketDtoCategoryEnumSerializer();
 
 class _$UpdateTicketDtoStatusEnumSerializer
@@ -147,20 +147,16 @@ class _$UpdateTicketDtoStatusEnumSerializer
   final String wireName = 'UpdateTicketDtoStatusEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UpdateTicketDtoStatusEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, UpdateTicketDtoStatusEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   UpdateTicketDtoStatusEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UpdateTicketDtoStatusEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateTicketDtoStatusEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$UpdateTicketDtoPriorityEnumSerializer
@@ -184,20 +180,16 @@ class _$UpdateTicketDtoPriorityEnumSerializer
   final String wireName = 'UpdateTicketDtoPriorityEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UpdateTicketDtoPriorityEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, UpdateTicketDtoPriorityEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   UpdateTicketDtoPriorityEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UpdateTicketDtoPriorityEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateTicketDtoPriorityEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$UpdateTicketDtoCategoryEnumSerializer
@@ -223,20 +215,16 @@ class _$UpdateTicketDtoCategoryEnumSerializer
   final String wireName = 'UpdateTicketDtoCategoryEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UpdateTicketDtoCategoryEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, UpdateTicketDtoCategoryEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   UpdateTicketDtoCategoryEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UpdateTicketDtoCategoryEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateTicketDtoCategoryEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$UpdateTicketDto extends UpdateTicketDto {
@@ -256,14 +244,14 @@ class _$UpdateTicketDto extends UpdateTicketDto {
   factory _$UpdateTicketDto([void Function(UpdateTicketDtoBuilder)? updates]) =>
       (UpdateTicketDtoBuilder()..update(updates))._build();
 
-  _$UpdateTicketDto._({
-    this.status,
-    this.priority,
-    this.category,
-    this.assigneeId,
-    this.subject,
-    this.description,
-  }) : super._();
+  _$UpdateTicketDto._(
+      {this.status,
+      this.priority,
+      this.category,
+      this.assigneeId,
+      this.subject,
+      this.description})
+      : super._();
   @override
   UpdateTicketDto rebuild(void Function(UpdateTicketDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -371,8 +359,7 @@ class UpdateTicketDtoBuilder
   UpdateTicketDto build() => _build();
 
   _$UpdateTicketDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateTicketDto._(
           status: status,
           priority: priority,

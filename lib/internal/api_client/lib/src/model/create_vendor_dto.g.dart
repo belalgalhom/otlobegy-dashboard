@@ -27,16 +27,16 @@ class _$CreateVendorDto extends CreateVendorDto {
   factory _$CreateVendorDto([void Function(CreateVendorDtoBuilder)? updates]) =>
       (CreateVendorDtoBuilder()..update(updates))._build();
 
-  _$CreateVendorDto._({
-    required this.storeName,
-    this.storeNameAr,
-    this.description,
-    this.descriptionAr,
-    required this.verticalId,
-    this.taxId,
-    this.commissionRate,
-    this.phone,
-  }) : super._();
+  _$CreateVendorDto._(
+      {required this.storeName,
+      this.storeNameAr,
+      this.description,
+      this.descriptionAr,
+      required this.verticalId,
+      this.taxId,
+      this.commissionRate,
+      this.phone})
+      : super._();
   @override
   CreateVendorDto rebuild(void Function(CreateVendorDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -160,22 +160,15 @@ class CreateVendorDtoBuilder
   CreateVendorDto build() => _build();
 
   _$CreateVendorDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$CreateVendorDto._(
           storeName: BuiltValueNullFieldError.checkNotNull(
-            storeName,
-            r'CreateVendorDto',
-            'storeName',
-          ),
+              storeName, r'CreateVendorDto', 'storeName'),
           storeNameAr: storeNameAr,
           description: description,
           descriptionAr: descriptionAr,
           verticalId: BuiltValueNullFieldError.checkNotNull(
-            verticalId,
-            r'CreateVendorDto',
-            'verticalId',
-          ),
+              verticalId, r'CreateVendorDto', 'verticalId'),
           taxId: taxId,
           commissionRate: commissionRate,
           phone: phone,

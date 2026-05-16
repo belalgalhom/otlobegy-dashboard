@@ -40,13 +40,13 @@ SendMessageDtoTypeEnum _$sendMessageDtoTypeEnumValueOf(String name) {
 
 final BuiltSet<SendMessageDtoTypeEnum> _$sendMessageDtoTypeEnumValues =
     BuiltSet<SendMessageDtoTypeEnum>(const <SendMessageDtoTypeEnum>[
-      _$sendMessageDtoTypeEnum_TEXT,
-      _$sendMessageDtoTypeEnum_IMAGE,
-      _$sendMessageDtoTypeEnum_VIDEO,
-      _$sendMessageDtoTypeEnum_AUDIO,
-      _$sendMessageDtoTypeEnum_LOCATION,
-      _$sendMessageDtoTypeEnum_SYSTEM,
-    ]);
+  _$sendMessageDtoTypeEnum_TEXT,
+  _$sendMessageDtoTypeEnum_IMAGE,
+  _$sendMessageDtoTypeEnum_VIDEO,
+  _$sendMessageDtoTypeEnum_AUDIO,
+  _$sendMessageDtoTypeEnum_LOCATION,
+  _$sendMessageDtoTypeEnum_SYSTEM,
+]);
 
 Serializer<SendMessageDtoTypeEnum> _$sendMessageDtoTypeEnumSerializer =
     _$SendMessageDtoTypeEnumSerializer();
@@ -76,20 +76,15 @@ class _$SendMessageDtoTypeEnumSerializer
   final String wireName = 'SendMessageDtoTypeEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    SendMessageDtoTypeEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, SendMessageDtoTypeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
-  SendMessageDtoTypeEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => SendMessageDtoTypeEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+  SendMessageDtoTypeEnum deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      SendMessageDtoTypeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$SendMessageDto extends SendMessageDto {
@@ -107,13 +102,13 @@ class _$SendMessageDto extends SendMessageDto {
   factory _$SendMessageDto([void Function(SendMessageDtoBuilder)? updates]) =>
       (SendMessageDtoBuilder()..update(updates))._build();
 
-  _$SendMessageDto._({
-    required this.type,
-    this.text,
-    this.mediaUrl,
-    this.metadata,
-    this.replyToId,
-  }) : super._();
+  _$SendMessageDto._(
+      {required this.type,
+      this.text,
+      this.mediaUrl,
+      this.metadata,
+      this.replyToId})
+      : super._();
   @override
   SendMessageDto rebuild(void Function(SendMessageDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -211,14 +206,10 @@ class SendMessageDtoBuilder
   SendMessageDto build() => _build();
 
   _$SendMessageDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$SendMessageDto._(
           type: BuiltValueNullFieldError.checkNotNull(
-            type,
-            r'SendMessageDto',
-            'type',
-          ),
+              type, r'SendMessageDto', 'type'),
           text: text,
           mediaUrl: mediaUrl,
           metadata: metadata,

@@ -37,9 +37,9 @@ class _$LogoutDto extends LogoutDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'LogoutDto',
-    )..add('fcmToken', fcmToken)).toString();
+    return (newBuiltValueToStringHelper(r'LogoutDto')
+          ..add('fcmToken', fcmToken))
+        .toString();
   }
 }
 
@@ -77,7 +77,10 @@ class LogoutDtoBuilder implements Builder<LogoutDto, LogoutDtoBuilder> {
   LogoutDto build() => _build();
 
   _$LogoutDto _build() {
-    final _$result = _$v ?? _$LogoutDto._(fcmToken: fcmToken);
+    final _$result = _$v ??
+        _$LogoutDto._(
+          fcmToken: fcmToken,
+        );
     replace(_$result);
     return _$result;
   }

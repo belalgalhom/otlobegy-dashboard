@@ -12,14 +12,13 @@ class _$ChangePasswordDto extends ChangePasswordDto {
   @override
   final String newPassword;
 
-  factory _$ChangePasswordDto([
-    void Function(ChangePasswordDtoBuilder)? updates,
-  ]) => (ChangePasswordDtoBuilder()..update(updates))._build();
+  factory _$ChangePasswordDto(
+          [void Function(ChangePasswordDtoBuilder)? updates]) =>
+      (ChangePasswordDtoBuilder()..update(updates))._build();
 
-  _$ChangePasswordDto._({
-    required this.currentPassword,
-    required this.newPassword,
-  }) : super._();
+  _$ChangePasswordDto._(
+      {required this.currentPassword, required this.newPassword})
+      : super._();
   @override
   ChangePasswordDto rebuild(void Function(ChangePasswordDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -95,19 +94,12 @@ class ChangePasswordDtoBuilder
   ChangePasswordDto build() => _build();
 
   _$ChangePasswordDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$ChangePasswordDto._(
           currentPassword: BuiltValueNullFieldError.checkNotNull(
-            currentPassword,
-            r'ChangePasswordDto',
-            'currentPassword',
-          ),
+              currentPassword, r'ChangePasswordDto', 'currentPassword'),
           newPassword: BuiltValueNullFieldError.checkNotNull(
-            newPassword,
-            r'ChangePasswordDto',
-            'newPassword',
-          ),
+              newPassword, r'ChangePasswordDto', 'newPassword'),
         );
     replace(_$result);
     return _$result;

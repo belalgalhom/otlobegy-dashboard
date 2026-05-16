@@ -13,6 +13,7 @@ part 'login_dto.g.dart';
 /// Properties:
 /// * [email] 
 /// * [password] 
+/// * [app] 
 @BuiltValue()
 abstract class LoginDto implements Built<LoginDto, LoginDtoBuilder> {
   @BuiltValueField(wireName: r'email')
@@ -20,6 +21,9 @@ abstract class LoginDto implements Built<LoginDto, LoginDtoBuilder> {
 
   @BuiltValueField(wireName: r'password')
   String get password;
+
+  @BuiltValueField(wireName: r'app')
+  String? get app;
 
   LoginDto._();
 
@@ -54,6 +58,13 @@ class _$LoginDtoSerializer implements PrimitiveSerializer<LoginDto> {
       object.password,
       specifiedType: const FullType(String),
     );
+    if (object.app != null) {
+      yield r'app';
+      yield serializers.serialize(
+        object.app,
+        specifiedType: const FullType(String),
+      );
+    }
   }
 
   @override
@@ -90,6 +101,13 @@ class _$LoginDtoSerializer implements PrimitiveSerializer<LoginDto> {
             specifiedType: const FullType(String),
           ) as String;
           result.password = valueDes;
+          break;
+        case r'app':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.app = valueDes;
           break;
         default:
           unhandled.add(key);

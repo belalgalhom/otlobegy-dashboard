@@ -22,23 +22,23 @@ class _$CreateVendorBranchDto extends CreateVendorBranchDto {
   @override
   final bool? isOpen;
 
-  factory _$CreateVendorBranchDto([
-    void Function(CreateVendorBranchDtoBuilder)? updates,
-  ]) => (CreateVendorBranchDtoBuilder()..update(updates))._build();
+  factory _$CreateVendorBranchDto(
+          [void Function(CreateVendorBranchDtoBuilder)? updates]) =>
+      (CreateVendorBranchDtoBuilder()..update(updates))._build();
 
-  _$CreateVendorBranchDto._({
-    required this.name,
-    this.nameAr,
-    required this.address,
-    this.phone,
-    required this.location,
-    this.zoneId,
-    this.isOpen,
-  }) : super._();
+  _$CreateVendorBranchDto._(
+      {required this.name,
+      this.nameAr,
+      required this.address,
+      this.phone,
+      required this.location,
+      this.zoneId,
+      this.isOpen})
+      : super._();
   @override
   CreateVendorBranchDto rebuild(
-    void Function(CreateVendorBranchDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateVendorBranchDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateVendorBranchDtoBuilder toBuilder() =>
@@ -153,20 +153,13 @@ class CreateVendorBranchDtoBuilder
   _$CreateVendorBranchDto _build() {
     _$CreateVendorBranchDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$CreateVendorBranchDto._(
             name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'CreateVendorBranchDto',
-              'name',
-            ),
+                name, r'CreateVendorBranchDto', 'name'),
             nameAr: nameAr,
             address: BuiltValueNullFieldError.checkNotNull(
-              address,
-              r'CreateVendorBranchDto',
-              'address',
-            ),
+                address, r'CreateVendorBranchDto', 'address'),
             phone: phone,
             location: location.build(),
             zoneId: zoneId,
@@ -179,10 +172,7 @@ class CreateVendorBranchDtoBuilder
         location.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'CreateVendorBranchDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'CreateVendorBranchDto', _$failedField, e.toString());
       }
       rethrow;
     }

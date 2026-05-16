@@ -13,12 +13,11 @@ const UpdateVendorStatusDtoStatusEnum _$updateVendorStatusDtoStatusEnum_OPEN =
 const UpdateVendorStatusDtoStatusEnum _$updateVendorStatusDtoStatusEnum_PAUSED =
     const UpdateVendorStatusDtoStatusEnum._('PAUSED');
 const UpdateVendorStatusDtoStatusEnum
-_$updateVendorStatusDtoStatusEnum_SUSPENDED =
+    _$updateVendorStatusDtoStatusEnum_SUSPENDED =
     const UpdateVendorStatusDtoStatusEnum._('SUSPENDED');
 
 UpdateVendorStatusDtoStatusEnum _$updateVendorStatusDtoStatusEnumValueOf(
-  String name,
-) {
+    String name) {
   switch (name) {
     case 'CLOSED':
       return _$updateVendorStatusDtoStatusEnum_CLOSED;
@@ -34,18 +33,16 @@ UpdateVendorStatusDtoStatusEnum _$updateVendorStatusDtoStatusEnumValueOf(
 }
 
 final BuiltSet<UpdateVendorStatusDtoStatusEnum>
-_$updateVendorStatusDtoStatusEnumValues =
-    BuiltSet<UpdateVendorStatusDtoStatusEnum>(
-      const <UpdateVendorStatusDtoStatusEnum>[
-        _$updateVendorStatusDtoStatusEnum_CLOSED,
-        _$updateVendorStatusDtoStatusEnum_OPEN,
-        _$updateVendorStatusDtoStatusEnum_PAUSED,
-        _$updateVendorStatusDtoStatusEnum_SUSPENDED,
-      ],
-    );
+    _$updateVendorStatusDtoStatusEnumValues = BuiltSet<
+        UpdateVendorStatusDtoStatusEnum>(const <UpdateVendorStatusDtoStatusEnum>[
+  _$updateVendorStatusDtoStatusEnum_CLOSED,
+  _$updateVendorStatusDtoStatusEnum_OPEN,
+  _$updateVendorStatusDtoStatusEnum_PAUSED,
+  _$updateVendorStatusDtoStatusEnum_SUSPENDED,
+]);
 
 Serializer<UpdateVendorStatusDtoStatusEnum>
-_$updateVendorStatusDtoStatusEnumSerializer =
+    _$updateVendorStatusDtoStatusEnumSerializer =
     _$UpdateVendorStatusDtoStatusEnumSerializer();
 
 class _$UpdateVendorStatusDtoStatusEnumSerializer
@@ -70,34 +67,31 @@ class _$UpdateVendorStatusDtoStatusEnumSerializer
 
   @override
   Object serialize(
-    Serializers serializers,
-    UpdateVendorStatusDtoStatusEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+          Serializers serializers, UpdateVendorStatusDtoStatusEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   UpdateVendorStatusDtoStatusEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UpdateVendorStatusDtoStatusEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateVendorStatusDtoStatusEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$UpdateVendorStatusDto extends UpdateVendorStatusDto {
   @override
   final UpdateVendorStatusDtoStatusEnum status;
 
-  factory _$UpdateVendorStatusDto([
-    void Function(UpdateVendorStatusDtoBuilder)? updates,
-  ]) => (UpdateVendorStatusDtoBuilder()..update(updates))._build();
+  factory _$UpdateVendorStatusDto(
+          [void Function(UpdateVendorStatusDtoBuilder)? updates]) =>
+      (UpdateVendorStatusDtoBuilder()..update(updates))._build();
 
   _$UpdateVendorStatusDto._({required this.status}) : super._();
   @override
   UpdateVendorStatusDto rebuild(
-    void Function(UpdateVendorStatusDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateVendorStatusDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateVendorStatusDtoBuilder toBuilder() =>
@@ -119,9 +113,9 @@ class _$UpdateVendorStatusDto extends UpdateVendorStatusDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'UpdateVendorStatusDto',
-    )..add('status', status)).toString();
+    return (newBuiltValueToStringHelper(r'UpdateVendorStatusDto')
+          ..add('status', status))
+        .toString();
   }
 }
 
@@ -161,14 +155,10 @@ class UpdateVendorStatusDtoBuilder
   UpdateVendorStatusDto build() => _build();
 
   _$UpdateVendorStatusDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateVendorStatusDto._(
           status: BuiltValueNullFieldError.checkNotNull(
-            status,
-            r'UpdateVendorStatusDto',
-            'status',
-          ),
+              status, r'UpdateVendorStatusDto', 'status'),
         );
     replace(_$result);
     return _$result;

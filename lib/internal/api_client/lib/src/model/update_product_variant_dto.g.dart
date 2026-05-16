@@ -24,24 +24,24 @@ class _$UpdateProductVariantDto extends UpdateProductVariantDto {
   @override
   final num? version;
 
-  factory _$UpdateProductVariantDto([
-    void Function(UpdateProductVariantDtoBuilder)? updates,
-  ]) => (UpdateProductVariantDtoBuilder()..update(updates))._build();
+  factory _$UpdateProductVariantDto(
+          [void Function(UpdateProductVariantDtoBuilder)? updates]) =>
+      (UpdateProductVariantDtoBuilder()..update(updates))._build();
 
-  _$UpdateProductVariantDto._({
-    this.name,
-    this.nameAr,
-    this.sku,
-    this.basePrice,
-    this.comparePrice,
-    this.stock,
-    this.isActive,
-    this.version,
-  }) : super._();
+  _$UpdateProductVariantDto._(
+      {this.name,
+      this.nameAr,
+      this.sku,
+      this.basePrice,
+      this.comparePrice,
+      this.stock,
+      this.isActive,
+      this.version})
+      : super._();
   @override
   UpdateProductVariantDto rebuild(
-    void Function(UpdateProductVariantDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateProductVariantDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateProductVariantDtoBuilder toBuilder() =>
@@ -162,8 +162,7 @@ class UpdateProductVariantDtoBuilder
   UpdateProductVariantDto build() => _build();
 
   _$UpdateProductVariantDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateProductVariantDto._(
           name: name,
           nameAr: nameAr,

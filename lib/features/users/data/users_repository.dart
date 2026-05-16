@@ -74,9 +74,9 @@ class UsersRepository {
         ..email = email
         ..password = password
         ..phone = phone
-        ..role = role
+        ..role = role != null ? RegisterDtoRoleEnum.valueOf(role) : null
         ..vendorId = vendorId
-        ..vendorRole = vendorRole
+        ..vendorRole = vendorRole != null ? RegisterDtoVendorRoleEnum.valueOf(vendorRole) : null
       );
 
       
@@ -87,11 +87,11 @@ class UsersRepository {
       // But we need the user ID. For now, let's just register.
       return true;
     } catch (e) {
-      if (e is DioException && e.response?.data != null) {
+      if (e is DioException && e.response?.data is Map) {
         final data = e.response?.data as Map<String, dynamic>;
         throw data['message'] ?? 'Failed to add user';
       }
-      rethrow;
+      throw 'An unexpected error occurred while adding user';
     }
   }
   Future<bool> updateUser(String id, {
@@ -107,9 +107,9 @@ class UsersRepository {
       // If password is provided, we use a manual patch request because the generated DTO might not have the password field yet
       if (password != null && password.isNotEmpty) {
         final Map<String, dynamic> data = {};
-        if (name != null) data['name'] = name;
-        if (email != null) data['email'] = email;
-        if (phone != null) data['phone'] = phone;
+        if (name != null) data['name'] = name.trim();
+        if (email != null) data['email'] = email.trim().isEmpty ? null : email.trim();
+        if (phone != null) data['phone'] = phone.trim().isEmpty ? null : phone.trim();
         if (role != null) data['role'] = role;
         if (vendorId != null) data['vendorId'] = vendorId;
         if (vendorRole != null) data['vendorRole'] = vendorRole;
@@ -120,12 +120,12 @@ class UsersRepository {
       }
 
       final dto = AdminUpdateUserDto((b) {
-        if (name != null) b.name = name;
-        if (email != null) b.email = email;
-        if (phone != null) b.phone = phone;
+        if (name != null) b.name = name.trim();
+        if (email != null) b.email = email.trim().isEmpty ? null : email.trim();
+        if (phone != null) b.phone = phone.trim().isEmpty ? null : phone.trim();
         if (role != null) b.role = AdminUpdateUserDtoRoleEnum.valueOf(role);
         if (vendorId != null) b.vendorId = vendorId;
-        if (vendorRole != null) b.vendorRole = vendorRole;
+        if (vendorRole != null) b.vendorRole = AdminUpdateUserDtoVendorRoleEnum.valueOf(vendorRole);
       });
       await _apiClient.getUsersApi().usersControllerAdminUpdate(
         userId: id,
@@ -133,11 +133,11 @@ class UsersRepository {
       );
       return true;
     } catch (e) {
-      if (e is DioException && e.response?.data != null) {
+      if (e is DioException && e.response?.data is Map) {
         final data = e.response?.data as Map<String, dynamic>;
         throw data['message'] ?? 'Failed to update user';
       }
-      rethrow;
+      throw 'An unexpected error occurred while updating user';
     }
   }
 
@@ -146,11 +146,11 @@ class UsersRepository {
       await _apiClient.getUsersApi().usersControllerAdminRemove(userId: id);
       return true;
     } catch (e) {
-      if (e is DioException && e.response?.data != null) {
+      if (e is DioException && e.response?.data is Map) {
         final responseData = e.response?.data as Map<String, dynamic>;
         throw responseData['message'] ?? 'Failed to delete user';
       }
-      rethrow;
+      throw 'An unexpected error occurred while deleting user';
     }
   }
 
@@ -165,11 +165,11 @@ class UsersRepository {
       );
       return true;
     } catch (e) {
-      if (e is DioException && e.response?.data != null) {
+      if (e is DioException && e.response?.data is Map) {
         final data = e.response?.data as Map<String, dynamic>;
         throw data['message'] ?? 'Failed to ban user';
       }
-      rethrow;
+      throw 'An unexpected error occurred while banning user';
     }
   }
 
@@ -178,11 +178,11 @@ class UsersRepository {
       await _apiClient.getUsersApi().usersControllerAdminUnban(userId: id);
       return true;
     } catch (e) {
-      if (e is DioException && e.response?.data != null) {
+      if (e is DioException && e.response?.data is Map) {
         final data = e.response?.data as Map<String, dynamic>;
         throw data['message'] ?? 'Failed to unban user';
       }
-      rethrow;
+      throw 'An unexpected error occurred while unbanning user';
     }
   }
 }

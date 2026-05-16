@@ -18,6 +18,7 @@ part 'create_vendor_dto.g.dart';
 /// * [verticalId] 
 /// * [taxId] 
 /// * [commissionRate] 
+/// * [phone] 
 @BuiltValue()
 abstract class CreateVendorDto implements Built<CreateVendorDto, CreateVendorDtoBuilder> {
   @BuiltValueField(wireName: r'storeName')

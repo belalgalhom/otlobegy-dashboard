@@ -24,24 +24,24 @@ class _$CreateProductVariantDto extends CreateProductVariantDto {
   @override
   final BuiltList<CreateOptionGroupDto>? optionGroups;
 
-  factory _$CreateProductVariantDto([
-    void Function(CreateProductVariantDtoBuilder)? updates,
-  ]) => (CreateProductVariantDtoBuilder()..update(updates))._build();
+  factory _$CreateProductVariantDto(
+          [void Function(CreateProductVariantDtoBuilder)? updates]) =>
+      (CreateProductVariantDtoBuilder()..update(updates))._build();
 
-  _$CreateProductVariantDto._({
-    required this.name,
-    this.nameAr,
-    this.sku,
-    required this.basePrice,
-    this.comparePrice,
-    this.stock,
-    this.isActive,
-    this.optionGroups,
-  }) : super._();
+  _$CreateProductVariantDto._(
+      {required this.name,
+      this.nameAr,
+      this.sku,
+      required this.basePrice,
+      this.comparePrice,
+      this.stock,
+      this.isActive,
+      this.optionGroups})
+      : super._();
   @override
   CreateProductVariantDto rebuild(
-    void Function(CreateProductVariantDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateProductVariantDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateProductVariantDtoBuilder toBuilder() =>
@@ -166,21 +166,14 @@ class CreateProductVariantDtoBuilder
   _$CreateProductVariantDto _build() {
     _$CreateProductVariantDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$CreateProductVariantDto._(
             name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'CreateProductVariantDto',
-              'name',
-            ),
+                name, r'CreateProductVariantDto', 'name'),
             nameAr: nameAr,
             sku: sku,
             basePrice: BuiltValueNullFieldError.checkNotNull(
-              basePrice,
-              r'CreateProductVariantDto',
-              'basePrice',
-            ),
+                basePrice, r'CreateProductVariantDto', 'basePrice'),
             comparePrice: comparePrice,
             stock: stock,
             isActive: isActive,
@@ -193,10 +186,7 @@ class CreateProductVariantDtoBuilder
         _optionGroups?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'CreateProductVariantDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'CreateProductVariantDto', _$failedField, e.toString());
       }
       rethrow;
     }

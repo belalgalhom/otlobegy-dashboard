@@ -23,14 +23,14 @@ class _$UpdateZoneDto extends UpdateZoneDto {
   factory _$UpdateZoneDto([void Function(UpdateZoneDtoBuilder)? updates]) =>
       (UpdateZoneDtoBuilder()..update(updates))._build();
 
-  _$UpdateZoneDto._({
-    this.name,
-    this.nameAr,
-    this.isActive,
-    this.baseDeliveryFeeOverride,
-    this.minOrderAmountOverride,
-    this.boundary,
-  }) : super._();
+  _$UpdateZoneDto._(
+      {this.name,
+      this.nameAr,
+      this.isActive,
+      this.baseDeliveryFeeOverride,
+      this.minOrderAmountOverride,
+      this.boundary})
+      : super._();
   @override
   UpdateZoneDto rebuild(void Function(UpdateZoneDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -141,8 +141,7 @@ class UpdateZoneDtoBuilder
   _$UpdateZoneDto _build() {
     _$UpdateZoneDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$UpdateZoneDto._(
             name: name,
             nameAr: nameAr,
@@ -158,10 +157,7 @@ class UpdateZoneDtoBuilder
         _boundary?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'UpdateZoneDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'UpdateZoneDto', _$failedField, e.toString());
       }
       rethrow;
     }

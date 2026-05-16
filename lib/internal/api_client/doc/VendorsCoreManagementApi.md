@@ -15,8 +15,9 @@ Method | HTTP request | Description
 [**vendorsControllerFindOne**](VendorsCoreManagementApi.md#vendorscontrollerfindone) | **GET** /vendors/{vendorId} | Get a specific vendor by ID
 [**vendorsControllerGetMyVendor**](VendorsCoreManagementApi.md#vendorscontrollergetmyvendor) | **GET** /vendors/{vendorId}/me | Get my vendor profile (Member)
 [**vendorsControllerRemove**](VendorsCoreManagementApi.md#vendorscontrollerremove) | **DELETE** /vendors/{vendorId} | Delete a vendor (Admin)
-[**vendorsControllerUpdate**](VendorsCoreManagementApi.md#vendorscontrollerupdate) | **PATCH** /vendors/{vendorId} | Update vendor information (Admin)
-[**vendorsControllerUpdateStatus**](VendorsCoreManagementApi.md#vendorscontrollerupdatestatus) | **PATCH** /vendors/{vendorId}/status | Update vendor status (Admin)
+[**vendorsControllerSearchDiscovery**](VendorsCoreManagementApi.md#vendorscontrollersearchdiscovery) | **GET** /vendors/discovery/search | Global discovery search for vendors and products
+[**vendorsControllerUpdate**](VendorsCoreManagementApi.md#vendorscontrollerupdate) | **PATCH** /vendors/{vendorId} | Update vendor information
+[**vendorsControllerUpdateStatus**](VendorsCoreManagementApi.md#vendorscontrollerupdatestatus) | **PATCH** /vendors/{vendorId}/status | Update vendor status
 [**vendorsControllerUploadCover**](VendorsCoreManagementApi.md#vendorscontrolleruploadcover) | **POST** /vendors/{vendorId}/cover | Upload vendor cover image
 [**vendorsControllerUploadLogo**](VendorsCoreManagementApi.md#vendorscontrolleruploadlogo) | **POST** /vendors/{vendorId}/logo | Upload vendor logo image
 
@@ -269,10 +270,58 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **vendorsControllerSearchDiscovery**
+> vendorsControllerSearchDiscovery(status, verticalId, search, page, limit)
+
+Global discovery search for vendors and products
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getVendorsCoreManagementApi();
+final String status = status_example; // String | 
+final String verticalId = vertical-id-123; // String | 
+final String search = pizza; // String | 
+final num page = 1; // num | 
+final num limit = 20; // num | 
+
+try {
+    api.vendorsControllerSearchDiscovery(status, verticalId, search, page, limit);
+} on DioException catch (e) {
+    print('Exception when calling VendorsCoreManagementApi->vendorsControllerSearchDiscovery: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **status** | **String**|  | [optional] 
+ **verticalId** | **String**|  | [optional] 
+ **search** | **String**|  | [optional] 
+ **page** | **num**|  | [optional] [default to 1]
+ **limit** | **num**|  | [optional] [default to 20]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **vendorsControllerUpdate**
 > vendorsControllerUpdate(vendorId, updateVendorDto)
 
-Update vendor information (Admin)
+Update vendor information
 
 ### Example
 ```dart
@@ -314,7 +363,7 @@ void (empty response body)
 # **vendorsControllerUpdateStatus**
 > vendorsControllerUpdateStatus(vendorId, updateVendorStatusDto)
 
-Update vendor status (Admin)
+Update vendor status
 
 ### Example
 ```dart

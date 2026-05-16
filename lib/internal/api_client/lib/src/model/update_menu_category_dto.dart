@@ -17,6 +17,7 @@ part 'update_menu_category_dto.g.dart';
 /// * [descriptionAr] 
 /// * [sortOrder] 
 /// * [isActive] 
+/// * [iconUrl] 
 @BuiltValue()
 abstract class UpdateMenuCategoryDto implements Built<UpdateMenuCategoryDto, UpdateMenuCategoryDtoBuilder> {
   @BuiltValueField(wireName: r'name')
@@ -36,6 +37,9 @@ abstract class UpdateMenuCategoryDto implements Built<UpdateMenuCategoryDto, Upd
 
   @BuiltValueField(wireName: r'isActive')
   bool? get isActive;
+
+  @BuiltValueField(wireName: r'iconUrl')
+  String? get iconUrl;
 
   UpdateMenuCategoryDto._();
 
@@ -102,6 +106,13 @@ class _$UpdateMenuCategoryDtoSerializer implements PrimitiveSerializer<UpdateMen
         specifiedType: const FullType(bool),
       );
     }
+    if (object.iconUrl != null) {
+      yield r'iconUrl';
+      yield serializers.serialize(
+        object.iconUrl,
+        specifiedType: const FullType(String),
+      );
+    }
   }
 
   @override
@@ -166,6 +177,13 @@ class _$UpdateMenuCategoryDtoSerializer implements PrimitiveSerializer<UpdateMen
             specifiedType: const FullType(bool),
           ) as bool;
           result.isActive = valueDes;
+          break;
+        case r'iconUrl':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.iconUrl = valueDes;
           break;
         default:
           unhandled.add(key);

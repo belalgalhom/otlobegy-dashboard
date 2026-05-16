@@ -73,9 +73,17 @@ Class | Method | HTTP request | Description
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**authControllerRegister**](doc/AuthenticationApi.md#authcontrollerregister) | **POST** /auth/register | Register a new user
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**authControllerResetPassword**](doc/AuthenticationApi.md#authcontrollerresetpassword) | **POST** /auth/password/reset | Reset password using code
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**authControllerSendVerification**](doc/AuthenticationApi.md#authcontrollersendverification) | **POST** /auth/verify/request | Request a verification code (OTP)
+[*CartApi*](doc/CartApi.md) | [**cartControllerAddItem**](doc/CartApi.md#cartcontrolleradditem) | **POST** /cart/{vendorId}/items | Add item to cart
+[*CartApi*](doc/CartApi.md) | [**cartControllerClearCart**](doc/CartApi.md#cartcontrollerclearcart) | **DELETE** /cart/{vendorId} | Clear entire cart for a vendor
+[*CartApi*](doc/CartApi.md) | [**cartControllerGetCart**](doc/CartApi.md#cartcontrollergetcart) | **GET** /cart/{vendorId} | Get cart for a specific vendor
+[*CartApi*](doc/CartApi.md) | [**cartControllerGetMyCarts**](doc/CartApi.md#cartcontrollergetmycarts) | **GET** /cart | Get all my carts (one per vendor)
+[*CartApi*](doc/CartApi.md) | [**cartControllerRemoveItem**](doc/CartApi.md#cartcontrollerremoveitem) | **DELETE** /cart/{vendorId}/items/{itemId} | Remove item from cart
+[*CartApi*](doc/CartApi.md) | [**cartControllerUpdateItem**](doc/CartApi.md#cartcontrollerupdateitem) | **PATCH** /cart/{vendorId}/items/{itemId} | Update cart item (quantity / options)
 [*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerClose**](doc/ChatConversationsApi.md#conversationscontrollerclose) | **PATCH** /chat/conversations/{id}/close | Close a conversation
+[*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerCreateDirect**](doc/ChatConversationsApi.md#conversationscontrollercreatedirect) | **POST** /chat/conversations/direct | Create or get a direct conversation with a user
 [*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerCreateOrder**](doc/ChatConversationsApi.md#conversationscontrollercreateorder) | **POST** /chat/conversations/order | Create a new conversation for an order
 [*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerCreateSupport**](doc/ChatConversationsApi.md#conversationscontrollercreatesupport) | **POST** /chat/conversations/support | Create a new support conversation
+[*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerCreateVendor**](doc/ChatConversationsApi.md#conversationscontrollercreatevendor) | **POST** /chat/conversations/vendor | Create a new vendor conversation
 [*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerGetOne**](doc/ChatConversationsApi.md#conversationscontrollergetone) | **GET** /chat/conversations/{id} | Get a specific conversation by ID
 [*ChatConversationsApi*](doc/ChatConversationsApi.md) | [**conversationsControllerListMine**](doc/ChatConversationsApi.md#conversationscontrollerlistmine) | **GET** /chat/conversations | List my conversations
 [*ChatMediaApi*](doc/ChatMediaApi.md) | [**chatMediaControllerUpload**](doc/ChatMediaApi.md#chatmediacontrollerupload) | **POST** /chat/media/upload | 
@@ -83,6 +91,8 @@ Class | Method | HTTP request | Description
 [*ChatMessagesApi*](doc/ChatMessagesApi.md) | [**messagesControllerList**](doc/ChatMessagesApi.md#messagescontrollerlist) | **GET** /chat/conversations/{conversationId}/messages | List messages in a conversation
 [*ChatMessagesApi*](doc/ChatMessagesApi.md) | [**messagesControllerMarkRead**](doc/ChatMessagesApi.md#messagescontrollermarkread) | **PATCH** /chat/conversations/{conversationId}/messages/read | Mark messages as read
 [*ChatMessagesApi*](doc/ChatMessagesApi.md) | [**messagesControllerSend**](doc/ChatMessagesApi.md#messagescontrollersend) | **POST** /chat/conversations/{conversationId}/messages | Send a message in a conversation
+[*ChatMessagesApi*](doc/ChatMessagesApi.md) | [**messagesControllerUpdate**](doc/ChatMessagesApi.md#messagescontrollerupdate) | **PATCH** /chat/conversations/{conversationId}/messages/{messageId} | Update a message
+[*ChatMessagesApi*](doc/ChatMessagesApi.md) | [**messagesControllerUpload**](doc/ChatMessagesApi.md#messagescontrollerupload) | **POST** /chat/conversations/{conversationId}/messages/upload | Upload a media file for chat
 [*CustomersApi*](doc/CustomersApi.md) | [**customersControllerAdminDisableOrdering**](doc/CustomersApi.md#customerscontrolleradmindisableordering) | **POST** /customers/{customerId}/disable-ordering | [Admin] Prevent customer from placing orders (canOrder → false)
 [*CustomersApi*](doc/CustomersApi.md) | [**customersControllerAdminEnableOrdering**](doc/CustomersApi.md#customerscontrolleradminenableordering) | **POST** /customers/{customerId}/enable-ordering | [Admin] Allow customer to place orders (canOrder → true)
 [*CustomersApi*](doc/CustomersApi.md) | [**customersControllerAdminFindAll**](doc/CustomersApi.md#customerscontrolleradminfindall) | **GET** /customers | [Admin] List all customers — filter by canOrder, includeDeleted, search
@@ -100,6 +110,22 @@ Class | Method | HTTP request | Description
 [*CustomersApi*](doc/CustomersApi.md) | [**customersControllerUpdateAddress**](doc/CustomersApi.md#customerscontrollerupdateaddress) | **PATCH** /customers/me/addresses/{id} | Update an address
 [*DevicesPushNotificationsApi*](doc/DevicesPushNotificationsApi.md) | [**devicesControllerRegister**](doc/DevicesPushNotificationsApi.md#devicescontrollerregister) | **POST** /devices | Register a device for push notifications
 [*DevicesPushNotificationsApi*](doc/DevicesPushNotificationsApi.md) | [**devicesControllerRemove**](doc/DevicesPushNotificationsApi.md#devicescontrollerremove) | **DELETE** /devices/{token} | Remove a device token
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerAdminFindAll**](doc/DriversApi.md#driverscontrolleradminfindall) | **GET** /drivers | [Admin] List all drivers
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerAdminFindOne**](doc/DriversApi.md#driverscontrolleradminfindone) | **GET** /drivers/{driverId} | [Admin] Get a driver by ID
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerAdminSuspend**](doc/DriversApi.md#driverscontrolleradminsuspend) | **POST** /drivers/{driverId}/suspend | [Admin] Suspend a driver
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerAdminUnsuspend**](doc/DriversApi.md#driverscontrolleradminunsuspend) | **POST** /drivers/{driverId}/unsuspend | [Admin] Unsuspend a driver
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerCreateShift**](doc/DriversApi.md#driverscontrollercreateshift) | **POST** /drivers/me/shifts | Create a shift
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerEndShift**](doc/DriversApi.md#driverscontrollerendshift) | **POST** /drivers/me/shifts/{shiftId}/end | End a shift
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerGetMyProfile**](doc/DriversApi.md#driverscontrollergetmyprofile) | **GET** /drivers/me | Get my driver profile
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerGetMyShifts**](doc/DriversApi.md#driverscontrollergetmyshifts) | **GET** /drivers/me/shifts | Get my shifts
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerGetWalletBalance**](doc/DriversApi.md#driverscontrollergetwalletbalance) | **GET** /drivers/me/wallet | Get wallet balance
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerGetWalletTransactions**](doc/DriversApi.md#driverscontrollergetwallettransactions) | **GET** /drivers/me/wallet/transactions | Get wallet transaction history
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerRegister**](doc/DriversApi.md#driverscontrollerregister) | **POST** /drivers/register | Register as a driver (creates driver profile, upgrades role)
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerStartShift**](doc/DriversApi.md#driverscontrollerstartshift) | **POST** /drivers/me/shifts/{shiftId}/start | Start a shift
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerUpdateLocation**](doc/DriversApi.md#driverscontrollerupdatelocation) | **PATCH** /drivers/me/location | Update driver GPS location (call frequently ~5s)
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerUpdateProfile**](doc/DriversApi.md#driverscontrollerupdateprofile) | **PATCH** /drivers/me | Update my driver profile
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerUpdateStatus**](doc/DriversApi.md#driverscontrollerupdatestatus) | **PATCH** /drivers/me/status | Update driver status (ONLINE / OFFLINE / ON_BREAK)
+[*DriversApi*](doc/DriversApi.md) | [**driversControllerUploadAvatar**](doc/DriversApi.md#driverscontrolleruploadavatar) | **POST** /drivers/me/avatar | Upload driver avatar
 [*HealthSystemApi*](doc/HealthSystemApi.md) | [**apiControllerRoot**](doc/HealthSystemApi.md#apicontrollerroot) | **GET** / | API Health Check
 [*InboxSummaryCountsApi*](doc/InboxSummaryCountsApi.md) | [**inboxControllerGetCounts**](doc/InboxSummaryCountsApi.md#inboxcontrollergetcounts) | **GET** /inbox/counts | Get unread counts for chat and notifications
 [*LogisticsZonesApi*](doc/LogisticsZonesApi.md) | [**zonesControllerCheckLocation**](doc/LogisticsZonesApi.md#zonescontrollerchecklocation) | **POST** /zones/check-location | Find zone by coordinates
@@ -115,16 +141,49 @@ Class | Method | HTTP request | Description
 [*NotificationsApi*](doc/NotificationsApi.md) | [**notificationsControllerMarkOneRead**](doc/NotificationsApi.md#notificationscontrollermarkoneread) | **PATCH** /notifications/{id}/read | Mark a specific notification as read
 [*NotificationsApi*](doc/NotificationsApi.md) | [**notificationsControllerMarkRead**](doc/NotificationsApi.md#notificationscontrollermarkread) | **PATCH** /notifications/read | Mark multiple notifications as read
 [*NotificationsApi*](doc/NotificationsApi.md) | [**notificationsControllerUnreadCount**](doc/NotificationsApi.md#notificationscontrollerunreadcount) | **GET** /notifications/unread-count | Get unread notifications count
+[*OffersApi*](doc/OffersApi.md) | [**offersControllerCreate**](doc/OffersApi.md#offerscontrollercreate) | **POST** /offers/admin | Create new product offer
+[*OffersApi*](doc/OffersApi.md) | [**offersControllerFindAll**](doc/OffersApi.md#offerscontrollerfindall) | **GET** /offers/admin | Get all offers (Admin)
+[*OffersApi*](doc/OffersApi.md) | [**offersControllerFindAllActive**](doc/OffersApi.md#offerscontrollerfindallactive) | **GET** /offers | Get all active product offers
+[*OffersApi*](doc/OffersApi.md) | [**offersControllerRemove**](doc/OffersApi.md#offerscontrollerremove) | **DELETE** /offers/admin/{id} | Delete product offer
+[*OffersApi*](doc/OffersApi.md) | [**offersControllerUpdate**](doc/OffersApi.md#offerscontrollerupdate) | **PATCH** /offers/admin/{id} | Update product offer
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerAdminFindAll**](doc/OrdersApi.md#orderscontrolleradminfindall) | **GET** /orders | [Admin] List all orders with filters
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerAdminForceAssignDriver**](doc/OrdersApi.md#orderscontrolleradminforceassigndriver) | **POST** /orders/{orderId}/assign-driver | [Admin] Force-assign a driver to an order
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerCancelOrder**](doc/OrdersApi.md#orderscontrollercancelorder) | **POST** /orders/{orderId}/cancel | Cancel an order (customer or vendor)
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerDriverUpdateStatus**](doc/OrdersApi.md#orderscontrollerdriverupdatestatus) | **PATCH** /orders/driver/{orderId}/status | Driver updates order status (PICKED_UP / DELIVERED)
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerGetMyDispatches**](doc/OrdersApi.md#orderscontrollergetmydispatches) | **GET** /orders/driver/dispatches | Get my pending dispatch requests
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerGetMyOrdersAsCustomer**](doc/OrdersApi.md#orderscontrollergetmyordersascustomer) | **GET** /orders/my | Get my order history (customer)
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerGetMyOrdersAsDriver**](doc/OrdersApi.md#orderscontrollergetmyordersasdriver) | **GET** /orders/driver/my | Get my orders as driver
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerGetOne**](doc/OrdersApi.md#orderscontrollergetone) | **GET** /orders/{orderId} | Get a single order (customer/driver/vendor/admin)
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerGetVendorOrders**](doc/OrdersApi.md#orderscontrollergetvendororders) | **GET** /orders/vendor/{vendorId} | Get orders for a vendor (vendor member or admin)
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerPlaceOrder**](doc/OrdersApi.md#orderscontrollerplaceorder) | **POST** /orders | Place a new order from active cart
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerRespondToDispatch**](doc/OrdersApi.md#orderscontrollerrespondtodispatch) | **POST** /orders/driver/dispatches/{dispatchId}/respond | Accept or reject a dispatch request
+[*OrdersApi*](doc/OrdersApi.md) | [**ordersControllerVendorUpdateStatus**](doc/OrdersApi.md#orderscontrollervendorupdatestatus) | **PATCH** /orders/vendor/{orderId}/status | Vendor updates order status
 [*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerCheckVersion**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrollercheckversion) | **POST** /platform-settings/app-version-check | Check if app version is supported
 [*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerGetAll**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrollergetall) | **GET** /platform-settings | Get all platform settings (Admin)
 [*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerGetPublic**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrollergetpublic) | **GET** /platform-settings/public | Get public platform settings (maintenance mode, versions)
 [*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerUpdate**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrollerupdate) | **PATCH** /platform-settings | Update platform settings (Admin)
+[*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerUploadCarIcon**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrolleruploadcaricon) | **POST** /platform-settings/car-icon | Upload car icon
+[*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerUploadDeliveryBannerIcon**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrolleruploaddeliverybannericon) | **POST** /platform-settings/delivery-banner-icon | Upload delivery banner icon
+[*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerUploadHomeCover**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrolleruploadhomecover) | **POST** /platform-settings/home-cover | Upload home cover image
+[*PlatformSettingsVersioningApi*](doc/PlatformSettingsVersioningApi.md) | [**platformSettingsControllerUploadMotorcycleIcon**](doc/PlatformSettingsVersioningApi.md#platformsettingscontrolleruploadmotorcycleicon) | **POST** /platform-settings/motorcycle-icon | Upload motorcycle icon
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerCreate**](doc/PromotionsApi.md#promotionscontrollercreate) | **POST** /promotions/admin | 
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerFindAll**](doc/PromotionsApi.md#promotionscontrollerfindall) | **GET** /promotions/admin | Get all promotions (Admin)
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerFindAllActive**](doc/PromotionsApi.md#promotionscontrollerfindallactive) | **GET** /promotions | Get all active promotions for customer app
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerFindOne**](doc/PromotionsApi.md#promotionscontrollerfindone) | **GET** /promotions/admin/{id} | 
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerRemove**](doc/PromotionsApi.md#promotionscontrollerremove) | **DELETE** /promotions/admin/{id} | 
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerUpdate**](doc/PromotionsApi.md#promotionscontrollerupdate) | **PATCH** /promotions/admin/{id} | 
+[*PromotionsApi*](doc/PromotionsApi.md) | [**promotionsControllerUploadImage**](doc/PromotionsApi.md#promotionscontrolleruploadimage) | **POST** /promotions/admin/{id}/image | 
+[*StatisticsApi*](doc/StatisticsApi.md) | [**statisticsControllerGetAppStats**](doc/StatisticsApi.md#statisticscontrollergetappstats) | **GET** /statistics/app | [Admin] Get platform-wide statistics
+[*StatisticsApi*](doc/StatisticsApi.md) | [**statisticsControllerGetDriverStats**](doc/StatisticsApi.md#statisticscontrollergetdriverstats) | **GET** /statistics/drivers/{driverId} | [Admin] Get statistics for a specific driver
+[*StatisticsApi*](doc/StatisticsApi.md) | [**statisticsControllerGetMyDriverStats**](doc/StatisticsApi.md#statisticscontrollergetmydriverstats) | **GET** /statistics/driver/me | Get my driver statistics
+[*StatisticsApi*](doc/StatisticsApi.md) | [**statisticsControllerGetVendorStats**](doc/StatisticsApi.md#statisticscontrollergetvendorstats) | **GET** /statistics/vendors/{vendorId} | Get vendor statistics (member or admin)
 [*SupportTicketsApi*](doc/SupportTicketsApi.md) | [**ticketsControllerCreate**](doc/SupportTicketsApi.md#ticketscontrollercreate) | **POST** /tickets | Create a new support ticket
 [*SupportTicketsApi*](doc/SupportTicketsApi.md) | [**ticketsControllerGetOne**](doc/SupportTicketsApi.md#ticketscontrollergetone) | **GET** /tickets/{id} | Get a specific support ticket by ID
 [*SupportTicketsApi*](doc/SupportTicketsApi.md) | [**ticketsControllerList**](doc/SupportTicketsApi.md#ticketscontrollerlist) | **GET** /tickets | List support tickets with filters
 [*SupportTicketsApi*](doc/SupportTicketsApi.md) | [**ticketsControllerRemove**](doc/SupportTicketsApi.md#ticketscontrollerremove) | **DELETE** /tickets/{id} | Delete/Cancel a support ticket
 [*SupportTicketsApi*](doc/SupportTicketsApi.md) | [**ticketsControllerUpdate**](doc/SupportTicketsApi.md#ticketscontrollerupdate) | **PATCH** /tickets/{id} | Update a support ticket
 [*UsersApi*](doc/UsersApi.md) | [**usersControllerAdminBan**](doc/UsersApi.md#userscontrolleradminban) | **POST** /users/{userId}/ban | [Admin] Ban a user — immediately revokes all sessions. Cannot ban SUPER_ADMIN.
+[*UsersApi*](doc/UsersApi.md) | [**usersControllerAdminCreate**](doc/UsersApi.md#userscontrolleradmincreate) | **POST** /users | [Admin] Create a new user directly
 [*UsersApi*](doc/UsersApi.md) | [**usersControllerAdminFindAll**](doc/UsersApi.md#userscontrolleradminfindall) | **GET** /users | [Admin] List all users — filter by role, isBanned, includeDeleted, search
 [*UsersApi*](doc/UsersApi.md) | [**usersControllerAdminFindOne**](doc/UsersApi.md#userscontrolleradminfindone) | **GET** /users/{userId} | [Admin] Get a user — includes sessions, devices, vendor memberships, customer/driver snapshots
 [*UsersApi*](doc/UsersApi.md) | [**usersControllerAdminGetSessions**](doc/UsersApi.md#userscontrolleradmingetsessions) | **GET** /users/{userId}/sessions | [Admin] List active sessions for a user
@@ -153,8 +212,9 @@ Class | Method | HTTP request | Description
 [*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerFindOne**](doc/VendorsCoreManagementApi.md#vendorscontrollerfindone) | **GET** /vendors/{vendorId} | Get a specific vendor by ID
 [*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerGetMyVendor**](doc/VendorsCoreManagementApi.md#vendorscontrollergetmyvendor) | **GET** /vendors/{vendorId}/me | Get my vendor profile (Member)
 [*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerRemove**](doc/VendorsCoreManagementApi.md#vendorscontrollerremove) | **DELETE** /vendors/{vendorId} | Delete a vendor (Admin)
-[*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerUpdate**](doc/VendorsCoreManagementApi.md#vendorscontrollerupdate) | **PATCH** /vendors/{vendorId} | Update vendor information (Admin)
-[*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerUpdateStatus**](doc/VendorsCoreManagementApi.md#vendorscontrollerupdatestatus) | **PATCH** /vendors/{vendorId}/status | Update vendor status (Admin)
+[*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerSearchDiscovery**](doc/VendorsCoreManagementApi.md#vendorscontrollersearchdiscovery) | **GET** /vendors/discovery/search | Global discovery search for vendors and products
+[*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerUpdate**](doc/VendorsCoreManagementApi.md#vendorscontrollerupdate) | **PATCH** /vendors/{vendorId} | Update vendor information
+[*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerUpdateStatus**](doc/VendorsCoreManagementApi.md#vendorscontrollerupdatestatus) | **PATCH** /vendors/{vendorId}/status | Update vendor status
 [*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerUploadCover**](doc/VendorsCoreManagementApi.md#vendorscontrolleruploadcover) | **POST** /vendors/{vendorId}/cover | Upload vendor cover image
 [*VendorsCoreManagementApi*](doc/VendorsCoreManagementApi.md) | [**vendorsControllerUploadLogo**](doc/VendorsCoreManagementApi.md#vendorscontrolleruploadlogo) | **POST** /vendors/{vendorId}/logo | Upload vendor logo image
 [*VendorsMembersTeamApi*](doc/VendorsMembersTeamApi.md) | [**vendorMembersControllerAddMember**](doc/VendorsMembersTeamApi.md#vendormemberscontrolleraddmember) | **POST** /vendors/{vendorId}/members | Add a new member to the vendor
@@ -166,12 +226,14 @@ Class | Method | HTTP request | Description
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerAdminCreate**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrolleradmincreate) | **POST** /vendors/{vendorId}/categories/admin | Create a new menu category (Admin Override)
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerAdminRemove**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrolleradminremove) | **DELETE** /vendors/{vendorId}/categories/admin/{categoryId} | Delete a menu category (Admin Override)
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerAdminUpdate**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrolleradminupdate) | **PATCH** /vendors/{vendorId}/categories/admin/{categoryId} | Update a menu category (Admin Override)
+[*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerAdminUploadIcon**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrolleradminuploadicon) | **POST** /vendors/{vendorId}/categories/admin/{categoryId}/icon | Upload menu category icon (Admin Override)
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerCreate**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrollercreate) | **POST** /vendors/{vendorId}/categories | Create a new menu category (Member)
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerFindAll**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrollerfindall) | **GET** /vendors/{vendorId}/categories | List all menu categories for a vendor
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerFindOne**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrollerfindone) | **GET** /vendors/{vendorId}/categories/{categoryId} | Get a specific menu category by ID
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerRemove**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrollerremove) | **DELETE** /vendors/{vendorId}/categories/{categoryId} | Delete a menu category (Member)
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerReorder**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrollerreorder) | **PATCH** /vendors/{vendorId}/categories/reorder | Reorder menu categories
 [*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerUpdate**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrollerupdate) | **PATCH** /vendors/{vendorId}/categories/{categoryId} | Update a menu category (Member)
+[*VendorsMenuCategoriesApi*](doc/VendorsMenuCategoriesApi.md) | [**menuCategoriesControllerUploadIcon**](doc/VendorsMenuCategoriesApi.md#menucategoriescontrolleruploadicon) | **POST** /vendors/{vendorId}/categories/{categoryId}/icon | Upload menu category icon (Member)
 [*VendorsProductsApi*](doc/VendorsProductsApi.md) | [**productsControllerAddOption**](doc/VendorsProductsApi.md#productscontrolleraddoption) | **POST** /vendors/{vendorId}/products/{productId}/option-groups/{groupId}/options | Add an option to a group
 [*VendorsProductsApi*](doc/VendorsProductsApi.md) | [**productsControllerAddOptionGroup**](doc/VendorsProductsApi.md#productscontrolleraddoptiongroup) | **POST** /vendors/{vendorId}/products/{productId}/option-groups | Add an option group to a product
 [*VendorsProductsApi*](doc/VendorsProductsApi.md) | [**productsControllerAddVariant**](doc/VendorsProductsApi.md#productscontrolleraddvariant) | **POST** /vendors/{vendorId}/products/{productId}/variants | Add a variant to a product
@@ -197,6 +259,7 @@ Class | Method | HTTP request | Description
 [*VendorsVerticalsCategoriesApi*](doc/VendorsVerticalsCategoriesApi.md) | [**vendorVerticalsControllerFindOne**](doc/VendorsVerticalsCategoriesApi.md#vendorverticalscontrollerfindone) | **GET** /vendor-verticals/{id} | Get a specific vendor vertical by ID
 [*VendorsVerticalsCategoriesApi*](doc/VendorsVerticalsCategoriesApi.md) | [**vendorVerticalsControllerRemove**](doc/VendorsVerticalsCategoriesApi.md#vendorverticalscontrollerremove) | **DELETE** /vendor-verticals/{id} | Delete a vendor vertical (Admin)
 [*VendorsVerticalsCategoriesApi*](doc/VendorsVerticalsCategoriesApi.md) | [**vendorVerticalsControllerUpdate**](doc/VendorsVerticalsCategoriesApi.md#vendorverticalscontrollerupdate) | **PATCH** /vendor-verticals/{id} | Update a vendor vertical (Admin)
+[*VendorsVerticalsCategoriesApi*](doc/VendorsVerticalsCategoriesApi.md) | [**vendorVerticalsControllerUploadIcon**](doc/VendorsVerticalsCategoriesApi.md#vendorverticalscontrolleruploadicon) | **POST** /vendor-verticals/admin/{id}/icon | Upload vertical icon image
 [*VendorsWalletTransactionsApi*](doc/VendorsWalletTransactionsApi.md) | [**vendorWalletControllerAdminGetBalance**](doc/VendorsWalletTransactionsApi.md#vendorwalletcontrolleradmingetbalance) | **GET** /vendors/{vendorId}/wallet/admin/balance | Get any vendor&#39;s wallet balance (Admin)
 [*VendorsWalletTransactionsApi*](doc/VendorsWalletTransactionsApi.md) | [**vendorWalletControllerAdminListTransactions**](doc/VendorsWalletTransactionsApi.md#vendorwalletcontrolleradminlisttransactions) | **GET** /vendors/{vendorId}/wallet/admin/transactions | List any vendor&#39;s wallet transactions (Admin)
 [*VendorsWalletTransactionsApi*](doc/VendorsWalletTransactionsApi.md) | [**vendorWalletControllerGetBalance**](doc/VendorsWalletTransactionsApi.md#vendorwalletcontrollergetbalance) | **GET** /vendors/{vendorId}/wallet/balance | Get vendor wallet balance (Member)
@@ -205,22 +268,29 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AddCartItemDto](doc/AddCartItemDto.md)
  - [AddVendorMemberDto](doc/AddVendorMemberDto.md)
+ - [AdminAssignDriverDto](doc/AdminAssignDriverDto.md)
  - [AdminUpdateUserDto](doc/AdminUpdateUserDto.md)
  - [AppVersionCheckDto](doc/AppVersionCheckDto.md)
  - [BanUserDto](doc/BanUserDto.md)
  - [ChangePasswordDto](doc/ChangePasswordDto.md)
  - [CheckLocationDto](doc/CheckLocationDto.md)
  - [CreateAddressDto](doc/CreateAddressDto.md)
+ - [CreateDirectConversationDto](doc/CreateDirectConversationDto.md)
+ - [CreateDriverShiftDto](doc/CreateDriverShiftDto.md)
  - [CreateMenuCategoryDto](doc/CreateMenuCategoryDto.md)
+ - [CreateOfferDto](doc/CreateOfferDto.md)
  - [CreateOptionGroupDto](doc/CreateOptionGroupDto.md)
  - [CreateOrderConversationDto](doc/CreateOrderConversationDto.md)
  - [CreateProductDto](doc/CreateProductDto.md)
  - [CreateProductOptionDto](doc/CreateProductOptionDto.md)
  - [CreateProductVariantDto](doc/CreateProductVariantDto.md)
+ - [CreatePromotionDto](doc/CreatePromotionDto.md)
  - [CreateSupportConversationDto](doc/CreateSupportConversationDto.md)
  - [CreateTicketDto](doc/CreateTicketDto.md)
  - [CreateVendorBranchDto](doc/CreateVendorBranchDto.md)
+ - [CreateVendorConversationDto](doc/CreateVendorConversationDto.md)
  - [CreateVendorDto](doc/CreateVendorDto.md)
  - [CreateVendorVerticalDto](doc/CreateVendorVerticalDto.md)
  - [CreateZoneDto](doc/CreateZoneDto.md)
@@ -229,20 +299,30 @@ Class | Method | HTTP request | Description
  - [LogoutDto](doc/LogoutDto.md)
  - [MarkNotificationsReadDto](doc/MarkNotificationsReadDto.md)
  - [MarkReadDto](doc/MarkReadDto.md)
+ - [PlaceOrderDto](doc/PlaceOrderDto.md)
  - [RegisterDeviceDto](doc/RegisterDeviceDto.md)
+ - [RegisterDriverDto](doc/RegisterDriverDto.md)
  - [RegisterDto](doc/RegisterDto.md)
  - [ReorderCategoriesDto](doc/ReorderCategoriesDto.md)
  - [ResetPasswordDto](doc/ResetPasswordDto.md)
+ - [RespondToDispatchDto](doc/RespondToDispatchDto.md)
  - [SendMessageDto](doc/SendMessageDto.md)
  - [SendOtpDto](doc/SendOtpDto.md)
  - [UpdateAddressDto](doc/UpdateAddressDto.md)
+ - [UpdateCartItemDto](doc/UpdateCartItemDto.md)
+ - [UpdateDriverLocationDto](doc/UpdateDriverLocationDto.md)
+ - [UpdateDriverProfileDto](doc/UpdateDriverProfileDto.md)
+ - [UpdateDriverStatusDto](doc/UpdateDriverStatusDto.md)
  - [UpdateMenuCategoryDto](doc/UpdateMenuCategoryDto.md)
  - [UpdateNotificationSettingsDto](doc/UpdateNotificationSettingsDto.md)
+ - [UpdateOfferDto](doc/UpdateOfferDto.md)
  - [UpdateOptionGroupDto](doc/UpdateOptionGroupDto.md)
+ - [UpdateOrderStatusDto](doc/UpdateOrderStatusDto.md)
  - [UpdatePlatformSettingsDto](doc/UpdatePlatformSettingsDto.md)
  - [UpdateProductDto](doc/UpdateProductDto.md)
  - [UpdateProductOptionDto](doc/UpdateProductOptionDto.md)
  - [UpdateProductVariantDto](doc/UpdateProductVariantDto.md)
+ - [UpdatePromotionDto](doc/UpdatePromotionDto.md)
  - [UpdateTicketDto](doc/UpdateTicketDto.md)
  - [UpdateUserDto](doc/UpdateUserDto.md)
  - [UpdateVendorBranchDto](doc/UpdateVendorBranchDto.md)

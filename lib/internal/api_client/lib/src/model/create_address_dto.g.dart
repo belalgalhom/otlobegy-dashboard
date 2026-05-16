@@ -18,17 +18,17 @@ class _$CreateAddressDto extends CreateAddressDto {
   @override
   final bool? isDefault;
 
-  factory _$CreateAddressDto([
-    void Function(CreateAddressDtoBuilder)? updates,
-  ]) => (CreateAddressDtoBuilder()..update(updates))._build();
+  factory _$CreateAddressDto(
+          [void Function(CreateAddressDtoBuilder)? updates]) =>
+      (CreateAddressDtoBuilder()..update(updates))._build();
 
-  _$CreateAddressDto._({
-    this.label,
-    required this.address,
-    required this.location,
-    this.details,
-    this.isDefault,
-  }) : super._();
+  _$CreateAddressDto._(
+      {this.label,
+      required this.address,
+      required this.location,
+      this.details,
+      this.isDefault})
+      : super._();
   @override
   CreateAddressDto rebuild(void Function(CreateAddressDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -130,15 +130,11 @@ class CreateAddressDtoBuilder
   _$CreateAddressDto _build() {
     _$CreateAddressDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$CreateAddressDto._(
             label: label,
             address: BuiltValueNullFieldError.checkNotNull(
-              address,
-              r'CreateAddressDto',
-              'address',
-            ),
+                address, r'CreateAddressDto', 'address'),
             location: location.build(),
             details: details,
             isDefault: isDefault,
@@ -150,10 +146,7 @@ class CreateAddressDtoBuilder
         location.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'CreateAddressDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'CreateAddressDto', _$failedField, e.toString());
       }
       rethrow;
     }

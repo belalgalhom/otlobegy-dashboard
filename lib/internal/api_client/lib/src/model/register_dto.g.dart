@@ -6,6 +6,140 @@ part of 'register_dto.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const RegisterDtoRoleEnum _$registerDtoRoleEnum_CUSTOMER =
+    const RegisterDtoRoleEnum._('CUSTOMER');
+const RegisterDtoRoleEnum _$registerDtoRoleEnum_DRIVER =
+    const RegisterDtoRoleEnum._('DRIVER');
+const RegisterDtoRoleEnum _$registerDtoRoleEnum_VENDOR_MEMBER =
+    const RegisterDtoRoleEnum._('VENDOR_MEMBER');
+const RegisterDtoRoleEnum _$registerDtoRoleEnum_ADMIN =
+    const RegisterDtoRoleEnum._('ADMIN');
+const RegisterDtoRoleEnum _$registerDtoRoleEnum_SUPER_ADMIN =
+    const RegisterDtoRoleEnum._('SUPER_ADMIN');
+
+RegisterDtoRoleEnum _$registerDtoRoleEnumValueOf(String name) {
+  switch (name) {
+    case 'CUSTOMER':
+      return _$registerDtoRoleEnum_CUSTOMER;
+    case 'DRIVER':
+      return _$registerDtoRoleEnum_DRIVER;
+    case 'VENDOR_MEMBER':
+      return _$registerDtoRoleEnum_VENDOR_MEMBER;
+    case 'ADMIN':
+      return _$registerDtoRoleEnum_ADMIN;
+    case 'SUPER_ADMIN':
+      return _$registerDtoRoleEnum_SUPER_ADMIN;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<RegisterDtoRoleEnum> _$registerDtoRoleEnumValues =
+    BuiltSet<RegisterDtoRoleEnum>(const <RegisterDtoRoleEnum>[
+  _$registerDtoRoleEnum_CUSTOMER,
+  _$registerDtoRoleEnum_DRIVER,
+  _$registerDtoRoleEnum_VENDOR_MEMBER,
+  _$registerDtoRoleEnum_ADMIN,
+  _$registerDtoRoleEnum_SUPER_ADMIN,
+]);
+
+const RegisterDtoVendorRoleEnum _$registerDtoVendorRoleEnum_OWNER =
+    const RegisterDtoVendorRoleEnum._('OWNER');
+const RegisterDtoVendorRoleEnum _$registerDtoVendorRoleEnum_MANAGER =
+    const RegisterDtoVendorRoleEnum._('MANAGER');
+const RegisterDtoVendorRoleEnum _$registerDtoVendorRoleEnum_STAFF =
+    const RegisterDtoVendorRoleEnum._('STAFF');
+
+RegisterDtoVendorRoleEnum _$registerDtoVendorRoleEnumValueOf(String name) {
+  switch (name) {
+    case 'OWNER':
+      return _$registerDtoVendorRoleEnum_OWNER;
+    case 'MANAGER':
+      return _$registerDtoVendorRoleEnum_MANAGER;
+    case 'STAFF':
+      return _$registerDtoVendorRoleEnum_STAFF;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<RegisterDtoVendorRoleEnum> _$registerDtoVendorRoleEnumValues =
+    BuiltSet<RegisterDtoVendorRoleEnum>(const <RegisterDtoVendorRoleEnum>[
+  _$registerDtoVendorRoleEnum_OWNER,
+  _$registerDtoVendorRoleEnum_MANAGER,
+  _$registerDtoVendorRoleEnum_STAFF,
+]);
+
+Serializer<RegisterDtoRoleEnum> _$registerDtoRoleEnumSerializer =
+    _$RegisterDtoRoleEnumSerializer();
+Serializer<RegisterDtoVendorRoleEnum> _$registerDtoVendorRoleEnumSerializer =
+    _$RegisterDtoVendorRoleEnumSerializer();
+
+class _$RegisterDtoRoleEnumSerializer
+    implements PrimitiveSerializer<RegisterDtoRoleEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'CUSTOMER': 'CUSTOMER',
+    'DRIVER': 'DRIVER',
+    'VENDOR_MEMBER': 'VENDOR_MEMBER',
+    'ADMIN': 'ADMIN',
+    'SUPER_ADMIN': 'SUPER_ADMIN',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'CUSTOMER': 'CUSTOMER',
+    'DRIVER': 'DRIVER',
+    'VENDOR_MEMBER': 'VENDOR_MEMBER',
+    'ADMIN': 'ADMIN',
+    'SUPER_ADMIN': 'SUPER_ADMIN',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[RegisterDtoRoleEnum];
+  @override
+  final String wireName = 'RegisterDtoRoleEnum';
+
+  @override
+  Object serialize(Serializers serializers, RegisterDtoRoleEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  RegisterDtoRoleEnum deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      RegisterDtoRoleEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
+class _$RegisterDtoVendorRoleEnumSerializer
+    implements PrimitiveSerializer<RegisterDtoVendorRoleEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'OWNER': 'OWNER',
+    'MANAGER': 'MANAGER',
+    'STAFF': 'STAFF',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'OWNER': 'OWNER',
+    'MANAGER': 'MANAGER',
+    'STAFF': 'STAFF',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[RegisterDtoVendorRoleEnum];
+  @override
+  final String wireName = 'RegisterDtoVendorRoleEnum';
+
+  @override
+  Object serialize(Serializers serializers, RegisterDtoVendorRoleEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  RegisterDtoVendorRoleEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      RegisterDtoVendorRoleEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
 class _$RegisterDto extends RegisterDto {
   @override
   final String email;
@@ -16,24 +150,24 @@ class _$RegisterDto extends RegisterDto {
   @override
   final String? phone;
   @override
-  final String? role;
+  final RegisterDtoRoleEnum? role;
   @override
   final String? vendorId;
   @override
-  final String? vendorRole;
+  final RegisterDtoVendorRoleEnum? vendorRole;
 
   factory _$RegisterDto([void Function(RegisterDtoBuilder)? updates]) =>
       (RegisterDtoBuilder()..update(updates))._build();
 
-  _$RegisterDto._({
-    required this.email,
-    required this.password,
-    required this.name,
-    this.phone,
-    this.role,
-    this.vendorId,
-    this.vendorRole,
-  }) : super._();
+  _$RegisterDto._(
+      {required this.email,
+      required this.password,
+      required this.name,
+      this.phone,
+      this.role,
+      this.vendorId,
+      this.vendorRole})
+      : super._();
   @override
   RegisterDto rebuild(void Function(RegisterDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -101,17 +235,18 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
   String? get phone => _$this._phone;
   set phone(String? phone) => _$this._phone = phone;
 
-  String? _role;
-  String? get role => _$this._role;
-  set role(String? role) => _$this._role = role;
+  RegisterDtoRoleEnum? _role;
+  RegisterDtoRoleEnum? get role => _$this._role;
+  set role(RegisterDtoRoleEnum? role) => _$this._role = role;
 
   String? _vendorId;
   String? get vendorId => _$this._vendorId;
   set vendorId(String? vendorId) => _$this._vendorId = vendorId;
 
-  String? _vendorRole;
-  String? get vendorRole => _$this._vendorRole;
-  set vendorRole(String? vendorRole) => _$this._vendorRole = vendorRole;
+  RegisterDtoVendorRoleEnum? _vendorRole;
+  RegisterDtoVendorRoleEnum? get vendorRole => _$this._vendorRole;
+  set vendorRole(RegisterDtoVendorRoleEnum? vendorRole) =>
+      _$this._vendorRole = vendorRole;
 
   RegisterDtoBuilder() {
     RegisterDto._defaults(this);
@@ -146,24 +281,14 @@ class RegisterDtoBuilder implements Builder<RegisterDto, RegisterDtoBuilder> {
   RegisterDto build() => _build();
 
   _$RegisterDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$RegisterDto._(
           email: BuiltValueNullFieldError.checkNotNull(
-            email,
-            r'RegisterDto',
-            'email',
-          ),
+              email, r'RegisterDto', 'email'),
           password: BuiltValueNullFieldError.checkNotNull(
-            password,
-            r'RegisterDto',
-            'password',
-          ),
+              password, r'RegisterDto', 'password'),
           name: BuiltValueNullFieldError.checkNotNull(
-            name,
-            r'RegisterDto',
-            'name',
-          ),
+              name, r'RegisterDto', 'name'),
           phone: phone,
           role: role,
           vendorId: vendorId,

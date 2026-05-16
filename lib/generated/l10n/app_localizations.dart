@@ -1981,6 +1981,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Offer deleted successfully'**
   String get offerDeleted;
+
+  /// No description provided for @escalated.
+  ///
+  /// In en, this message translates to:
+  /// **'Escalated'**
+  String get escalated;
+
+  /// No description provided for @waitingOnUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting on User'**
+  String get waitingOnUser;
+
+  /// No description provided for @ticketCategoryDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Issue'**
+  String get ticketCategoryDelivery;
+
+  /// No description provided for @ticketCategoryVendor.
+  ///
+  /// In en, this message translates to:
+  /// **'Store/Restaurant Issue'**
+  String get ticketCategoryVendor;
+
+  /// No description provided for @ticketCategoryPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Issue'**
+  String get ticketCategoryPayment;
+
+  /// No description provided for @ticketCategoryAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Issue'**
+  String get ticketCategoryAccount;
+
+  /// No description provided for @ticketCategoryReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Return/Complaint'**
+  String get ticketCategoryReturn;
+
+  /// No description provided for @ticketCategoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get ticketCategoryOther;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @ticketNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket No.'**
+  String get ticketNumber;
 }
 
 class _AppLocalizationsDelegate

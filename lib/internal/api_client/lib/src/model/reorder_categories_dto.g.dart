@@ -10,15 +10,15 @@ class _$ReorderCategoriesDto extends ReorderCategoriesDto {
   @override
   final BuiltList<String> items;
 
-  factory _$ReorderCategoriesDto([
-    void Function(ReorderCategoriesDtoBuilder)? updates,
-  ]) => (ReorderCategoriesDtoBuilder()..update(updates))._build();
+  factory _$ReorderCategoriesDto(
+          [void Function(ReorderCategoriesDtoBuilder)? updates]) =>
+      (ReorderCategoriesDtoBuilder()..update(updates))._build();
 
   _$ReorderCategoriesDto._({required this.items}) : super._();
   @override
   ReorderCategoriesDto rebuild(
-    void Function(ReorderCategoriesDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(ReorderCategoriesDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   ReorderCategoriesDtoBuilder toBuilder() =>
@@ -40,9 +40,9 @@ class _$ReorderCategoriesDto extends ReorderCategoriesDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'ReorderCategoriesDto',
-    )..add('items', items)).toString();
+    return (newBuiltValueToStringHelper(r'ReorderCategoriesDto')
+          ..add('items', items))
+        .toString();
   }
 }
 
@@ -83,7 +83,10 @@ class ReorderCategoriesDtoBuilder
   _$ReorderCategoriesDto _build() {
     _$ReorderCategoriesDto _$result;
     try {
-      _$result = _$v ?? _$ReorderCategoriesDto._(items: items.build());
+      _$result = _$v ??
+          _$ReorderCategoriesDto._(
+            items: items.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -91,10 +94,7 @@ class ReorderCategoriesDtoBuilder
         items.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'ReorderCategoriesDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'ReorderCategoriesDto', _$failedField, e.toString());
       }
       rethrow;
     }

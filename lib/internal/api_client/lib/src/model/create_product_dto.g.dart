@@ -32,30 +32,36 @@ class _$CreateProductDto extends CreateProductDto {
   @override
   final bool? isFeatured;
   @override
+  final bool? sellByStrip;
+  @override
+  final num? stripsPerPackage;
+  @override
   final BuiltList<CreateOptionGroupDto>? optionGroups;
   @override
   final BuiltList<CreateProductVariantDto>? variants;
 
-  factory _$CreateProductDto([
-    void Function(CreateProductDtoBuilder)? updates,
-  ]) => (CreateProductDtoBuilder()..update(updates))._build();
+  factory _$CreateProductDto(
+          [void Function(CreateProductDtoBuilder)? updates]) =>
+      (CreateProductDtoBuilder()..update(updates))._build();
 
-  _$CreateProductDto._({
-    this.categoryId,
-    required this.name,
-    this.nameAr,
-    this.description,
-    this.descriptionAr,
-    this.hasVariants,
-    this.basePrice,
-    this.comparePrice,
-    this.sku,
-    this.stock,
-    this.isActive,
-    this.isFeatured,
-    this.optionGroups,
-    this.variants,
-  }) : super._();
+  _$CreateProductDto._(
+      {this.categoryId,
+      required this.name,
+      this.nameAr,
+      this.description,
+      this.descriptionAr,
+      this.hasVariants,
+      this.basePrice,
+      this.comparePrice,
+      this.sku,
+      this.stock,
+      this.isActive,
+      this.isFeatured,
+      this.sellByStrip,
+      this.stripsPerPackage,
+      this.optionGroups,
+      this.variants})
+      : super._();
   @override
   CreateProductDto rebuild(void Function(CreateProductDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -80,6 +86,8 @@ class _$CreateProductDto extends CreateProductDto {
         stock == other.stock &&
         isActive == other.isActive &&
         isFeatured == other.isFeatured &&
+        sellByStrip == other.sellByStrip &&
+        stripsPerPackage == other.stripsPerPackage &&
         optionGroups == other.optionGroups &&
         variants == other.variants;
   }
@@ -99,6 +107,8 @@ class _$CreateProductDto extends CreateProductDto {
     _$hash = $jc(_$hash, stock.hashCode);
     _$hash = $jc(_$hash, isActive.hashCode);
     _$hash = $jc(_$hash, isFeatured.hashCode);
+    _$hash = $jc(_$hash, sellByStrip.hashCode);
+    _$hash = $jc(_$hash, stripsPerPackage.hashCode);
     _$hash = $jc(_$hash, optionGroups.hashCode);
     _$hash = $jc(_$hash, variants.hashCode);
     _$hash = $jf(_$hash);
@@ -120,6 +130,8 @@ class _$CreateProductDto extends CreateProductDto {
           ..add('stock', stock)
           ..add('isActive', isActive)
           ..add('isFeatured', isFeatured)
+          ..add('sellByStrip', sellByStrip)
+          ..add('stripsPerPackage', stripsPerPackage)
           ..add('optionGroups', optionGroups)
           ..add('variants', variants))
         .toString();
@@ -179,6 +191,15 @@ class CreateProductDtoBuilder
   bool? get isFeatured => _$this._isFeatured;
   set isFeatured(bool? isFeatured) => _$this._isFeatured = isFeatured;
 
+  bool? _sellByStrip;
+  bool? get sellByStrip => _$this._sellByStrip;
+  set sellByStrip(bool? sellByStrip) => _$this._sellByStrip = sellByStrip;
+
+  num? _stripsPerPackage;
+  num? get stripsPerPackage => _$this._stripsPerPackage;
+  set stripsPerPackage(num? stripsPerPackage) =>
+      _$this._stripsPerPackage = stripsPerPackage;
+
   ListBuilder<CreateOptionGroupDto>? _optionGroups;
   ListBuilder<CreateOptionGroupDto> get optionGroups =>
       _$this._optionGroups ??= ListBuilder<CreateOptionGroupDto>();
@@ -210,6 +231,8 @@ class CreateProductDtoBuilder
       _stock = $v.stock;
       _isActive = $v.isActive;
       _isFeatured = $v.isFeatured;
+      _sellByStrip = $v.sellByStrip;
+      _stripsPerPackage = $v.stripsPerPackage;
       _optionGroups = $v.optionGroups?.toBuilder();
       _variants = $v.variants?.toBuilder();
       _$v = null;
@@ -233,15 +256,11 @@ class CreateProductDtoBuilder
   _$CreateProductDto _build() {
     _$CreateProductDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$CreateProductDto._(
             categoryId: categoryId,
             name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'CreateProductDto',
-              'name',
-            ),
+                name, r'CreateProductDto', 'name'),
             nameAr: nameAr,
             description: description,
             descriptionAr: descriptionAr,
@@ -252,6 +271,8 @@ class CreateProductDtoBuilder
             stock: stock,
             isActive: isActive,
             isFeatured: isFeatured,
+            sellByStrip: sellByStrip,
+            stripsPerPackage: stripsPerPackage,
             optionGroups: _optionGroups?.build(),
             variants: _variants?.build(),
           );
@@ -264,10 +285,7 @@ class CreateProductDtoBuilder
         _variants?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'CreateProductDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'CreateProductDto', _$failedField, e.toString());
       }
       rethrow;
     }

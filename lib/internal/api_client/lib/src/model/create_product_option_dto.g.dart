@@ -16,20 +16,17 @@ class _$CreateProductOptionDto extends CreateProductOptionDto {
   @override
   final bool? isActive;
 
-  factory _$CreateProductOptionDto([
-    void Function(CreateProductOptionDtoBuilder)? updates,
-  ]) => (CreateProductOptionDtoBuilder()..update(updates))._build();
+  factory _$CreateProductOptionDto(
+          [void Function(CreateProductOptionDtoBuilder)? updates]) =>
+      (CreateProductOptionDtoBuilder()..update(updates))._build();
 
-  _$CreateProductOptionDto._({
-    required this.name,
-    this.nameAr,
-    this.priceAdded,
-    this.isActive,
-  }) : super._();
+  _$CreateProductOptionDto._(
+      {required this.name, this.nameAr, this.priceAdded, this.isActive})
+      : super._();
   @override
   CreateProductOptionDto rebuild(
-    void Function(CreateProductOptionDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateProductOptionDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateProductOptionDtoBuilder toBuilder() =>
@@ -117,14 +114,10 @@ class CreateProductOptionDtoBuilder
   CreateProductOptionDto build() => _build();
 
   _$CreateProductOptionDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$CreateProductOptionDto._(
           name: BuiltValueNullFieldError.checkNotNull(
-            name,
-            r'CreateProductOptionDto',
-            'name',
-          ),
+              name, r'CreateProductOptionDto', 'name'),
           nameAr: nameAr,
           priceAdded: priceAdded,
           isActive: isActive,

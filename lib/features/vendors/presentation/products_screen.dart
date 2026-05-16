@@ -246,14 +246,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 4),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       '\$${price.toStringAsFixed(2)}',
                       style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold),
                     ),
-                    if (product['sellByStrip'] == true && product['stripsPerPackage'] != null) ...[
-                      const SizedBox(width: 8),
+                    if (product['sellByStrip'] == true && product['stripsPerPackage'] != null)
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
@@ -265,11 +267,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           style: const TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ],
                   ],
                 ),
                 const SizedBox(height: 4),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -286,13 +290,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ),
                       ),
                     ),
-                    if (product['stock'] != null) ...[
-                      const SizedBox(width: 8),
+                    if (product['stock'] != null)
                       Text(
                         '${AppLocalizations.of(context)!.stock}: ${product['stock']}',
                         style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
                       ),
-                    ],
                   ],
                 ),
               ],

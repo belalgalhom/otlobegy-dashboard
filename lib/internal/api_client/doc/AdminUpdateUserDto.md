@@ -18,6 +18,9 @@ Name | Type | Description | Notes
 **permissions** | **BuiltList&lt;String&gt;** | Replaces entire permissions array. Only for ADMIN role. | [optional] 
 **isEmailVerified** | **bool** |  | [optional] 
 **isPhoneVerified** | **bool** |  | [optional] 
+**vendorId** | **String** |  | [optional] 
+**vendorRole** | **String** |  | [optional] 
+**password** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -18,21 +18,21 @@ class _$UpdateNotificationSettingsDto extends UpdateNotificationSettingsDto {
   @override
   final bool? system;
 
-  factory _$UpdateNotificationSettingsDto([
-    void Function(UpdateNotificationSettingsDtoBuilder)? updates,
-  ]) => (UpdateNotificationSettingsDtoBuilder()..update(updates))._build();
+  factory _$UpdateNotificationSettingsDto(
+          [void Function(UpdateNotificationSettingsDtoBuilder)? updates]) =>
+      (UpdateNotificationSettingsDtoBuilder()..update(updates))._build();
 
-  _$UpdateNotificationSettingsDto._({
-    this.pushEnabled,
-    this.orderUpdates,
-    this.chatMessages,
-    this.promotions,
-    this.system,
-  }) : super._();
+  _$UpdateNotificationSettingsDto._(
+      {this.pushEnabled,
+      this.orderUpdates,
+      this.chatMessages,
+      this.promotions,
+      this.system})
+      : super._();
   @override
   UpdateNotificationSettingsDto rebuild(
-    void Function(UpdateNotificationSettingsDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateNotificationSettingsDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateNotificationSettingsDtoBuilder toBuilder() =>
@@ -75,10 +75,8 @@ class _$UpdateNotificationSettingsDto extends UpdateNotificationSettingsDto {
 
 class UpdateNotificationSettingsDtoBuilder
     implements
-        Builder<
-          UpdateNotificationSettingsDto,
-          UpdateNotificationSettingsDtoBuilder
-        > {
+        Builder<UpdateNotificationSettingsDto,
+            UpdateNotificationSettingsDtoBuilder> {
   _$UpdateNotificationSettingsDto? _$v;
 
   bool? _pushEnabled;
@@ -132,8 +130,7 @@ class UpdateNotificationSettingsDtoBuilder
   UpdateNotificationSettingsDto build() => _build();
 
   _$UpdateNotificationSettingsDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateNotificationSettingsDto._(
           pushEnabled: pushEnabled,
           orderUpdates: orderUpdates,

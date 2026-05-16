@@ -37,9 +37,9 @@ class _$MarkReadDto extends MarkReadDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'MarkReadDto',
-    )..add('lastReadMessageId', lastReadMessageId)).toString();
+    return (newBuiltValueToStringHelper(r'MarkReadDto')
+          ..add('lastReadMessageId', lastReadMessageId))
+        .toString();
   }
 }
 
@@ -78,8 +78,10 @@ class MarkReadDtoBuilder implements Builder<MarkReadDto, MarkReadDtoBuilder> {
   MarkReadDto build() => _build();
 
   _$MarkReadDto _build() {
-    final _$result =
-        _$v ?? _$MarkReadDto._(lastReadMessageId: lastReadMessageId);
+    final _$result = _$v ??
+        _$MarkReadDto._(
+          lastReadMessageId: lastReadMessageId,
+        );
     replace(_$result);
     return _$result;
   }

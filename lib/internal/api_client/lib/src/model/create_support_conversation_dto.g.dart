@@ -8,17 +8,17 @@ part of 'create_support_conversation_dto.dart';
 
 class _$CreateSupportConversationDto extends CreateSupportConversationDto {
   @override
-  final String vendorId;
+  final String? vendorId;
 
-  factory _$CreateSupportConversationDto([
-    void Function(CreateSupportConversationDtoBuilder)? updates,
-  ]) => (CreateSupportConversationDtoBuilder()..update(updates))._build();
+  factory _$CreateSupportConversationDto(
+          [void Function(CreateSupportConversationDtoBuilder)? updates]) =>
+      (CreateSupportConversationDtoBuilder()..update(updates))._build();
 
-  _$CreateSupportConversationDto._({required this.vendorId}) : super._();
+  _$CreateSupportConversationDto._({this.vendorId}) : super._();
   @override
   CreateSupportConversationDto rebuild(
-    void Function(CreateSupportConversationDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateSupportConversationDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateSupportConversationDtoBuilder toBuilder() =>
@@ -40,18 +40,16 @@ class _$CreateSupportConversationDto extends CreateSupportConversationDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'CreateSupportConversationDto',
-    )..add('vendorId', vendorId)).toString();
+    return (newBuiltValueToStringHelper(r'CreateSupportConversationDto')
+          ..add('vendorId', vendorId))
+        .toString();
   }
 }
 
 class CreateSupportConversationDtoBuilder
     implements
-        Builder<
-          CreateSupportConversationDto,
-          CreateSupportConversationDtoBuilder
-        > {
+        Builder<CreateSupportConversationDto,
+            CreateSupportConversationDtoBuilder> {
   _$CreateSupportConversationDto? _$v;
 
   String? _vendorId;
@@ -85,14 +83,9 @@ class CreateSupportConversationDtoBuilder
   CreateSupportConversationDto build() => _build();
 
   _$CreateSupportConversationDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$CreateSupportConversationDto._(
-          vendorId: BuiltValueNullFieldError.checkNotNull(
-            vendorId,
-            r'CreateSupportConversationDto',
-            'vendorId',
-          ),
+          vendorId: vendorId,
         );
     replace(_$result);
     return _$result;

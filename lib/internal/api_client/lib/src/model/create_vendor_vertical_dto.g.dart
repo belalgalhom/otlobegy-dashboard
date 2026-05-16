@@ -20,22 +20,22 @@ class _$CreateVendorVerticalDto extends CreateVendorVerticalDto {
   @override
   final num? sortOrder;
 
-  factory _$CreateVendorVerticalDto([
-    void Function(CreateVendorVerticalDtoBuilder)? updates,
-  ]) => (CreateVendorVerticalDtoBuilder()..update(updates))._build();
+  factory _$CreateVendorVerticalDto(
+          [void Function(CreateVendorVerticalDtoBuilder)? updates]) =>
+      (CreateVendorVerticalDtoBuilder()..update(updates))._build();
 
-  _$CreateVendorVerticalDto._({
-    required this.name,
-    this.nameAr,
-    required this.slug,
-    this.iconUrl,
-    this.isActive,
-    this.sortOrder,
-  }) : super._();
+  _$CreateVendorVerticalDto._(
+      {required this.name,
+      this.nameAr,
+      required this.slug,
+      this.iconUrl,
+      this.isActive,
+      this.sortOrder})
+      : super._();
   @override
   CreateVendorVerticalDto rebuild(
-    void Function(CreateVendorVerticalDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateVendorVerticalDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateVendorVerticalDtoBuilder toBuilder() =>
@@ -140,20 +140,13 @@ class CreateVendorVerticalDtoBuilder
   CreateVendorVerticalDto build() => _build();
 
   _$CreateVendorVerticalDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$CreateVendorVerticalDto._(
           name: BuiltValueNullFieldError.checkNotNull(
-            name,
-            r'CreateVendorVerticalDto',
-            'name',
-          ),
+              name, r'CreateVendorVerticalDto', 'name'),
           nameAr: nameAr,
           slug: BuiltValueNullFieldError.checkNotNull(
-            slug,
-            r'CreateVendorVerticalDto',
-            'slug',
-          ),
+              slug, r'CreateVendorVerticalDto', 'slug'),
           iconUrl: iconUrl,
           isActive: isActive,
           sortOrder: sortOrder,

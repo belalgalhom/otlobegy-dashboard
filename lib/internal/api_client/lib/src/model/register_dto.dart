@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -15,6 +16,9 @@ part 'register_dto.g.dart';
 /// * [password] 
 /// * [name] 
 /// * [phone] 
+/// * [role] 
+/// * [vendorId] 
+/// * [vendorRole] 
 @BuiltValue()
 abstract class RegisterDto implements Built<RegisterDto, RegisterDtoBuilder> {
   @BuiltValueField(wireName: r'email')
@@ -30,14 +34,15 @@ abstract class RegisterDto implements Built<RegisterDto, RegisterDtoBuilder> {
   String? get phone;
 
   @BuiltValueField(wireName: r'role')
-  String? get role;
+  RegisterDtoRoleEnum? get role;
+  // enum roleEnum {  CUSTOMER,  DRIVER,  VENDOR_MEMBER,  ADMIN,  SUPER_ADMIN,  };
 
   @BuiltValueField(wireName: r'vendorId')
   String? get vendorId;
 
   @BuiltValueField(wireName: r'vendorRole')
-  String? get vendorRole;
-
+  RegisterDtoVendorRoleEnum? get vendorRole;
+  // enum vendorRoleEnum {  OWNER,  MANAGER,  STAFF,  };
 
   RegisterDto._();
 
@@ -88,7 +93,7 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
       yield r'role';
       yield serializers.serialize(
         object.role,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(RegisterDtoRoleEnum),
       );
     }
     if (object.vendorId != null) {
@@ -102,11 +107,10 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
       yield r'vendorRole';
       yield serializers.serialize(
         object.vendorRole,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(RegisterDtoVendorRoleEnum),
       );
     }
   }
-
 
   @override
   Object serialize(
@@ -160,8 +164,8 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
         case r'role':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(RegisterDtoRoleEnum),
+          ) as RegisterDtoRoleEnum;
           result.role = valueDes;
           break;
         case r'vendorId':
@@ -174,11 +178,10 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
         case r'vendorRole':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(RegisterDtoVendorRoleEnum),
+          ) as RegisterDtoVendorRoleEnum;
           result.vendorRole = valueDes;
           break;
-
         default:
           unhandled.add(key);
           unhandled.add(value);
@@ -206,5 +209,43 @@ class _$RegisterDtoSerializer implements PrimitiveSerializer<RegisterDto> {
     );
     return result.build();
   }
+}
+
+class RegisterDtoRoleEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'CUSTOMER')
+  static const RegisterDtoRoleEnum CUSTOMER = _$registerDtoRoleEnum_CUSTOMER;
+  @BuiltValueEnumConst(wireName: r'DRIVER')
+  static const RegisterDtoRoleEnum DRIVER = _$registerDtoRoleEnum_DRIVER;
+  @BuiltValueEnumConst(wireName: r'VENDOR_MEMBER')
+  static const RegisterDtoRoleEnum VENDOR_MEMBER = _$registerDtoRoleEnum_VENDOR_MEMBER;
+  @BuiltValueEnumConst(wireName: r'ADMIN')
+  static const RegisterDtoRoleEnum ADMIN = _$registerDtoRoleEnum_ADMIN;
+  @BuiltValueEnumConst(wireName: r'SUPER_ADMIN')
+  static const RegisterDtoRoleEnum SUPER_ADMIN = _$registerDtoRoleEnum_SUPER_ADMIN;
+
+  static Serializer<RegisterDtoRoleEnum> get serializer => _$registerDtoRoleEnumSerializer;
+
+  const RegisterDtoRoleEnum._(String name): super(name);
+
+  static BuiltSet<RegisterDtoRoleEnum> get values => _$registerDtoRoleEnumValues;
+  static RegisterDtoRoleEnum valueOf(String name) => _$registerDtoRoleEnumValueOf(name);
+}
+
+class RegisterDtoVendorRoleEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'OWNER')
+  static const RegisterDtoVendorRoleEnum OWNER = _$registerDtoVendorRoleEnum_OWNER;
+  @BuiltValueEnumConst(wireName: r'MANAGER')
+  static const RegisterDtoVendorRoleEnum MANAGER = _$registerDtoVendorRoleEnum_MANAGER;
+  @BuiltValueEnumConst(wireName: r'STAFF')
+  static const RegisterDtoVendorRoleEnum STAFF = _$registerDtoVendorRoleEnum_STAFF;
+
+  static Serializer<RegisterDtoVendorRoleEnum> get serializer => _$registerDtoVendorRoleEnumSerializer;
+
+  const RegisterDtoVendorRoleEnum._(String name): super(name);
+
+  static BuiltSet<RegisterDtoVendorRoleEnum> get values => _$registerDtoVendorRoleEnumValues;
+  static RegisterDtoVendorRoleEnum valueOf(String name) => _$registerDtoVendorRoleEnumValueOf(name);
 }
 

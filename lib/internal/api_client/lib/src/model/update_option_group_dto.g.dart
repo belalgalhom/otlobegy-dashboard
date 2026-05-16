@@ -18,21 +18,17 @@ class _$UpdateOptionGroupDto extends UpdateOptionGroupDto {
   @override
   final num? maxSelect;
 
-  factory _$UpdateOptionGroupDto([
-    void Function(UpdateOptionGroupDtoBuilder)? updates,
-  ]) => (UpdateOptionGroupDtoBuilder()..update(updates))._build();
+  factory _$UpdateOptionGroupDto(
+          [void Function(UpdateOptionGroupDtoBuilder)? updates]) =>
+      (UpdateOptionGroupDtoBuilder()..update(updates))._build();
 
-  _$UpdateOptionGroupDto._({
-    this.name,
-    this.nameAr,
-    this.isRequired,
-    this.minSelect,
-    this.maxSelect,
-  }) : super._();
+  _$UpdateOptionGroupDto._(
+      {this.name, this.nameAr, this.isRequired, this.minSelect, this.maxSelect})
+      : super._();
   @override
   UpdateOptionGroupDto rebuild(
-    void Function(UpdateOptionGroupDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateOptionGroupDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateOptionGroupDtoBuilder toBuilder() =>
@@ -128,8 +124,7 @@ class UpdateOptionGroupDtoBuilder
   UpdateOptionGroupDto build() => _build();
 
   _$UpdateOptionGroupDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateOptionGroupDto._(
           name: name,
           nameAr: nameAr,

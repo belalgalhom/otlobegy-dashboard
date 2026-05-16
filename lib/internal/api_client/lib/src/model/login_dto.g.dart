@@ -11,11 +11,14 @@ class _$LoginDto extends LoginDto {
   final String email;
   @override
   final String password;
+  @override
+  final String? app;
 
   factory _$LoginDto([void Function(LoginDtoBuilder)? updates]) =>
       (LoginDtoBuilder()..update(updates))._build();
 
-  _$LoginDto._({required this.email, required this.password}) : super._();
+  _$LoginDto._({required this.email, required this.password, this.app})
+      : super._();
   @override
   LoginDto rebuild(void Function(LoginDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -28,7 +31,8 @@ class _$LoginDto extends LoginDto {
     if (identical(other, this)) return true;
     return other is LoginDto &&
         email == other.email &&
-        password == other.password;
+        password == other.password &&
+        app == other.app;
   }
 
   @override
@@ -36,6 +40,7 @@ class _$LoginDto extends LoginDto {
     var _$hash = 0;
     _$hash = $jc(_$hash, email.hashCode);
     _$hash = $jc(_$hash, password.hashCode);
+    _$hash = $jc(_$hash, app.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -44,7 +49,8 @@ class _$LoginDto extends LoginDto {
   String toString() {
     return (newBuiltValueToStringHelper(r'LoginDto')
           ..add('email', email)
-          ..add('password', password))
+          ..add('password', password)
+          ..add('app', app))
         .toString();
   }
 }
@@ -60,6 +66,10 @@ class LoginDtoBuilder implements Builder<LoginDto, LoginDtoBuilder> {
   String? get password => _$this._password;
   set password(String? password) => _$this._password = password;
 
+  String? _app;
+  String? get app => _$this._app;
+  set app(String? app) => _$this._app = app;
+
   LoginDtoBuilder() {
     LoginDto._defaults(this);
   }
@@ -69,6 +79,7 @@ class LoginDtoBuilder implements Builder<LoginDto, LoginDtoBuilder> {
     if ($v != null) {
       _email = $v.email;
       _password = $v.password;
+      _app = $v.app;
       _$v = null;
     }
     return this;
@@ -88,19 +99,13 @@ class LoginDtoBuilder implements Builder<LoginDto, LoginDtoBuilder> {
   LoginDto build() => _build();
 
   _$LoginDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$LoginDto._(
           email: BuiltValueNullFieldError.checkNotNull(
-            email,
-            r'LoginDto',
-            'email',
-          ),
+              email, r'LoginDto', 'email'),
           password: BuiltValueNullFieldError.checkNotNull(
-            password,
-            r'LoginDto',
-            'password',
-          ),
+              password, r'LoginDto', 'password'),
+          app: app,
         );
     replace(_$result);
     return _$result;

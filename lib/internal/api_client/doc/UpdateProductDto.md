@@ -19,6 +19,8 @@ Name | Type | Description | Notes
 **stock** | **num** |  | [optional] 
 **isActive** | **bool** |  | [optional] 
 **isFeatured** | **bool** |  | [optional] 
+**sellByStrip** | **bool** |  | [optional] 
+**stripsPerPackage** | **num** |  | [optional] 
 **version** | **num** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**vendorVerticalsControllerFindOne**](VendorsVerticalsCategoriesApi.md#vendorverticalscontrollerfindone) | **GET** /vendor-verticals/{id} | Get a specific vendor vertical by ID
 [**vendorVerticalsControllerRemove**](VendorsVerticalsCategoriesApi.md#vendorverticalscontrollerremove) | **DELETE** /vendor-verticals/{id} | Delete a vendor vertical (Admin)
 [**vendorVerticalsControllerUpdate**](VendorsVerticalsCategoriesApi.md#vendorverticalscontrollerupdate) | **PATCH** /vendor-verticals/{id} | Update a vendor vertical (Admin)
+[**vendorVerticalsControllerUploadIcon**](VendorsVerticalsCategoriesApi.md#vendorverticalscontrolleruploadicon) | **POST** /vendor-verticals/admin/{id}/icon | Upload vertical icon image
 
 
 # **vendorVerticalsControllerCreate**
@@ -247,6 +248,48 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **vendorVerticalsControllerUploadIcon**
+> vendorVerticalsControllerUploadIcon(id, file)
+
+Upload vertical icon image
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getVendorsVerticalsCategoriesApi();
+final String id = id_example; // String | 
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
+
+try {
+    api.vendorVerticalsControllerUploadIcon(id, file);
+} on DioException catch (e) {
+    print('Exception when calling VendorsVerticalsCategoriesApi->vendorVerticalsControllerUploadIcon: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **file** | **MultipartFile**|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
  - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

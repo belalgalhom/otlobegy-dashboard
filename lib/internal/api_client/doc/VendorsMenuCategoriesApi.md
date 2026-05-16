@@ -12,12 +12,14 @@ Method | HTTP request | Description
 [**menuCategoriesControllerAdminCreate**](VendorsMenuCategoriesApi.md#menucategoriescontrolleradmincreate) | **POST** /vendors/{vendorId}/categories/admin | Create a new menu category (Admin Override)
 [**menuCategoriesControllerAdminRemove**](VendorsMenuCategoriesApi.md#menucategoriescontrolleradminremove) | **DELETE** /vendors/{vendorId}/categories/admin/{categoryId} | Delete a menu category (Admin Override)
 [**menuCategoriesControllerAdminUpdate**](VendorsMenuCategoriesApi.md#menucategoriescontrolleradminupdate) | **PATCH** /vendors/{vendorId}/categories/admin/{categoryId} | Update a menu category (Admin Override)
+[**menuCategoriesControllerAdminUploadIcon**](VendorsMenuCategoriesApi.md#menucategoriescontrolleradminuploadicon) | **POST** /vendors/{vendorId}/categories/admin/{categoryId}/icon | Upload menu category icon (Admin Override)
 [**menuCategoriesControllerCreate**](VendorsMenuCategoriesApi.md#menucategoriescontrollercreate) | **POST** /vendors/{vendorId}/categories | Create a new menu category (Member)
 [**menuCategoriesControllerFindAll**](VendorsMenuCategoriesApi.md#menucategoriescontrollerfindall) | **GET** /vendors/{vendorId}/categories | List all menu categories for a vendor
 [**menuCategoriesControllerFindOne**](VendorsMenuCategoriesApi.md#menucategoriescontrollerfindone) | **GET** /vendors/{vendorId}/categories/{categoryId} | Get a specific menu category by ID
 [**menuCategoriesControllerRemove**](VendorsMenuCategoriesApi.md#menucategoriescontrollerremove) | **DELETE** /vendors/{vendorId}/categories/{categoryId} | Delete a menu category (Member)
 [**menuCategoriesControllerReorder**](VendorsMenuCategoriesApi.md#menucategoriescontrollerreorder) | **PATCH** /vendors/{vendorId}/categories/reorder | Reorder menu categories
 [**menuCategoriesControllerUpdate**](VendorsMenuCategoriesApi.md#menucategoriescontrollerupdate) | **PATCH** /vendors/{vendorId}/categories/{categoryId} | Update a menu category (Member)
+[**menuCategoriesControllerUploadIcon**](VendorsMenuCategoriesApi.md#menucategoriescontrolleruploadicon) | **POST** /vendors/{vendorId}/categories/{categoryId}/icon | Upload menu category icon (Member)
 
 
 # **menuCategoriesControllerAdminCreate**
@@ -144,6 +146,50 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **menuCategoriesControllerAdminUploadIcon**
+> menuCategoriesControllerAdminUploadIcon(vendorId, categoryId, file)
+
+Upload menu category icon (Admin Override)
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getVendorsMenuCategoriesApi();
+final String vendorId = vendorId_example; // String | 
+final String categoryId = categoryId_example; // String | 
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
+
+try {
+    api.menuCategoriesControllerAdminUploadIcon(vendorId, categoryId, file);
+} on DioException catch (e) {
+    print('Exception when calling VendorsMenuCategoriesApi->menuCategoriesControllerAdminUploadIcon: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **vendorId** | **String**|  | 
+ **categoryId** | **String**|  | 
+ **file** | **MultipartFile**|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
  - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -398,6 +444,50 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **menuCategoriesControllerUploadIcon**
+> menuCategoriesControllerUploadIcon(vendorId, categoryId, file)
+
+Upload menu category icon (Member)
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getVendorsMenuCategoriesApi();
+final String vendorId = vendorId_example; // String | 
+final String categoryId = categoryId_example; // String | 
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
+
+try {
+    api.menuCategoriesControllerUploadIcon(vendorId, categoryId, file);
+} on DioException catch (e) {
+    print('Exception when calling VendorsMenuCategoriesApi->menuCategoriesControllerUploadIcon: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **vendorId** | **String**|  | 
+ **categoryId** | **String**|  | 
+ **file** | **MultipartFile**|  | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
  - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

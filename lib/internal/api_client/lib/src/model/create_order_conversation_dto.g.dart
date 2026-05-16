@@ -10,15 +10,15 @@ class _$CreateOrderConversationDto extends CreateOrderConversationDto {
   @override
   final String orderId;
 
-  factory _$CreateOrderConversationDto([
-    void Function(CreateOrderConversationDtoBuilder)? updates,
-  ]) => (CreateOrderConversationDtoBuilder()..update(updates))._build();
+  factory _$CreateOrderConversationDto(
+          [void Function(CreateOrderConversationDtoBuilder)? updates]) =>
+      (CreateOrderConversationDtoBuilder()..update(updates))._build();
 
   _$CreateOrderConversationDto._({required this.orderId}) : super._();
   @override
   CreateOrderConversationDto rebuild(
-    void Function(CreateOrderConversationDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateOrderConversationDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateOrderConversationDtoBuilder toBuilder() =>
@@ -40,9 +40,9 @@ class _$CreateOrderConversationDto extends CreateOrderConversationDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'CreateOrderConversationDto',
-    )..add('orderId', orderId)).toString();
+    return (newBuiltValueToStringHelper(r'CreateOrderConversationDto')
+          ..add('orderId', orderId))
+        .toString();
   }
 }
 
@@ -82,14 +82,10 @@ class CreateOrderConversationDtoBuilder
   CreateOrderConversationDto build() => _build();
 
   _$CreateOrderConversationDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$CreateOrderConversationDto._(
           orderId: BuiltValueNullFieldError.checkNotNull(
-            orderId,
-            r'CreateOrderConversationDto',
-            'orderId',
-          ),
+              orderId, r'CreateOrderConversationDto', 'orderId'),
         );
     replace(_$result);
     return _$result;

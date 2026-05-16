@@ -24,9 +24,9 @@ SendOtpDtoMethodEnum _$sendOtpDtoMethodEnumValueOf(String name) {
 
 final BuiltSet<SendOtpDtoMethodEnum> _$sendOtpDtoMethodEnumValues =
     BuiltSet<SendOtpDtoMethodEnum>(const <SendOtpDtoMethodEnum>[
-      _$sendOtpDtoMethodEnum_EMAIL,
-      _$sendOtpDtoMethodEnum_SMS,
-    ]);
+  _$sendOtpDtoMethodEnum_EMAIL,
+  _$sendOtpDtoMethodEnum_SMS,
+]);
 
 Serializer<SendOtpDtoMethodEnum> _$sendOtpDtoMethodEnumSerializer =
     _$SendOtpDtoMethodEnumSerializer();
@@ -48,20 +48,15 @@ class _$SendOtpDtoMethodEnumSerializer
   final String wireName = 'SendOtpDtoMethodEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    SendOtpDtoMethodEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, SendOtpDtoMethodEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
-  SendOtpDtoMethodEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => SendOtpDtoMethodEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+  SendOtpDtoMethodEnum deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      SendOtpDtoMethodEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$SendOtpDto extends SendOtpDto {
@@ -146,19 +141,12 @@ class SendOtpDtoBuilder implements Builder<SendOtpDto, SendOtpDtoBuilder> {
   SendOtpDto build() => _build();
 
   _$SendOtpDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$SendOtpDto._(
           contact: BuiltValueNullFieldError.checkNotNull(
-            contact,
-            r'SendOtpDto',
-            'contact',
-          ),
+              contact, r'SendOtpDto', 'contact'),
           method: BuiltValueNullFieldError.checkNotNull(
-            method,
-            r'SendOtpDto',
-            'method',
-          ),
+              method, r'SendOtpDto', 'method'),
         );
     replace(_$result);
     return _$result;

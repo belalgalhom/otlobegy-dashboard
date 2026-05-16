@@ -22,23 +22,23 @@ class _$UpdateVendorBranchDto extends UpdateVendorBranchDto {
   @override
   final bool? isOpen;
 
-  factory _$UpdateVendorBranchDto([
-    void Function(UpdateVendorBranchDtoBuilder)? updates,
-  ]) => (UpdateVendorBranchDtoBuilder()..update(updates))._build();
+  factory _$UpdateVendorBranchDto(
+          [void Function(UpdateVendorBranchDtoBuilder)? updates]) =>
+      (UpdateVendorBranchDtoBuilder()..update(updates))._build();
 
-  _$UpdateVendorBranchDto._({
-    this.name,
-    this.nameAr,
-    this.address,
-    this.phone,
-    this.location,
-    this.zoneId,
-    this.isOpen,
-  }) : super._();
+  _$UpdateVendorBranchDto._(
+      {this.name,
+      this.nameAr,
+      this.address,
+      this.phone,
+      this.location,
+      this.zoneId,
+      this.isOpen})
+      : super._();
   @override
   UpdateVendorBranchDto rebuild(
-    void Function(UpdateVendorBranchDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateVendorBranchDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateVendorBranchDtoBuilder toBuilder() =>
@@ -153,8 +153,7 @@ class UpdateVendorBranchDtoBuilder
   _$UpdateVendorBranchDto _build() {
     _$UpdateVendorBranchDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$UpdateVendorBranchDto._(
             name: name,
             nameAr: nameAr,
@@ -171,10 +170,7 @@ class UpdateVendorBranchDtoBuilder
         _location?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'UpdateVendorBranchDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'UpdateVendorBranchDto', _$failedField, e.toString());
       }
       rethrow;
     }

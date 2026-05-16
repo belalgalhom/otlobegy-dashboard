@@ -14,15 +14,13 @@ class _$ResetPasswordDto extends ResetPasswordDto {
   @override
   final String newPassword;
 
-  factory _$ResetPasswordDto([
-    void Function(ResetPasswordDtoBuilder)? updates,
-  ]) => (ResetPasswordDtoBuilder()..update(updates))._build();
+  factory _$ResetPasswordDto(
+          [void Function(ResetPasswordDtoBuilder)? updates]) =>
+      (ResetPasswordDtoBuilder()..update(updates))._build();
 
-  _$ResetPasswordDto._({
-    required this.contact,
-    required this.code,
-    required this.newPassword,
-  }) : super._();
+  _$ResetPasswordDto._(
+      {required this.contact, required this.code, required this.newPassword})
+      : super._();
   @override
   ResetPasswordDto rebuild(void Function(ResetPasswordDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -105,24 +103,14 @@ class ResetPasswordDtoBuilder
   ResetPasswordDto build() => _build();
 
   _$ResetPasswordDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$ResetPasswordDto._(
           contact: BuiltValueNullFieldError.checkNotNull(
-            contact,
-            r'ResetPasswordDto',
-            'contact',
-          ),
+              contact, r'ResetPasswordDto', 'contact'),
           code: BuiltValueNullFieldError.checkNotNull(
-            code,
-            r'ResetPasswordDto',
-            'code',
-          ),
+              code, r'ResetPasswordDto', 'code'),
           newPassword: BuiltValueNullFieldError.checkNotNull(
-            newPassword,
-            r'ResetPasswordDto',
-            'newPassword',
-          ),
+              newPassword, r'ResetPasswordDto', 'newPassword'),
         );
     replace(_$result);
     return _$result;

@@ -19,23 +19,26 @@ class _$UpdateMenuCategoryDto extends UpdateMenuCategoryDto {
   final num? sortOrder;
   @override
   final bool? isActive;
+  @override
+  final String? iconUrl;
 
-  factory _$UpdateMenuCategoryDto([
-    void Function(UpdateMenuCategoryDtoBuilder)? updates,
-  ]) => (UpdateMenuCategoryDtoBuilder()..update(updates))._build();
+  factory _$UpdateMenuCategoryDto(
+          [void Function(UpdateMenuCategoryDtoBuilder)? updates]) =>
+      (UpdateMenuCategoryDtoBuilder()..update(updates))._build();
 
-  _$UpdateMenuCategoryDto._({
-    this.name,
-    this.nameAr,
-    this.description,
-    this.descriptionAr,
-    this.sortOrder,
-    this.isActive,
-  }) : super._();
+  _$UpdateMenuCategoryDto._(
+      {this.name,
+      this.nameAr,
+      this.description,
+      this.descriptionAr,
+      this.sortOrder,
+      this.isActive,
+      this.iconUrl})
+      : super._();
   @override
   UpdateMenuCategoryDto rebuild(
-    void Function(UpdateMenuCategoryDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateMenuCategoryDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateMenuCategoryDtoBuilder toBuilder() =>
@@ -50,7 +53,8 @@ class _$UpdateMenuCategoryDto extends UpdateMenuCategoryDto {
         description == other.description &&
         descriptionAr == other.descriptionAr &&
         sortOrder == other.sortOrder &&
-        isActive == other.isActive;
+        isActive == other.isActive &&
+        iconUrl == other.iconUrl;
   }
 
   @override
@@ -62,6 +66,7 @@ class _$UpdateMenuCategoryDto extends UpdateMenuCategoryDto {
     _$hash = $jc(_$hash, descriptionAr.hashCode);
     _$hash = $jc(_$hash, sortOrder.hashCode);
     _$hash = $jc(_$hash, isActive.hashCode);
+    _$hash = $jc(_$hash, iconUrl.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -74,7 +79,8 @@ class _$UpdateMenuCategoryDto extends UpdateMenuCategoryDto {
           ..add('description', description)
           ..add('descriptionAr', descriptionAr)
           ..add('sortOrder', sortOrder)
-          ..add('isActive', isActive))
+          ..add('isActive', isActive)
+          ..add('iconUrl', iconUrl))
         .toString();
   }
 }
@@ -108,6 +114,10 @@ class UpdateMenuCategoryDtoBuilder
   bool? get isActive => _$this._isActive;
   set isActive(bool? isActive) => _$this._isActive = isActive;
 
+  String? _iconUrl;
+  String? get iconUrl => _$this._iconUrl;
+  set iconUrl(String? iconUrl) => _$this._iconUrl = iconUrl;
+
   UpdateMenuCategoryDtoBuilder() {
     UpdateMenuCategoryDto._defaults(this);
   }
@@ -121,6 +131,7 @@ class UpdateMenuCategoryDtoBuilder
       _descriptionAr = $v.descriptionAr;
       _sortOrder = $v.sortOrder;
       _isActive = $v.isActive;
+      _iconUrl = $v.iconUrl;
       _$v = null;
     }
     return this;
@@ -140,8 +151,7 @@ class UpdateMenuCategoryDtoBuilder
   UpdateMenuCategoryDto build() => _build();
 
   _$UpdateMenuCategoryDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateMenuCategoryDto._(
           name: name,
           nameAr: nameAr,
@@ -149,6 +159,7 @@ class UpdateMenuCategoryDtoBuilder
           descriptionAr: descriptionAr,
           sortOrder: sortOrder,
           isActive: isActive,
+          iconUrl: iconUrl,
         );
     replace(_$result);
     return _$result;

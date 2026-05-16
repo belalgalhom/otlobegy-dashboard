@@ -1,0 +1,17 @@
+# otlob_api.model.CreateDriverShiftDto
+
+## Load the model package
+```dart
+import 'package:otlob_api/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**startTime** | **String** |  | 
+**endTime** | **String** |  | 
+**zoneId** | **String** |  | [optional] 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

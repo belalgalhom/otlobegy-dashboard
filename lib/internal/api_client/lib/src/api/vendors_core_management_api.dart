@@ -358,7 +358,71 @@ class VendorsCoreManagementApi {
     return _response;
   }
 
-  /// Update vendor information (Admin)
+  /// Global discovery search for vendors and products
+  /// 
+  ///
+  /// Parameters:
+  /// * [status] 
+  /// * [verticalId] 
+  /// * [search] 
+  /// * [page] 
+  /// * [limit] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future]
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<void>> vendorsControllerSearchDiscovery({ 
+    String? status,
+    String? verticalId,
+    String? search,
+    num? page = 1,
+    num? limit = 20,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/vendors/discovery/search';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (status != null) r'status': encodeQueryParameter(_serializers, status, const FullType(String)),
+      if (verticalId != null) r'verticalId': encodeQueryParameter(_serializers, verticalId, const FullType(String)),
+      if (search != null) r'search': encodeQueryParameter(_serializers, search, const FullType(String)),
+      if (page != null) r'page': encodeQueryParameter(_serializers, page, const FullType(num)),
+      if (limit != null) r'limit': encodeQueryParameter(_serializers, limit, const FullType(num)),
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    return _response;
+  }
+
+  /// Update vendor information
   /// 
   ///
   /// Parameters:
@@ -433,7 +497,7 @@ class VendorsCoreManagementApi {
     return _response;
   }
 
-  /// Update vendor status (Admin)
+  /// Update vendor status
   /// 
   ///
   /// Parameters:

@@ -22,6 +22,9 @@ part 'admin_update_user_dto.g.dart';
 /// * [permissions] - Replaces entire permissions array. Only for ADMIN role.
 /// * [isEmailVerified] 
 /// * [isPhoneVerified] 
+/// * [vendorId] 
+/// * [vendorRole] 
+/// * [password] 
 @BuiltValue()
 abstract class AdminUpdateUserDto implements Built<AdminUpdateUserDto, AdminUpdateUserDtoBuilder> {
   @BuiltValueField(wireName: r'name')
@@ -62,7 +65,11 @@ abstract class AdminUpdateUserDto implements Built<AdminUpdateUserDto, AdminUpda
   String? get vendorId;
 
   @BuiltValueField(wireName: r'vendorRole')
-  String? get vendorRole;
+  AdminUpdateUserDtoVendorRoleEnum? get vendorRole;
+  // enum vendorRoleEnum {  OWNER,  MANAGER,  STAFF,  };
+
+  @BuiltValueField(wireName: r'password')
+  String? get password;
 
   AdminUpdateUserDto._();
 
@@ -168,6 +175,13 @@ class _$AdminUpdateUserDtoSerializer implements PrimitiveSerializer<AdminUpdateU
       yield r'vendorRole';
       yield serializers.serialize(
         object.vendorRole,
+        specifiedType: const FullType(AdminUpdateUserDtoVendorRoleEnum),
+      );
+    }
+    if (object.password != null) {
+      yield r'password';
+      yield serializers.serialize(
+        object.password,
         specifiedType: const FullType(String),
       );
     }
@@ -274,9 +288,16 @@ class _$AdminUpdateUserDtoSerializer implements PrimitiveSerializer<AdminUpdateU
         case r'vendorRole':
           final valueDes = serializers.deserialize(
             value,
+            specifiedType: const FullType(AdminUpdateUserDtoVendorRoleEnum),
+          ) as AdminUpdateUserDtoVendorRoleEnum;
+          result.vendorRole = valueDes;
+          break;
+        case r'password':
+          final valueDes = serializers.deserialize(
+            value,
             specifiedType: const FullType(String),
           ) as String;
-          result.vendorRole = valueDes;
+          result.password = valueDes;
           break;
         default:
           unhandled.add(key);
@@ -380,5 +401,22 @@ class AdminUpdateUserDtoPermissionsEnum extends EnumClass {
 
   static BuiltSet<AdminUpdateUserDtoPermissionsEnum> get values => _$adminUpdateUserDtoPermissionsEnumValues;
   static AdminUpdateUserDtoPermissionsEnum valueOf(String name) => _$adminUpdateUserDtoPermissionsEnumValueOf(name);
+}
+
+class AdminUpdateUserDtoVendorRoleEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'OWNER')
+  static const AdminUpdateUserDtoVendorRoleEnum OWNER = _$adminUpdateUserDtoVendorRoleEnum_OWNER;
+  @BuiltValueEnumConst(wireName: r'MANAGER')
+  static const AdminUpdateUserDtoVendorRoleEnum MANAGER = _$adminUpdateUserDtoVendorRoleEnum_MANAGER;
+  @BuiltValueEnumConst(wireName: r'STAFF')
+  static const AdminUpdateUserDtoVendorRoleEnum STAFF = _$adminUpdateUserDtoVendorRoleEnum_STAFF;
+
+  static Serializer<AdminUpdateUserDtoVendorRoleEnum> get serializer => _$adminUpdateUserDtoVendorRoleEnumSerializer;
+
+  const AdminUpdateUserDtoVendorRoleEnum._(String name): super(name);
+
+  static BuiltSet<AdminUpdateUserDtoVendorRoleEnum> get values => _$adminUpdateUserDtoVendorRoleEnumValues;
+  static AdminUpdateUserDtoVendorRoleEnum valueOf(String name) => _$adminUpdateUserDtoVendorRoleEnumValueOf(name);
 }
 

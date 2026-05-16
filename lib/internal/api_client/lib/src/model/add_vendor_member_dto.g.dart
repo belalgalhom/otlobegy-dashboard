@@ -28,10 +28,10 @@ AddVendorMemberDtoRoleEnum _$addVendorMemberDtoRoleEnumValueOf(String name) {
 
 final BuiltSet<AddVendorMemberDtoRoleEnum> _$addVendorMemberDtoRoleEnumValues =
     BuiltSet<AddVendorMemberDtoRoleEnum>(const <AddVendorMemberDtoRoleEnum>[
-      _$addVendorMemberDtoRoleEnum_OWNER,
-      _$addVendorMemberDtoRoleEnum_MANAGER,
-      _$addVendorMemberDtoRoleEnum_STAFF,
-    ]);
+  _$addVendorMemberDtoRoleEnum_OWNER,
+  _$addVendorMemberDtoRoleEnum_MANAGER,
+  _$addVendorMemberDtoRoleEnum_STAFF,
+]);
 
 Serializer<AddVendorMemberDtoRoleEnum> _$addVendorMemberDtoRoleEnumSerializer =
     _$AddVendorMemberDtoRoleEnumSerializer();
@@ -55,20 +55,16 @@ class _$AddVendorMemberDtoRoleEnumSerializer
   final String wireName = 'AddVendorMemberDtoRoleEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    AddVendorMemberDtoRoleEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, AddVendorMemberDtoRoleEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   AddVendorMemberDtoRoleEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => AddVendorMemberDtoRoleEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AddVendorMemberDtoRoleEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$AddVendorMemberDto extends AddVendorMemberDto {
@@ -77,16 +73,16 @@ class _$AddVendorMemberDto extends AddVendorMemberDto {
   @override
   final AddVendorMemberDtoRoleEnum role;
 
-  factory _$AddVendorMemberDto([
-    void Function(AddVendorMemberDtoBuilder)? updates,
-  ]) => (AddVendorMemberDtoBuilder()..update(updates))._build();
+  factory _$AddVendorMemberDto(
+          [void Function(AddVendorMemberDtoBuilder)? updates]) =>
+      (AddVendorMemberDtoBuilder()..update(updates))._build();
 
   _$AddVendorMemberDto._({required this.userId, required this.role})
-    : super._();
+      : super._();
   @override
   AddVendorMemberDto rebuild(
-    void Function(AddVendorMemberDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(AddVendorMemberDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   AddVendorMemberDtoBuilder toBuilder() =>
@@ -158,19 +154,12 @@ class AddVendorMemberDtoBuilder
   AddVendorMemberDto build() => _build();
 
   _$AddVendorMemberDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$AddVendorMemberDto._(
           userId: BuiltValueNullFieldError.checkNotNull(
-            userId,
-            r'AddVendorMemberDto',
-            'userId',
-          ),
+              userId, r'AddVendorMemberDto', 'userId'),
           role: BuiltValueNullFieldError.checkNotNull(
-            role,
-            r'AddVendorMemberDto',
-            'role',
-          ),
+              role, r'AddVendorMemberDto', 'role'),
         );
     replace(_$result);
     return _$result;

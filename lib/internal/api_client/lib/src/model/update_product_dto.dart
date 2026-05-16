@@ -23,6 +23,8 @@ part 'update_product_dto.g.dart';
 /// * [stock] 
 /// * [isActive] 
 /// * [isFeatured] 
+/// * [sellByStrip] 
+/// * [stripsPerPackage] 
 /// * [version] 
 @BuiltValue()
 abstract class UpdateProductDto implements Built<UpdateProductDto, UpdateProductDtoBuilder> {
@@ -58,6 +60,12 @@ abstract class UpdateProductDto implements Built<UpdateProductDto, UpdateProduct
 
   @BuiltValueField(wireName: r'isFeatured')
   bool? get isFeatured;
+
+  @BuiltValueField(wireName: r'sellByStrip')
+  bool? get sellByStrip;
+
+  @BuiltValueField(wireName: r'stripsPerPackage')
+  num? get stripsPerPackage;
 
   @BuiltValueField(wireName: r'version')
   num? get version;
@@ -160,6 +168,20 @@ class _$UpdateProductDtoSerializer implements PrimitiveSerializer<UpdateProductD
       yield serializers.serialize(
         object.isFeatured,
         specifiedType: const FullType(bool),
+      );
+    }
+    if (object.sellByStrip != null) {
+      yield r'sellByStrip';
+      yield serializers.serialize(
+        object.sellByStrip,
+        specifiedType: const FullType(bool),
+      );
+    }
+    if (object.stripsPerPackage != null) {
+      yield r'stripsPerPackage';
+      yield serializers.serialize(
+        object.stripsPerPackage,
+        specifiedType: const FullType(num),
       );
     }
     if (object.version != null) {
@@ -269,6 +291,20 @@ class _$UpdateProductDtoSerializer implements PrimitiveSerializer<UpdateProductD
             specifiedType: const FullType(bool),
           ) as bool;
           result.isFeatured = valueDes;
+          break;
+        case r'sellByStrip':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.sellByStrip = valueDes;
+          break;
+        case r'stripsPerPackage':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(num),
+          ) as num;
+          result.stripsPerPackage = valueDes;
           break;
         case r'version':
           final valueDes = serializers.deserialize(

@@ -30,26 +30,32 @@ class _$UpdateProductDto extends UpdateProductDto {
   @override
   final bool? isFeatured;
   @override
+  final bool? sellByStrip;
+  @override
+  final num? stripsPerPackage;
+  @override
   final num? version;
 
-  factory _$UpdateProductDto([
-    void Function(UpdateProductDtoBuilder)? updates,
-  ]) => (UpdateProductDtoBuilder()..update(updates))._build();
+  factory _$UpdateProductDto(
+          [void Function(UpdateProductDtoBuilder)? updates]) =>
+      (UpdateProductDtoBuilder()..update(updates))._build();
 
-  _$UpdateProductDto._({
-    this.categoryId,
-    this.name,
-    this.nameAr,
-    this.description,
-    this.descriptionAr,
-    this.basePrice,
-    this.comparePrice,
-    this.sku,
-    this.stock,
-    this.isActive,
-    this.isFeatured,
-    this.version,
-  }) : super._();
+  _$UpdateProductDto._(
+      {this.categoryId,
+      this.name,
+      this.nameAr,
+      this.description,
+      this.descriptionAr,
+      this.basePrice,
+      this.comparePrice,
+      this.sku,
+      this.stock,
+      this.isActive,
+      this.isFeatured,
+      this.sellByStrip,
+      this.stripsPerPackage,
+      this.version})
+      : super._();
   @override
   UpdateProductDto rebuild(void Function(UpdateProductDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -73,6 +79,8 @@ class _$UpdateProductDto extends UpdateProductDto {
         stock == other.stock &&
         isActive == other.isActive &&
         isFeatured == other.isFeatured &&
+        sellByStrip == other.sellByStrip &&
+        stripsPerPackage == other.stripsPerPackage &&
         version == other.version;
   }
 
@@ -90,6 +98,8 @@ class _$UpdateProductDto extends UpdateProductDto {
     _$hash = $jc(_$hash, stock.hashCode);
     _$hash = $jc(_$hash, isActive.hashCode);
     _$hash = $jc(_$hash, isFeatured.hashCode);
+    _$hash = $jc(_$hash, sellByStrip.hashCode);
+    _$hash = $jc(_$hash, stripsPerPackage.hashCode);
     _$hash = $jc(_$hash, version.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -109,6 +119,8 @@ class _$UpdateProductDto extends UpdateProductDto {
           ..add('stock', stock)
           ..add('isActive', isActive)
           ..add('isFeatured', isFeatured)
+          ..add('sellByStrip', sellByStrip)
+          ..add('stripsPerPackage', stripsPerPackage)
           ..add('version', version))
         .toString();
   }
@@ -163,6 +175,15 @@ class UpdateProductDtoBuilder
   bool? get isFeatured => _$this._isFeatured;
   set isFeatured(bool? isFeatured) => _$this._isFeatured = isFeatured;
 
+  bool? _sellByStrip;
+  bool? get sellByStrip => _$this._sellByStrip;
+  set sellByStrip(bool? sellByStrip) => _$this._sellByStrip = sellByStrip;
+
+  num? _stripsPerPackage;
+  num? get stripsPerPackage => _$this._stripsPerPackage;
+  set stripsPerPackage(num? stripsPerPackage) =>
+      _$this._stripsPerPackage = stripsPerPackage;
+
   num? _version;
   num? get version => _$this._version;
   set version(num? version) => _$this._version = version;
@@ -185,6 +206,8 @@ class UpdateProductDtoBuilder
       _stock = $v.stock;
       _isActive = $v.isActive;
       _isFeatured = $v.isFeatured;
+      _sellByStrip = $v.sellByStrip;
+      _stripsPerPackage = $v.stripsPerPackage;
       _version = $v.version;
       _$v = null;
     }
@@ -205,8 +228,7 @@ class UpdateProductDtoBuilder
   UpdateProductDto build() => _build();
 
   _$UpdateProductDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateProductDto._(
           categoryId: categoryId,
           name: name,
@@ -219,6 +241,8 @@ class UpdateProductDtoBuilder
           stock: stock,
           isActive: isActive,
           isFeatured: isFeatured,
+          sellByStrip: sellByStrip,
+          stripsPerPackage: stripsPerPackage,
           version: version,
         );
     replace(_$result);

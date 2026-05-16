@@ -18,6 +18,7 @@ import 'package:otlob_admin/features/users/presentation/user_bloc.dart';
 import 'package:otlob_admin/features/zones/presentation/zone_bloc.dart';
 import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
 import 'package:otlob_admin/features/chat/presentation/chat_bloc.dart';
+import 'package:otlob_admin/features/tickets/presentation/ticket_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ void main() async {
         BlocProvider(create: (context) => di.sl<VerticalBloc>()),
         BlocProvider(create: (context) => di.sl<PromotionBloc>()),
         BlocProvider(create: (context) => di.sl<ChatBloc>()),
+        BlocProvider(create: (context) => di.sl<TicketBloc>()),
       ],
       child: const OtlobAdminApp(),
     ),

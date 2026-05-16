@@ -10,6 +10,7 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**usersControllerAdminBan**](UsersApi.md#userscontrolleradminban) | **POST** /users/{userId}/ban | [Admin] Ban a user — immediately revokes all sessions. Cannot ban SUPER_ADMIN.
+[**usersControllerAdminCreate**](UsersApi.md#userscontrolleradmincreate) | **POST** /users | [Admin] Create a new user directly
 [**usersControllerAdminFindAll**](UsersApi.md#userscontrolleradminfindall) | **GET** /users | [Admin] List all users — filter by role, isBanned, includeDeleted, search
 [**usersControllerAdminFindOne**](UsersApi.md#userscontrolleradminfindone) | **GET** /users/{userId} | [Admin] Get a user — includes sessions, devices, vendor memberships, customer/driver snapshots
 [**usersControllerAdminGetSessions**](UsersApi.md#userscontrolleradmingetsessions) | **GET** /users/{userId}/sessions | [Admin] List active sessions for a user
@@ -52,6 +53,46 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **userId** | **String**|  | 
  **banUserDto** | [**BanUserDto**](BanUserDto.md)|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **usersControllerAdminCreate**
+> usersControllerAdminCreate(registerDto)
+
+[Admin] Create a new user directly
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getUsersApi();
+final RegisterDto registerDto = ; // RegisterDto | 
+
+try {
+    api.usersControllerAdminCreate(registerDto);
+} on DioException catch (e) {
+    print('Exception when calling UsersApi->usersControllerAdminCreate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **registerDto** | [**RegisterDto**](RegisterDto.md)|  | 
 
 ### Return type
 

@@ -991,4 +991,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offerDeleted => 'Offer deleted successfully';
+
+  @override
+  String get escalated => 'Escalated';
+
+  @override
+  String get waitingOnUser => 'Waiting on User';
+
+  @override
+  String get ticketCategoryDelivery => 'Delivery Issue';
+
+  @override
+  String get ticketCategoryVendor => 'Store/Restaurant Issue';
+
+  @override
+  String get ticketCategoryPayment => 'Payment Issue';
+
+  @override
+  String get ticketCategoryAccount => 'Account Issue';
+
+  @override
+  String get ticketCategoryReturn => 'Return/Complaint';
+
+  @override
+  String get ticketCategoryOther => 'Other';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get ticketNumber => 'Ticket No.';
 }

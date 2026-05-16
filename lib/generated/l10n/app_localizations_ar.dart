@@ -982,4 +982,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get offerDeleted => 'تم حذف الخصم بنجاح';
+
+  @override
+  String get escalated => 'مصعد';
+
+  @override
+  String get waitingOnUser => 'بانتظار المستخدم';
+
+  @override
+  String get ticketCategoryDelivery => 'مشكلة توصيل';
+
+  @override
+  String get ticketCategoryVendor => 'مشكلة متجر/مطعم';
+
+  @override
+  String get ticketCategoryPayment => 'مشكلة في الدفع';
+
+  @override
+  String get ticketCategoryAccount => 'مشكلة في الحساب';
+
+  @override
+  String get ticketCategoryReturn => 'طلب استرجاع/شكوى';
+
+  @override
+  String get ticketCategoryOther => 'أخرى';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get ticketNumber => 'تذكرة رقم';
 }

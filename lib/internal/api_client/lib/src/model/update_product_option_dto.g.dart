@@ -16,20 +16,17 @@ class _$UpdateProductOptionDto extends UpdateProductOptionDto {
   @override
   final bool? isActive;
 
-  factory _$UpdateProductOptionDto([
-    void Function(UpdateProductOptionDtoBuilder)? updates,
-  ]) => (UpdateProductOptionDtoBuilder()..update(updates))._build();
+  factory _$UpdateProductOptionDto(
+          [void Function(UpdateProductOptionDtoBuilder)? updates]) =>
+      (UpdateProductOptionDtoBuilder()..update(updates))._build();
 
-  _$UpdateProductOptionDto._({
-    this.name,
-    this.nameAr,
-    this.priceAdded,
-    this.isActive,
-  }) : super._();
+  _$UpdateProductOptionDto._(
+      {this.name, this.nameAr, this.priceAdded, this.isActive})
+      : super._();
   @override
   UpdateProductOptionDto rebuild(
-    void Function(UpdateProductOptionDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateProductOptionDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateProductOptionDtoBuilder toBuilder() =>
@@ -117,8 +114,7 @@ class UpdateProductOptionDtoBuilder
   UpdateProductOptionDto build() => _build();
 
   _$UpdateProductOptionDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateProductOptionDto._(
           name: name,
           nameAr: nameAr,

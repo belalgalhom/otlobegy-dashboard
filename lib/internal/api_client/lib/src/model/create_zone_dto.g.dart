@@ -23,14 +23,14 @@ class _$CreateZoneDto extends CreateZoneDto {
   factory _$CreateZoneDto([void Function(CreateZoneDtoBuilder)? updates]) =>
       (CreateZoneDtoBuilder()..update(updates))._build();
 
-  _$CreateZoneDto._({
-    required this.name,
-    this.nameAr,
-    this.isActive,
-    this.baseDeliveryFeeOverride,
-    this.minOrderAmountOverride,
-    required this.boundary,
-  }) : super._();
+  _$CreateZoneDto._(
+      {required this.name,
+      this.nameAr,
+      this.isActive,
+      this.baseDeliveryFeeOverride,
+      this.minOrderAmountOverride,
+      required this.boundary})
+      : super._();
   @override
   CreateZoneDto rebuild(void Function(CreateZoneDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -141,14 +141,10 @@ class CreateZoneDtoBuilder
   _$CreateZoneDto _build() {
     _$CreateZoneDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$CreateZoneDto._(
             name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'CreateZoneDto',
-              'name',
-            ),
+                name, r'CreateZoneDto', 'name'),
             nameAr: nameAr,
             isActive: isActive,
             baseDeliveryFeeOverride: baseDeliveryFeeOverride,
@@ -162,10 +158,7 @@ class CreateZoneDtoBuilder
         boundary.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'CreateZoneDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'CreateZoneDto', _$failedField, e.toString());
       }
       rethrow;
     }

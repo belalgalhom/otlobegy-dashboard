@@ -24,9 +24,9 @@ VerifyOtpDtoPurposeEnum _$verifyOtpDtoPurposeEnumValueOf(String name) {
 
 final BuiltSet<VerifyOtpDtoPurposeEnum> _$verifyOtpDtoPurposeEnumValues =
     BuiltSet<VerifyOtpDtoPurposeEnum>(const <VerifyOtpDtoPurposeEnum>[
-      _$verifyOtpDtoPurposeEnum_VERIFICATION,
-      _$verifyOtpDtoPurposeEnum_PASSWORD_RESET,
-    ]);
+  _$verifyOtpDtoPurposeEnum_VERIFICATION,
+  _$verifyOtpDtoPurposeEnum_PASSWORD_RESET,
+]);
 
 Serializer<VerifyOtpDtoPurposeEnum> _$verifyOtpDtoPurposeEnumSerializer =
     _$VerifyOtpDtoPurposeEnumSerializer();
@@ -48,20 +48,16 @@ class _$VerifyOtpDtoPurposeEnumSerializer
   final String wireName = 'VerifyOtpDtoPurposeEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    VerifyOtpDtoPurposeEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, VerifyOtpDtoPurposeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   VerifyOtpDtoPurposeEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => VerifyOtpDtoPurposeEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      VerifyOtpDtoPurposeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$VerifyOtpDto extends VerifyOtpDto {
@@ -76,7 +72,7 @@ class _$VerifyOtpDto extends VerifyOtpDto {
       (VerifyOtpDtoBuilder()..update(updates))._build();
 
   _$VerifyOtpDto._({required this.contact, required this.code, this.purpose})
-    : super._();
+      : super._();
   @override
   VerifyOtpDto rebuild(void Function(VerifyOtpDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -158,19 +154,12 @@ class VerifyOtpDtoBuilder
   VerifyOtpDto build() => _build();
 
   _$VerifyOtpDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$VerifyOtpDto._(
           contact: BuiltValueNullFieldError.checkNotNull(
-            contact,
-            r'VerifyOtpDto',
-            'contact',
-          ),
+              contact, r'VerifyOtpDto', 'contact'),
           code: BuiltValueNullFieldError.checkNotNull(
-            code,
-            r'VerifyOtpDto',
-            'code',
-          ),
+              code, r'VerifyOtpDto', 'code'),
           purpose: purpose,
         );
     replace(_$result);

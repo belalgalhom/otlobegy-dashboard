@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **verticalId** | **String** |  | [optional] 
 **taxId** | **String** |  | [optional] 
 **commissionRate** | **num** |  | [optional] 
+**phone** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

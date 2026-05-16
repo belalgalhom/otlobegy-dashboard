@@ -10,15 +10,15 @@ class _$MarkNotificationsReadDto extends MarkNotificationsReadDto {
   @override
   final BuiltList<String>? ids;
 
-  factory _$MarkNotificationsReadDto([
-    void Function(MarkNotificationsReadDtoBuilder)? updates,
-  ]) => (MarkNotificationsReadDtoBuilder()..update(updates))._build();
+  factory _$MarkNotificationsReadDto(
+          [void Function(MarkNotificationsReadDtoBuilder)? updates]) =>
+      (MarkNotificationsReadDtoBuilder()..update(updates))._build();
 
   _$MarkNotificationsReadDto._({this.ids}) : super._();
   @override
   MarkNotificationsReadDto rebuild(
-    void Function(MarkNotificationsReadDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(MarkNotificationsReadDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   MarkNotificationsReadDtoBuilder toBuilder() =>
@@ -40,9 +40,9 @@ class _$MarkNotificationsReadDto extends MarkNotificationsReadDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'MarkNotificationsReadDto',
-    )..add('ids', ids)).toString();
+    return (newBuiltValueToStringHelper(r'MarkNotificationsReadDto')
+          ..add('ids', ids))
+        .toString();
   }
 }
 
@@ -84,7 +84,10 @@ class MarkNotificationsReadDtoBuilder
   _$MarkNotificationsReadDto _build() {
     _$MarkNotificationsReadDto _$result;
     try {
-      _$result = _$v ?? _$MarkNotificationsReadDto._(ids: _ids?.build());
+      _$result = _$v ??
+          _$MarkNotificationsReadDto._(
+            ids: _ids?.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -92,10 +95,7 @@ class MarkNotificationsReadDtoBuilder
         _ids?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'MarkNotificationsReadDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'MarkNotificationsReadDto', _$failedField, e.toString());
       }
       rethrow;
     }

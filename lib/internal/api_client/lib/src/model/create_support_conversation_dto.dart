@@ -15,7 +15,7 @@ part 'create_support_conversation_dto.g.dart';
 @BuiltValue()
 abstract class CreateSupportConversationDto implements Built<CreateSupportConversationDto, CreateSupportConversationDtoBuilder> {
   @BuiltValueField(wireName: r'vendorId')
-  String get vendorId;
+  String? get vendorId;
 
   CreateSupportConversationDto._();
 
@@ -40,11 +40,13 @@ class _$CreateSupportConversationDtoSerializer implements PrimitiveSerializer<Cr
     CreateSupportConversationDto object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'vendorId';
-    yield serializers.serialize(
-      object.vendorId,
-      specifiedType: const FullType(String),
-    );
+    if (object.vendorId != null) {
+      yield r'vendorId';
+      yield serializers.serialize(
+        object.vendorId,
+        specifiedType: const FullType(String),
+      );
+    }
   }
 
   @override

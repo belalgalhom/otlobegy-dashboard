@@ -12,6 +12,9 @@ Name | Type | Description | Notes
 **password** | **String** |  | 
 **name** | **String** |  | 
 **phone** | **String** |  | [optional] 
+**role** | **String** |  | [optional] 
+**vendorId** | **String** |  | [optional] 
+**vendorRole** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

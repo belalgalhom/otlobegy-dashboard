@@ -12,9 +12,9 @@ import 'package:otlob_api/src/api_util.dart';
 import 'package:otlob_api/src/model/admin_update_user_dto.dart';
 import 'package:otlob_api/src/model/ban_user_dto.dart';
 import 'package:otlob_api/src/model/change_password_dto.dart';
+import 'package:otlob_api/src/model/register_dto.dart';
 import 'package:otlob_api/src/model/update_notification_settings_dto.dart';
 import 'package:otlob_api/src/model/update_user_dto.dart';
-import 'package:otlob_api/src/model/register_dto.dart';
 
 class UsersApi {
 

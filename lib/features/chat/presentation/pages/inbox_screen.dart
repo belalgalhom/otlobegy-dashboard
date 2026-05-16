@@ -69,7 +69,7 @@ class _InboxScreenState extends State<InboxScreen> {
           return Center(child: Text('Error: ${state.message}'));
         }
         if (state is ConversationsLoaded) {
-          final conversations = state.conversations;
+          final conversations = state.conversations.where((c) => c['type'] != 'SUPPORT').toList();
           if (conversations.isEmpty) {
             return _buildEmptyState();
           }
@@ -142,6 +142,7 @@ class _InboxScreenState extends State<InboxScreen> {
               phoneNumber: phoneNumber,
               vendorName: vendorName,
               vendorId: conversation['vendorId'],
+              type: conversation['type'],
             ),
           ),
         ).then((_) => context.read<ChatBloc>().add(FetchConversations()));

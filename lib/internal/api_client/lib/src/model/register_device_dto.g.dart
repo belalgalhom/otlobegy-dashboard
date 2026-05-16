@@ -14,8 +14,7 @@ const RegisterDeviceDtoPlatformEnum _$registerDeviceDtoPlatformEnum_WEB =
     const RegisterDeviceDtoPlatformEnum._('WEB');
 
 RegisterDeviceDtoPlatformEnum _$registerDeviceDtoPlatformEnumValueOf(
-  String name,
-) {
+    String name) {
   switch (name) {
     case 'ANDROID':
       return _$registerDeviceDtoPlatformEnum_ANDROID;
@@ -29,16 +28,15 @@ RegisterDeviceDtoPlatformEnum _$registerDeviceDtoPlatformEnumValueOf(
 }
 
 final BuiltSet<RegisterDeviceDtoPlatformEnum>
-_$registerDeviceDtoPlatformEnumValues = BuiltSet<RegisterDeviceDtoPlatformEnum>(
-  const <RegisterDeviceDtoPlatformEnum>[
-    _$registerDeviceDtoPlatformEnum_ANDROID,
-    _$registerDeviceDtoPlatformEnum_IOS,
-    _$registerDeviceDtoPlatformEnum_WEB,
-  ],
-);
+    _$registerDeviceDtoPlatformEnumValues = BuiltSet<
+        RegisterDeviceDtoPlatformEnum>(const <RegisterDeviceDtoPlatformEnum>[
+  _$registerDeviceDtoPlatformEnum_ANDROID,
+  _$registerDeviceDtoPlatformEnum_IOS,
+  _$registerDeviceDtoPlatformEnum_WEB,
+]);
 
 Serializer<RegisterDeviceDtoPlatformEnum>
-_$registerDeviceDtoPlatformEnumSerializer =
+    _$registerDeviceDtoPlatformEnumSerializer =
     _$RegisterDeviceDtoPlatformEnumSerializer();
 
 class _$RegisterDeviceDtoPlatformEnumSerializer
@@ -61,19 +59,16 @@ class _$RegisterDeviceDtoPlatformEnumSerializer
 
   @override
   Object serialize(
-    Serializers serializers,
-    RegisterDeviceDtoPlatformEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+          Serializers serializers, RegisterDeviceDtoPlatformEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   RegisterDeviceDtoPlatformEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => RegisterDeviceDtoPlatformEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      RegisterDeviceDtoPlatformEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$RegisterDeviceDto extends RegisterDeviceDto {
@@ -82,12 +77,12 @@ class _$RegisterDeviceDto extends RegisterDeviceDto {
   @override
   final RegisterDeviceDtoPlatformEnum platform;
 
-  factory _$RegisterDeviceDto([
-    void Function(RegisterDeviceDtoBuilder)? updates,
-  ]) => (RegisterDeviceDtoBuilder()..update(updates))._build();
+  factory _$RegisterDeviceDto(
+          [void Function(RegisterDeviceDtoBuilder)? updates]) =>
+      (RegisterDeviceDtoBuilder()..update(updates))._build();
 
   _$RegisterDeviceDto._({required this.token, required this.platform})
-    : super._();
+      : super._();
   @override
   RegisterDeviceDto rebuild(void Function(RegisterDeviceDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -163,19 +158,12 @@ class RegisterDeviceDtoBuilder
   RegisterDeviceDto build() => _build();
 
   _$RegisterDeviceDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$RegisterDeviceDto._(
           token: BuiltValueNullFieldError.checkNotNull(
-            token,
-            r'RegisterDeviceDto',
-            'token',
-          ),
+              token, r'RegisterDeviceDto', 'token'),
           platform: BuiltValueNullFieldError.checkNotNull(
-            platform,
-            r'RegisterDeviceDto',
-            'platform',
-          ),
+              platform, r'RegisterDeviceDto', 'platform'),
         );
     replace(_$result);
     return _$result;

@@ -7,6 +7,7 @@ import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 import 'package:otlob_admin/core/utils/phone_utils.dart';
 import 'package:otlob_admin/core/utils/error_utils.dart';
 import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
+import 'package:otlob_admin/core/widgets/location_picker_map.dart';
 
 
 
@@ -302,10 +303,13 @@ class _BranchesScreenState extends State<BranchesScreen> {
     final nameArController = TextEditingController(text: branch?['nameAr'] ?? '');
     final addressController = TextEditingController(text: branch?['address'] ?? '');
     final phoneController = TextEditingController(text: branch?['phoneNumber'] ?? '');
+    double? selectedLat = branch?['lat'] != null ? double.tryParse(branch['lat'].toString()) : null;
+    double? selectedLng = branch?['lng'] != null ? double.tryParse(branch['lng'].toString()) : null;
     
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => Dialog(
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
           constraints: const BoxConstraints(maxWidth: 450),
@@ -343,6 +347,28 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       const SizedBox(height: 16),
                       _buildDialogTextField(controller: addressController, label: AppLocalizations.of(context)!.address, hint: 'Full address', icon: LucideIcons.mapPin),
                       const SizedBox(height: 16),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(LucideIcons.map),
+                        title: Text(selectedLat != null ? 'Location Selected' : 'Pick Location on Map', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                        subtitle: selectedLat != null ? Text('$selectedLat, $selectedLng', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))) : null,
+                        trailing: const Icon(LucideIcons.chevronRight),
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LocationPickerMap(),
+                            ),
+                          );
+                          if (result != null) {
+                            setState(() {
+                              selectedLat = result.latitude;
+                              selectedLng = result.longitude;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
                       _buildDialogTextField(controller: phoneController, label: AppLocalizations.of(context)!.phone, hint: '+123...', icon: LucideIcons.phone, keyboardType: TextInputType.phone),
                     ],
                   ),
@@ -365,6 +391,8 @@ class _BranchesScreenState extends State<BranchesScreen> {
                             'nameAr': nameArController.text,
                             'address': addressController.text,
                             'phoneNumber': PhoneUtils.normalize(phoneController.text),
+                            if (selectedLat != null) 'lat': selectedLat,
+                            if (selectedLng != null) 'lng': selectedLng,
                           };
 
                           try {
@@ -405,6 +433,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
           ),
         ),
       ),
+    ),
     );
 
     if (result == true) _fetchBranches();

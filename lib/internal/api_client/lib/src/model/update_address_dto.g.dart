@@ -18,17 +18,13 @@ class _$UpdateAddressDto extends UpdateAddressDto {
   @override
   final bool? isDefault;
 
-  factory _$UpdateAddressDto([
-    void Function(UpdateAddressDtoBuilder)? updates,
-  ]) => (UpdateAddressDtoBuilder()..update(updates))._build();
+  factory _$UpdateAddressDto(
+          [void Function(UpdateAddressDtoBuilder)? updates]) =>
+      (UpdateAddressDtoBuilder()..update(updates))._build();
 
-  _$UpdateAddressDto._({
-    this.label,
-    this.address,
-    this.location,
-    this.details,
-    this.isDefault,
-  }) : super._();
+  _$UpdateAddressDto._(
+      {this.label, this.address, this.location, this.details, this.isDefault})
+      : super._();
   @override
   UpdateAddressDto rebuild(void Function(UpdateAddressDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -130,8 +126,7 @@ class UpdateAddressDtoBuilder
   _$UpdateAddressDto _build() {
     _$UpdateAddressDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$UpdateAddressDto._(
             label: label,
             address: address,
@@ -146,10 +141,7 @@ class UpdateAddressDtoBuilder
         _location?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'UpdateAddressDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'UpdateAddressDto', _$failedField, e.toString());
       }
       rethrow;
     }

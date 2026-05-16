@@ -12,12 +12,12 @@ class _$CheckLocationDto extends CheckLocationDto {
   @override
   final num latitude;
 
-  factory _$CheckLocationDto([
-    void Function(CheckLocationDtoBuilder)? updates,
-  ]) => (CheckLocationDtoBuilder()..update(updates))._build();
+  factory _$CheckLocationDto(
+          [void Function(CheckLocationDtoBuilder)? updates]) =>
+      (CheckLocationDtoBuilder()..update(updates))._build();
 
   _$CheckLocationDto._({required this.longitude, required this.latitude})
-    : super._();
+      : super._();
   @override
   CheckLocationDto rebuild(void Function(CheckLocationDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -92,19 +92,12 @@ class CheckLocationDtoBuilder
   CheckLocationDto build() => _build();
 
   _$CheckLocationDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$CheckLocationDto._(
           longitude: BuiltValueNullFieldError.checkNotNull(
-            longitude,
-            r'CheckLocationDto',
-            'longitude',
-          ),
+              longitude, r'CheckLocationDto', 'longitude'),
           latitude: BuiltValueNullFieldError.checkNotNull(
-            latitude,
-            r'CheckLocationDto',
-            'latitude',
-          ),
+              latitude, r'CheckLocationDto', 'latitude'),
         );
     replace(_$result);
     return _$result;

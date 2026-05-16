@@ -24,9 +24,9 @@ UpdateUserDtoLanguageEnum _$updateUserDtoLanguageEnumValueOf(String name) {
 
 final BuiltSet<UpdateUserDtoLanguageEnum> _$updateUserDtoLanguageEnumValues =
     BuiltSet<UpdateUserDtoLanguageEnum>(const <UpdateUserDtoLanguageEnum>[
-      _$updateUserDtoLanguageEnum_EN,
-      _$updateUserDtoLanguageEnum_AR,
-    ]);
+  _$updateUserDtoLanguageEnum_EN,
+  _$updateUserDtoLanguageEnum_AR,
+]);
 
 Serializer<UpdateUserDtoLanguageEnum> _$updateUserDtoLanguageEnumSerializer =
     _$UpdateUserDtoLanguageEnumSerializer();
@@ -48,20 +48,16 @@ class _$UpdateUserDtoLanguageEnumSerializer
   final String wireName = 'UpdateUserDtoLanguageEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UpdateUserDtoLanguageEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, UpdateUserDtoLanguageEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   UpdateUserDtoLanguageEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UpdateUserDtoLanguageEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateUserDtoLanguageEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$UpdateUserDto extends UpdateUserDto {
@@ -78,7 +74,7 @@ class _$UpdateUserDto extends UpdateUserDto {
       (UpdateUserDtoBuilder()..update(updates))._build();
 
   _$UpdateUserDto._({this.name, this.email, this.phone, this.language})
-    : super._();
+      : super._();
   @override
   UpdateUserDto rebuild(void Function(UpdateUserDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -169,8 +165,7 @@ class UpdateUserDtoBuilder
   UpdateUserDto build() => _build();
 
   _$UpdateUserDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateUserDto._(
           name: name,
           email: email,

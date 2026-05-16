@@ -417,6 +417,9 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     final messages = await repository.getMessages(widget.conversationId);
     if (mounted) {
       setState(() {
+        // Remove optimistic/temp messages before merging real ones
+        _messages.removeWhere((m) => m['id']?.toString().startsWith('temp-') ?? false);
+        
         final fetchedMessages = messages.reversed.toList();
         
         // Merge with existing messages (avoid duplicates from socket)
@@ -531,10 +534,11 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
                 await launchUrl(launchUri);
               },
             ),
-          IconButton(
-            icon: const Icon(LucideIcons.plus, size: 20),
-            onPressed: _showAddProductDialog,
-          ),
+          if (widget.type != 'SUPPORT')
+            IconButton(
+              icon: const Icon(LucideIcons.plus, size: 20),
+              onPressed: _showAddProductDialog,
+            ),
         ],
       ),
       body: Container(

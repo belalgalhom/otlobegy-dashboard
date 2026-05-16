@@ -26,6 +26,8 @@ part 'create_product_dto.g.dart';
 /// * [stock] 
 /// * [isActive] 
 /// * [isFeatured] 
+/// * [sellByStrip] 
+/// * [stripsPerPackage] 
 /// * [optionGroups] 
 /// * [variants] 
 @BuiltValue()
@@ -66,6 +68,12 @@ abstract class CreateProductDto implements Built<CreateProductDto, CreateProduct
   @BuiltValueField(wireName: r'isFeatured')
   bool? get isFeatured;
 
+  @BuiltValueField(wireName: r'sellByStrip')
+  bool? get sellByStrip;
+
+  @BuiltValueField(wireName: r'stripsPerPackage')
+  num? get stripsPerPackage;
+
   @BuiltValueField(wireName: r'optionGroups')
   BuiltList<CreateOptionGroupDto>? get optionGroups;
 
@@ -81,7 +89,8 @@ abstract class CreateProductDto implements Built<CreateProductDto, CreateProduct
       ..hasVariants = false
       ..stock = 0
       ..isActive = true
-      ..isFeatured = false;
+      ..isFeatured = false
+      ..sellByStrip = false;
 
   @BuiltValueSerializer(custom: true)
   static Serializer<CreateProductDto> get serializer => _$CreateProductDtoSerializer();
@@ -179,6 +188,20 @@ class _$CreateProductDtoSerializer implements PrimitiveSerializer<CreateProductD
       yield serializers.serialize(
         object.isFeatured,
         specifiedType: const FullType(bool),
+      );
+    }
+    if (object.sellByStrip != null) {
+      yield r'sellByStrip';
+      yield serializers.serialize(
+        object.sellByStrip,
+        specifiedType: const FullType(bool),
+      );
+    }
+    if (object.stripsPerPackage != null) {
+      yield r'stripsPerPackage';
+      yield serializers.serialize(
+        object.stripsPerPackage,
+        specifiedType: const FullType(num),
       );
     }
     if (object.optionGroups != null) {
@@ -301,6 +324,20 @@ class _$CreateProductDtoSerializer implements PrimitiveSerializer<CreateProductD
             specifiedType: const FullType(bool),
           ) as bool;
           result.isFeatured = valueDes;
+          break;
+        case r'sellByStrip':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.sellByStrip = valueDes;
+          break;
+        case r'stripsPerPackage':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(num),
+          ) as num;
+          result.stripsPerPackage = valueDes;
           break;
         case r'optionGroups':
           final valueDes = serializers.deserialize(

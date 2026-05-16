@@ -27,16 +27,16 @@ class _$UpdateVendorDto extends UpdateVendorDto {
   factory _$UpdateVendorDto([void Function(UpdateVendorDtoBuilder)? updates]) =>
       (UpdateVendorDtoBuilder()..update(updates))._build();
 
-  _$UpdateVendorDto._({
-    this.storeName,
-    this.storeNameAr,
-    this.description,
-    this.descriptionAr,
-    this.verticalId,
-    this.taxId,
-    this.commissionRate,
-    this.phone,
-  }) : super._();
+  _$UpdateVendorDto._(
+      {this.storeName,
+      this.storeNameAr,
+      this.description,
+      this.descriptionAr,
+      this.verticalId,
+      this.taxId,
+      this.commissionRate,
+      this.phone})
+      : super._();
   @override
   UpdateVendorDto rebuild(void Function(UpdateVendorDtoBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -160,8 +160,7 @@ class UpdateVendorDtoBuilder
   UpdateVendorDto build() => _build();
 
   _$UpdateVendorDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateVendorDto._(
           storeName: storeName,
           storeNameAr: storeNameAr,

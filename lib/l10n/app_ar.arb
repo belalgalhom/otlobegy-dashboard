@@ -373,6 +373,16 @@
   "noExpiry": "بدون تاريخ انتهاء",
   "offerCreated": "تم إضافة الخصم بنجاح",
   "offerUpdated": "تم تحديث الخصم بنجاح",
-  "offerDeleted": "تم حذف الخصم بنجاح"
+  "offerDeleted": "تم حذف الخصم بنجاح",
+  "escalated": "مصعد",
+  "waitingOnUser": "بانتظار المستخدم",
+  "ticketCategoryDelivery": "مشكلة توصيل",
+  "ticketCategoryVendor": "مشكلة متجر/مطعم",
+  "ticketCategoryPayment": "مشكلة في الدفع",
+  "ticketCategoryAccount": "مشكلة في الحساب",
+  "ticketCategoryReturn": "طلب استرجاع/شكوى",
+  "ticketCategoryOther": "أخرى",
+  "refresh": "تحديث",
+  "ticketNumber": "تذكرة رقم"
 }
 

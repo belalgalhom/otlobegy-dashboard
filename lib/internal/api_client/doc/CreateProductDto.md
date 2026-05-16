@@ -20,6 +20,8 @@ Name | Type | Description | Notes
 **stock** | **num** |  | [optional] [default to 0]
 **isActive** | **bool** |  | [optional] [default to true]
 **isFeatured** | **bool** |  | [optional] [default to false]
+**sellByStrip** | **bool** |  | [optional] [default to false]
+**stripsPerPackage** | **num** |  | [optional] 
 **optionGroups** | [**BuiltList&lt;CreateOptionGroupDto&gt;**](CreateOptionGroupDto.md) |  | [optional] 
 **variants** | [**BuiltList&lt;CreateProductVariantDto&gt;**](CreateProductVariantDto.md) |  | [optional] 
 

@@ -7,18 +7,17 @@ part of 'update_vendor_member_role_dto.dart';
 // **************************************************************************
 
 const UpdateVendorMemberRoleDtoRoleEnum
-_$updateVendorMemberRoleDtoRoleEnum_OWNER =
+    _$updateVendorMemberRoleDtoRoleEnum_OWNER =
     const UpdateVendorMemberRoleDtoRoleEnum._('OWNER');
 const UpdateVendorMemberRoleDtoRoleEnum
-_$updateVendorMemberRoleDtoRoleEnum_MANAGER =
+    _$updateVendorMemberRoleDtoRoleEnum_MANAGER =
     const UpdateVendorMemberRoleDtoRoleEnum._('MANAGER');
 const UpdateVendorMemberRoleDtoRoleEnum
-_$updateVendorMemberRoleDtoRoleEnum_STAFF =
+    _$updateVendorMemberRoleDtoRoleEnum_STAFF =
     const UpdateVendorMemberRoleDtoRoleEnum._('STAFF');
 
 UpdateVendorMemberRoleDtoRoleEnum _$updateVendorMemberRoleDtoRoleEnumValueOf(
-  String name,
-) {
+    String name) {
   switch (name) {
     case 'OWNER':
       return _$updateVendorMemberRoleDtoRoleEnum_OWNER;
@@ -32,17 +31,15 @@ UpdateVendorMemberRoleDtoRoleEnum _$updateVendorMemberRoleDtoRoleEnumValueOf(
 }
 
 final BuiltSet<UpdateVendorMemberRoleDtoRoleEnum>
-_$updateVendorMemberRoleDtoRoleEnumValues =
-    BuiltSet<UpdateVendorMemberRoleDtoRoleEnum>(
-      const <UpdateVendorMemberRoleDtoRoleEnum>[
-        _$updateVendorMemberRoleDtoRoleEnum_OWNER,
-        _$updateVendorMemberRoleDtoRoleEnum_MANAGER,
-        _$updateVendorMemberRoleDtoRoleEnum_STAFF,
-      ],
-    );
+    _$updateVendorMemberRoleDtoRoleEnumValues = BuiltSet<
+        UpdateVendorMemberRoleDtoRoleEnum>(const <UpdateVendorMemberRoleDtoRoleEnum>[
+  _$updateVendorMemberRoleDtoRoleEnum_OWNER,
+  _$updateVendorMemberRoleDtoRoleEnum_MANAGER,
+  _$updateVendorMemberRoleDtoRoleEnum_STAFF,
+]);
 
 Serializer<UpdateVendorMemberRoleDtoRoleEnum>
-_$updateVendorMemberRoleDtoRoleEnumSerializer =
+    _$updateVendorMemberRoleDtoRoleEnumSerializer =
     _$UpdateVendorMemberRoleDtoRoleEnumSerializer();
 
 class _$UpdateVendorMemberRoleDtoRoleEnumSerializer
@@ -65,34 +62,31 @@ class _$UpdateVendorMemberRoleDtoRoleEnumSerializer
 
   @override
   Object serialize(
-    Serializers serializers,
-    UpdateVendorMemberRoleDtoRoleEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+          Serializers serializers, UpdateVendorMemberRoleDtoRoleEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   UpdateVendorMemberRoleDtoRoleEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UpdateVendorMemberRoleDtoRoleEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateVendorMemberRoleDtoRoleEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$UpdateVendorMemberRoleDto extends UpdateVendorMemberRoleDto {
   @override
   final UpdateVendorMemberRoleDtoRoleEnum role;
 
-  factory _$UpdateVendorMemberRoleDto([
-    void Function(UpdateVendorMemberRoleDtoBuilder)? updates,
-  ]) => (UpdateVendorMemberRoleDtoBuilder()..update(updates))._build();
+  factory _$UpdateVendorMemberRoleDto(
+          [void Function(UpdateVendorMemberRoleDtoBuilder)? updates]) =>
+      (UpdateVendorMemberRoleDtoBuilder()..update(updates))._build();
 
   _$UpdateVendorMemberRoleDto._({required this.role}) : super._();
   @override
   UpdateVendorMemberRoleDto rebuild(
-    void Function(UpdateVendorMemberRoleDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateVendorMemberRoleDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateVendorMemberRoleDtoBuilder toBuilder() =>
@@ -114,9 +108,9 @@ class _$UpdateVendorMemberRoleDto extends UpdateVendorMemberRoleDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'UpdateVendorMemberRoleDto',
-    )..add('role', role)).toString();
+    return (newBuiltValueToStringHelper(r'UpdateVendorMemberRoleDto')
+          ..add('role', role))
+        .toString();
   }
 }
 
@@ -156,14 +150,10 @@ class UpdateVendorMemberRoleDtoBuilder
   UpdateVendorMemberRoleDto build() => _build();
 
   _$UpdateVendorMemberRoleDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateVendorMemberRoleDto._(
           role: BuiltValueNullFieldError.checkNotNull(
-            role,
-            r'UpdateVendorMemberRoleDto',
-            'role',
-          ),
+              role, r'UpdateVendorMemberRoleDto', 'role'),
         );
     replace(_$result);
     return _$result;

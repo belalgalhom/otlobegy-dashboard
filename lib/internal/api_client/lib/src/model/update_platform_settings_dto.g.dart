@@ -56,40 +56,40 @@ class _$UpdatePlatformSettingsDto extends UpdatePlatformSettingsDto {
   @override
   final String? privacyUrl;
 
-  factory _$UpdatePlatformSettingsDto([
-    void Function(UpdatePlatformSettingsDtoBuilder)? updates,
-  ]) => (UpdatePlatformSettingsDtoBuilder()..update(updates))._build();
+  factory _$UpdatePlatformSettingsDto(
+          [void Function(UpdatePlatformSettingsDtoBuilder)? updates]) =>
+      (UpdatePlatformSettingsDtoBuilder()..update(updates))._build();
 
-  _$UpdatePlatformSettingsDto._({
-    this.currency,
-    this.defaultCommissionRate,
-    this.defaultTaxRate,
-    this.minOrderAmount,
-    this.baseDeliveryFee,
-    this.pricePerKm,
-    this.maxDeliveryRadiusKm,
-    this.driverSearchRadiusKm,
-    this.autoCancelPendingMins,
-    this.driverAcceptTimeoutSecs,
-    this.isMaintenanceMode,
-    this.androidMinVersion,
-    this.androidLatestVersion,
-    this.androidForceUpdate,
-    this.androidStoreUrl,
-    this.iosMinVersion,
-    this.iosLatestVersion,
-    this.iosForceUpdate,
-    this.iosStoreUrl,
-    this.supportEmail,
-    this.supportPhone,
-    this.supportWhatsapp,
-    this.termsUrl,
-    this.privacyUrl,
-  }) : super._();
+  _$UpdatePlatformSettingsDto._(
+      {this.currency,
+      this.defaultCommissionRate,
+      this.defaultTaxRate,
+      this.minOrderAmount,
+      this.baseDeliveryFee,
+      this.pricePerKm,
+      this.maxDeliveryRadiusKm,
+      this.driverSearchRadiusKm,
+      this.autoCancelPendingMins,
+      this.driverAcceptTimeoutSecs,
+      this.isMaintenanceMode,
+      this.androidMinVersion,
+      this.androidLatestVersion,
+      this.androidForceUpdate,
+      this.androidStoreUrl,
+      this.iosMinVersion,
+      this.iosLatestVersion,
+      this.iosForceUpdate,
+      this.iosStoreUrl,
+      this.supportEmail,
+      this.supportPhone,
+      this.supportWhatsapp,
+      this.termsUrl,
+      this.privacyUrl})
+      : super._();
   @override
   UpdatePlatformSettingsDto rebuild(
-    void Function(UpdatePlatformSettingsDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdatePlatformSettingsDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdatePlatformSettingsDtoBuilder toBuilder() =>
@@ -355,8 +355,7 @@ class UpdatePlatformSettingsDtoBuilder
   UpdatePlatformSettingsDto build() => _build();
 
   _$UpdatePlatformSettingsDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdatePlatformSettingsDto._(
           currency: currency,
           defaultCommissionRate: defaultCommissionRate,

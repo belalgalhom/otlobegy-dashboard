@@ -20,22 +20,22 @@ class _$UpdateVendorVerticalDto extends UpdateVendorVerticalDto {
   @override
   final num? sortOrder;
 
-  factory _$UpdateVendorVerticalDto([
-    void Function(UpdateVendorVerticalDtoBuilder)? updates,
-  ]) => (UpdateVendorVerticalDtoBuilder()..update(updates))._build();
+  factory _$UpdateVendorVerticalDto(
+          [void Function(UpdateVendorVerticalDtoBuilder)? updates]) =>
+      (UpdateVendorVerticalDtoBuilder()..update(updates))._build();
 
-  _$UpdateVendorVerticalDto._({
-    this.name,
-    this.nameAr,
-    this.slug,
-    this.iconUrl,
-    this.isActive,
-    this.sortOrder,
-  }) : super._();
+  _$UpdateVendorVerticalDto._(
+      {this.name,
+      this.nameAr,
+      this.slug,
+      this.iconUrl,
+      this.isActive,
+      this.sortOrder})
+      : super._();
   @override
   UpdateVendorVerticalDto rebuild(
-    void Function(UpdateVendorVerticalDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(UpdateVendorVerticalDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UpdateVendorVerticalDtoBuilder toBuilder() =>
@@ -140,8 +140,7 @@ class UpdateVendorVerticalDtoBuilder
   UpdateVendorVerticalDto build() => _build();
 
   _$UpdateVendorVerticalDto _build() {
-    final _$result =
-        _$v ??
+    final _$result = _$v ??
         _$UpdateVendorVerticalDto._(
           name: name,
           nameAr: nameAr,

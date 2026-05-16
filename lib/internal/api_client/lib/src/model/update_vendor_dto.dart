@@ -18,6 +18,7 @@ part 'update_vendor_dto.g.dart';
 /// * [verticalId] 
 /// * [taxId] 
 /// * [commissionRate] 
+/// * [phone] 
 @BuiltValue()
 abstract class UpdateVendorDto implements Built<UpdateVendorDto, UpdateVendorDtoBuilder> {
   @BuiltValueField(wireName: r'storeName')

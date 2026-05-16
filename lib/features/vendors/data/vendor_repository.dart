@@ -390,6 +390,23 @@ class VendorRepository {
     }
   }
 
+  Future<dynamic> getVendorProduct(String vendorId, String productId) async {
+    try {
+      final response = await _apiClient.getVendorsProductsApi().productsControllerFindOne(
+        vendorId: vendorId,
+        productId: productId,
+      );
+      final dynamic responseMap = (response as dynamic).data;
+      if (responseMap is Map && responseMap['data'] != null) {
+        return responseMap['data'];
+      }
+      return responseMap;
+    } catch (e) {
+      print('VendorRepository getVendorProduct Error: $e');
+      return null;
+    }
+  }
+
   Future<bool> updateProduct(String vendorId, String productId, Map<String, dynamic> data) async {
     try {
       final Map<String, dynamic> body = {
@@ -431,7 +448,192 @@ class VendorRepository {
       }
       rethrow;
     }
+  }
 
+  // --- Variants, Option Groups, and Options ---
+
+  Future<bool> addVariant(String vendorId, String productId, Map<String, dynamic> data) async {
+    try {
+      final dto = CreateProductVariantDto((b) => b
+        ..name = data['name'] ?? ''
+        ..nameAr = data['nameAr'] ?? ''
+        ..sku = data['sku']
+        ..basePrice = (data['basePrice'] as num?)?.toDouble() ?? 0.0
+        ..stock = (data['stock'] as num?)?.toInt() ?? 0
+        ..isActive = data['isActive'] ?? true
+      );
+      await _apiClient.getVendorsProductsApi().productsControllerAddVariant(
+        vendorId: vendorId,
+        productId: productId,
+        createProductVariantDto: dto,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository addVariant Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateVariant(String vendorId, String productId, String variantId, Map<String, dynamic> data) async {
+    try {
+      final dto = UpdateProductVariantDto((b) => b
+        ..name = data['name']
+        ..nameAr = data['nameAr']
+        ..sku = data['sku']
+        ..basePrice = (data['basePrice'] as num?)?.toDouble()
+        ..stock = (data['stock'] as num?)?.toInt()
+        ..isActive = data['isActive']
+      );
+      await _apiClient.getVendorsProductsApi().productsControllerUpdateVariant(
+        vendorId: vendorId,
+        productId: productId,
+        variantId: variantId,
+        updateProductVariantDto: dto,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository updateVariant Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteVariant(String vendorId, String productId, String variantId) async {
+    try {
+      await _apiClient.getVendorsProductsApi().productsControllerRemoveVariant(
+        vendorId: vendorId,
+        productId: productId,
+        variantId: variantId,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository deleteVariant Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> addOptionGroup(String vendorId, String productId, Map<String, dynamic> data, {String? variantId}) async {
+    try {
+      final dto = CreateOptionGroupDto((b) => b
+        ..name = data['name'] ?? ''
+        ..nameAr = data['nameAr'] ?? ''
+        ..minSelect = data['minOptions'] ?? 0
+        ..maxSelect = data['maxOptions'] ?? 1
+        ..isRequired = data['isRequired'] ?? false
+      );
+      
+      if (variantId != null) {
+        await _apiClient.getVendorsProductsApi().productsControllerAddVariantOptionGroup(
+          vendorId: vendorId,
+          productId: productId,
+          variantId: variantId,
+          createOptionGroupDto: dto,
+        );
+      } else {
+        await _apiClient.getVendorsProductsApi().productsControllerAddOptionGroup(
+          vendorId: vendorId,
+          productId: productId,
+          createOptionGroupDto: dto,
+        );
+      }
+      return true;
+    } catch (e) {
+      print('VendorRepository addOptionGroup Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateOptionGroup(String vendorId, String productId, String groupId, Map<String, dynamic> data) async {
+    try {
+      final dto = UpdateOptionGroupDto((b) => b
+        ..name = data['name']
+        ..nameAr = data['nameAr']
+        ..minSelect = data['minOptions']
+        ..maxSelect = data['maxOptions']
+        ..isRequired = data['isRequired']
+      );
+      await _apiClient.getVendorsProductsApi().productsControllerUpdateOptionGroup(
+        vendorId: vendorId,
+        productId: productId,
+        groupId: groupId,
+        updateOptionGroupDto: dto,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository updateOptionGroup Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteOptionGroup(String vendorId, String productId, String groupId) async {
+    try {
+      await _apiClient.getVendorsProductsApi().productsControllerRemoveOptionGroup(
+        vendorId: vendorId,
+        productId: productId,
+        groupId: groupId,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository deleteOptionGroup Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> addOption(String vendorId, String productId, String groupId, Map<String, dynamic> data) async {
+    try {
+      final dto = CreateProductOptionDto((b) => b
+        ..name = data['name'] ?? ''
+        ..nameAr = data['nameAr'] ?? ''
+        ..priceAdded = (data['price'] as num?)?.toDouble() ?? 0.0
+        ..isActive = data['isActive'] ?? true
+      );
+      await _apiClient.getVendorsProductsApi().productsControllerAddOption(
+        vendorId: vendorId,
+        productId: productId,
+        groupId: groupId,
+        createProductOptionDto: dto,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository addOption Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateOption(String vendorId, String productId, String groupId, String optionId, Map<String, dynamic> data) async {
+    try {
+      final dto = UpdateProductOptionDto((b) => b
+        ..name = data['name']
+        ..nameAr = data['nameAr']
+        ..priceAdded = (data['price'] as num?)?.toDouble()
+        ..isActive = data['isActive']
+      );
+      await _apiClient.getVendorsProductsApi().productsControllerUpdateOption(
+        vendorId: vendorId,
+        productId: productId,
+        groupId: groupId,
+        optionId: optionId,
+        updateProductOptionDto: dto,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository updateOption Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteOption(String vendorId, String productId, String groupId, String optionId) async {
+    try {
+      await _apiClient.getVendorsProductsApi().productsControllerRemoveOption(
+        vendorId: vendorId,
+        productId: productId,
+        groupId: groupId,
+        optionId: optionId,
+      );
+      return true;
+    } catch (e) {
+      print('VendorRepository deleteOption Error: $e');
+      return false;
+    }
   }
 
   Future<bool> deleteProduct(String vendorId, String productId) async {
@@ -643,7 +845,7 @@ class VendorRepository {
         ..nameAr = data['nameAr'] ?? ''
         ..address = data['address'] ?? ''
         ..phone = data['phoneNumber'] ?? ''
-        ..location.replace(['0.0', '0.0']) // Default location
+        ..location.replace([data['lat'] ?? 0.0, data['lng'] ?? 0.0])
         ..isOpen = data['isActive'] ?? true
       );
       try {
@@ -674,13 +876,17 @@ class VendorRepository {
 
   Future<bool> updateBranch(String vendorId, String branchId, Map<String, dynamic> data) async {
     try {
-      final dto = UpdateVendorBranchDto((b) => b
-        ..name = data['name']
-        ..nameAr = data['nameAr']
-        ..address = data['address']
-        ..phone = data['phoneNumber']
-        ..isOpen = data['isActive']
-      );
+      final dto = UpdateVendorBranchDto((b) {
+        b
+          ..name = data['name']
+          ..nameAr = data['nameAr']
+          ..address = data['address']
+          ..phone = data['phoneNumber']
+          ..isOpen = data['isActive'];
+        if (data['lat'] != null && data['lng'] != null) {
+          b.location.replace([data['lat'], data['lng']]);
+        }
+      });
       try {
         await _apiClient.getVendorsBranchesApi().vendorBranchesControllerAdminUpdate(
           vendorId: vendorId,

@@ -20,22 +20,22 @@ class _$CreateOptionGroupDto extends CreateOptionGroupDto {
   @override
   final BuiltList<CreateProductOptionDto>? options;
 
-  factory _$CreateOptionGroupDto([
-    void Function(CreateOptionGroupDtoBuilder)? updates,
-  ]) => (CreateOptionGroupDtoBuilder()..update(updates))._build();
+  factory _$CreateOptionGroupDto(
+          [void Function(CreateOptionGroupDtoBuilder)? updates]) =>
+      (CreateOptionGroupDtoBuilder()..update(updates))._build();
 
-  _$CreateOptionGroupDto._({
-    required this.name,
-    this.nameAr,
-    this.isRequired,
-    this.minSelect,
-    this.maxSelect,
-    this.options,
-  }) : super._();
+  _$CreateOptionGroupDto._(
+      {required this.name,
+      this.nameAr,
+      this.isRequired,
+      this.minSelect,
+      this.maxSelect,
+      this.options})
+      : super._();
   @override
   CreateOptionGroupDto rebuild(
-    void Function(CreateOptionGroupDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(CreateOptionGroupDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   CreateOptionGroupDtoBuilder toBuilder() =>
@@ -143,14 +143,10 @@ class CreateOptionGroupDtoBuilder
   _$CreateOptionGroupDto _build() {
     _$CreateOptionGroupDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$CreateOptionGroupDto._(
             name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'CreateOptionGroupDto',
-              'name',
-            ),
+                name, r'CreateOptionGroupDto', 'name'),
             nameAr: nameAr,
             isRequired: isRequired,
             minSelect: minSelect,
@@ -164,10 +160,7 @@ class CreateOptionGroupDtoBuilder
         _options?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'CreateOptionGroupDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'CreateOptionGroupDto', _$failedField, e.toString());
       }
       rethrow;
     }

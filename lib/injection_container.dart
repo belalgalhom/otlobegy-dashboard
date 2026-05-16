@@ -19,6 +19,8 @@ import 'package:otlob_admin/features/settings/presentation/bloc/settings_bloc.da
 import 'package:otlob_admin/features/promotions/presentation/promotion_bloc.dart';
 import 'package:otlob_admin/features/chat/data/chat_repository.dart';
 import 'package:otlob_admin/features/chat/presentation/chat_bloc.dart';
+import 'package:otlob_admin/features/tickets/data/ticket_repository.dart';
+import 'package:otlob_admin/features/tickets/presentation/ticket_bloc.dart';
 import 'package:otlob_admin/core/services/socket_service.dart';
 
 final sl = GetIt.instance;
@@ -44,6 +46,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ZonesRepository(sl()));
   sl.registerLazySingleton(() => SettingsRepository(sl()));
   sl.registerLazySingleton(() => ChatRepository(sl()));
+  sl.registerLazySingleton(() => TicketRepository(sl()));
 
   // Blocs
   sl.registerFactory(() => AuthBloc(sl()));
@@ -54,6 +57,7 @@ Future<void> init() async {
   sl.registerFactory(() => SettingsBloc(sl()));
   sl.registerFactory(() => PromotionBloc(sl()));
   sl.registerFactory(() => ChatBloc(sl()));
+  sl.registerFactory(() => TicketBloc(sl()));
   sl.registerLazySingleton(() => LanguageCubit(sl()));
   sl.registerLazySingleton(() => ThemeCubit(sl()));
 }

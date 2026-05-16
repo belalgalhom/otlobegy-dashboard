@@ -12,8 +12,7 @@ const AdminUpdateUserDtoLanguageEnum _$adminUpdateUserDtoLanguageEnum_AR =
     const AdminUpdateUserDtoLanguageEnum._('AR');
 
 AdminUpdateUserDtoLanguageEnum _$adminUpdateUserDtoLanguageEnumValueOf(
-  String name,
-) {
+    String name) {
   switch (name) {
     case 'EN':
       return _$adminUpdateUserDtoLanguageEnum_EN;
@@ -25,13 +24,11 @@ AdminUpdateUserDtoLanguageEnum _$adminUpdateUserDtoLanguageEnumValueOf(
 }
 
 final BuiltSet<AdminUpdateUserDtoLanguageEnum>
-_$adminUpdateUserDtoLanguageEnumValues =
-    BuiltSet<AdminUpdateUserDtoLanguageEnum>(
-      const <AdminUpdateUserDtoLanguageEnum>[
-        _$adminUpdateUserDtoLanguageEnum_EN,
-        _$adminUpdateUserDtoLanguageEnum_AR,
-      ],
-    );
+    _$adminUpdateUserDtoLanguageEnumValues = BuiltSet<
+        AdminUpdateUserDtoLanguageEnum>(const <AdminUpdateUserDtoLanguageEnum>[
+  _$adminUpdateUserDtoLanguageEnum_EN,
+  _$adminUpdateUserDtoLanguageEnum_AR,
+]);
 
 const AdminUpdateUserDtoRoleEnum _$adminUpdateUserDtoRoleEnum_CUSTOMER =
     const AdminUpdateUserDtoRoleEnum._('CUSTOMER');
@@ -63,59 +60,58 @@ AdminUpdateUserDtoRoleEnum _$adminUpdateUserDtoRoleEnumValueOf(String name) {
 
 final BuiltSet<AdminUpdateUserDtoRoleEnum> _$adminUpdateUserDtoRoleEnumValues =
     BuiltSet<AdminUpdateUserDtoRoleEnum>(const <AdminUpdateUserDtoRoleEnum>[
-      _$adminUpdateUserDtoRoleEnum_CUSTOMER,
-      _$adminUpdateUserDtoRoleEnum_DRIVER,
-      _$adminUpdateUserDtoRoleEnum_VENDOR_MEMBER,
-      _$adminUpdateUserDtoRoleEnum_ADMIN,
-      _$adminUpdateUserDtoRoleEnum_SUPER_ADMIN,
-    ]);
+  _$adminUpdateUserDtoRoleEnum_CUSTOMER,
+  _$adminUpdateUserDtoRoleEnum_DRIVER,
+  _$adminUpdateUserDtoRoleEnum_VENDOR_MEMBER,
+  _$adminUpdateUserDtoRoleEnum_ADMIN,
+  _$adminUpdateUserDtoRoleEnum_SUPER_ADMIN,
+]);
 
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_ORDERS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_ORDERS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_ORDERS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_PRODUCTS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_PRODUCTS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_PRODUCTS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_VENDORS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_VENDORS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_VENDORS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_DRIVERS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_DRIVERS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_DRIVERS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_CUSTOMERS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_CUSTOMERS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_CUSTOMERS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_TICKETS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_TICKETS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_TICKETS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_CONVERSATIONS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_CONVERSATIONS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_CONVERSATIONS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_VIEW_STATISTICS =
+    _$adminUpdateUserDtoPermissionsEnum_VIEW_STATISTICS =
     const AdminUpdateUserDtoPermissionsEnum._('VIEW_STATISTICS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_SETTINGS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_SETTINGS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_SETTINGS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_USERS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_USERS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_USERS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_VIEW_FINANCIALS =
+    _$adminUpdateUserDtoPermissionsEnum_VIEW_FINANCIALS =
     const AdminUpdateUserDtoPermissionsEnum._('VIEW_FINANCIALS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_FINANCE =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_FINANCE =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_FINANCE');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_MANAGE_PROMOTIONS =
+    _$adminUpdateUserDtoPermissionsEnum_MANAGE_PROMOTIONS =
     const AdminUpdateUserDtoPermissionsEnum._('MANAGE_PROMOTIONS');
 const AdminUpdateUserDtoPermissionsEnum
-_$adminUpdateUserDtoPermissionsEnum_VIEW_AUDIT_LOGS =
+    _$adminUpdateUserDtoPermissionsEnum_VIEW_AUDIT_LOGS =
     const AdminUpdateUserDtoPermissionsEnum._('VIEW_AUDIT_LOGS');
 
 AdminUpdateUserDtoPermissionsEnum _$adminUpdateUserDtoPermissionsEnumValueOf(
-  String name,
-) {
+    String name) {
   switch (name) {
     case 'MANAGE_ORDERS':
       return _$adminUpdateUserDtoPermissionsEnum_MANAGE_ORDERS;
@@ -151,34 +147,67 @@ AdminUpdateUserDtoPermissionsEnum _$adminUpdateUserDtoPermissionsEnumValueOf(
 }
 
 final BuiltSet<AdminUpdateUserDtoPermissionsEnum>
-_$adminUpdateUserDtoPermissionsEnumValues =
-    BuiltSet<AdminUpdateUserDtoPermissionsEnum>(
-      const <AdminUpdateUserDtoPermissionsEnum>[
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_ORDERS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_PRODUCTS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_VENDORS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_DRIVERS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_CUSTOMERS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_TICKETS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_CONVERSATIONS,
-        _$adminUpdateUserDtoPermissionsEnum_VIEW_STATISTICS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_SETTINGS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_USERS,
-        _$adminUpdateUserDtoPermissionsEnum_VIEW_FINANCIALS,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_FINANCE,
-        _$adminUpdateUserDtoPermissionsEnum_MANAGE_PROMOTIONS,
-        _$adminUpdateUserDtoPermissionsEnum_VIEW_AUDIT_LOGS,
-      ],
-    );
+    _$adminUpdateUserDtoPermissionsEnumValues = BuiltSet<
+        AdminUpdateUserDtoPermissionsEnum>(const <AdminUpdateUserDtoPermissionsEnum>[
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_ORDERS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_PRODUCTS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_VENDORS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_DRIVERS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_CUSTOMERS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_TICKETS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_CONVERSATIONS,
+  _$adminUpdateUserDtoPermissionsEnum_VIEW_STATISTICS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_SETTINGS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_USERS,
+  _$adminUpdateUserDtoPermissionsEnum_VIEW_FINANCIALS,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_FINANCE,
+  _$adminUpdateUserDtoPermissionsEnum_MANAGE_PROMOTIONS,
+  _$adminUpdateUserDtoPermissionsEnum_VIEW_AUDIT_LOGS,
+]);
+
+const AdminUpdateUserDtoVendorRoleEnum
+    _$adminUpdateUserDtoVendorRoleEnum_OWNER =
+    const AdminUpdateUserDtoVendorRoleEnum._('OWNER');
+const AdminUpdateUserDtoVendorRoleEnum
+    _$adminUpdateUserDtoVendorRoleEnum_MANAGER =
+    const AdminUpdateUserDtoVendorRoleEnum._('MANAGER');
+const AdminUpdateUserDtoVendorRoleEnum
+    _$adminUpdateUserDtoVendorRoleEnum_STAFF =
+    const AdminUpdateUserDtoVendorRoleEnum._('STAFF');
+
+AdminUpdateUserDtoVendorRoleEnum _$adminUpdateUserDtoVendorRoleEnumValueOf(
+    String name) {
+  switch (name) {
+    case 'OWNER':
+      return _$adminUpdateUserDtoVendorRoleEnum_OWNER;
+    case 'MANAGER':
+      return _$adminUpdateUserDtoVendorRoleEnum_MANAGER;
+    case 'STAFF':
+      return _$adminUpdateUserDtoVendorRoleEnum_STAFF;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<AdminUpdateUserDtoVendorRoleEnum>
+    _$adminUpdateUserDtoVendorRoleEnumValues = BuiltSet<
+        AdminUpdateUserDtoVendorRoleEnum>(const <AdminUpdateUserDtoVendorRoleEnum>[
+  _$adminUpdateUserDtoVendorRoleEnum_OWNER,
+  _$adminUpdateUserDtoVendorRoleEnum_MANAGER,
+  _$adminUpdateUserDtoVendorRoleEnum_STAFF,
+]);
 
 Serializer<AdminUpdateUserDtoLanguageEnum>
-_$adminUpdateUserDtoLanguageEnumSerializer =
+    _$adminUpdateUserDtoLanguageEnumSerializer =
     _$AdminUpdateUserDtoLanguageEnumSerializer();
 Serializer<AdminUpdateUserDtoRoleEnum> _$adminUpdateUserDtoRoleEnumSerializer =
     _$AdminUpdateUserDtoRoleEnumSerializer();
 Serializer<AdminUpdateUserDtoPermissionsEnum>
-_$adminUpdateUserDtoPermissionsEnumSerializer =
+    _$adminUpdateUserDtoPermissionsEnumSerializer =
     _$AdminUpdateUserDtoPermissionsEnumSerializer();
+Serializer<AdminUpdateUserDtoVendorRoleEnum>
+    _$adminUpdateUserDtoVendorRoleEnumSerializer =
+    _$AdminUpdateUserDtoVendorRoleEnumSerializer();
 
 class _$AdminUpdateUserDtoLanguageEnumSerializer
     implements PrimitiveSerializer<AdminUpdateUserDtoLanguageEnum> {
@@ -198,19 +227,16 @@ class _$AdminUpdateUserDtoLanguageEnumSerializer
 
   @override
   Object serialize(
-    Serializers serializers,
-    AdminUpdateUserDtoLanguageEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+          Serializers serializers, AdminUpdateUserDtoLanguageEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   AdminUpdateUserDtoLanguageEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => AdminUpdateUserDtoLanguageEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AdminUpdateUserDtoLanguageEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$AdminUpdateUserDtoRoleEnumSerializer
@@ -236,20 +262,16 @@ class _$AdminUpdateUserDtoRoleEnumSerializer
   final String wireName = 'AdminUpdateUserDtoRoleEnum';
 
   @override
-  Object serialize(
-    Serializers serializers,
-    AdminUpdateUserDtoRoleEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+  Object serialize(Serializers serializers, AdminUpdateUserDtoRoleEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   AdminUpdateUserDtoRoleEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => AdminUpdateUserDtoRoleEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AdminUpdateUserDtoRoleEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$AdminUpdateUserDtoPermissionsEnumSerializer
@@ -294,19 +316,48 @@ class _$AdminUpdateUserDtoPermissionsEnumSerializer
 
   @override
   Object serialize(
-    Serializers serializers,
-    AdminUpdateUserDtoPermissionsEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
+          Serializers serializers, AdminUpdateUserDtoPermissionsEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
 
   @override
   AdminUpdateUserDtoPermissionsEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => AdminUpdateUserDtoPermissionsEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AdminUpdateUserDtoPermissionsEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
+class _$AdminUpdateUserDtoVendorRoleEnumSerializer
+    implements PrimitiveSerializer<AdminUpdateUserDtoVendorRoleEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'OWNER': 'OWNER',
+    'MANAGER': 'MANAGER',
+    'STAFF': 'STAFF',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'OWNER': 'OWNER',
+    'MANAGER': 'MANAGER',
+    'STAFF': 'STAFF',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[AdminUpdateUserDtoVendorRoleEnum];
+  @override
+  final String wireName = 'AdminUpdateUserDtoVendorRoleEnum';
+
+  @override
+  Object serialize(
+          Serializers serializers, AdminUpdateUserDtoVendorRoleEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  AdminUpdateUserDtoVendorRoleEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AdminUpdateUserDtoVendorRoleEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$AdminUpdateUserDto extends AdminUpdateUserDto {
@@ -333,30 +384,33 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
   @override
   final String? vendorId;
   @override
-  final String? vendorRole;
+  final AdminUpdateUserDtoVendorRoleEnum? vendorRole;
+  @override
+  final String? password;
 
-  factory _$AdminUpdateUserDto([
-    void Function(AdminUpdateUserDtoBuilder)? updates,
-  ]) => (AdminUpdateUserDtoBuilder()..update(updates))._build();
+  factory _$AdminUpdateUserDto(
+          [void Function(AdminUpdateUserDtoBuilder)? updates]) =>
+      (AdminUpdateUserDtoBuilder()..update(updates))._build();
 
-  _$AdminUpdateUserDto._({
-    this.name,
-    this.email,
-    this.phone,
-    this.language,
-    this.role,
-    this.title,
-    this.titleAr,
-    this.permissions,
-    this.isEmailVerified,
-    this.isPhoneVerified,
-    this.vendorId,
-    this.vendorRole,
-  }) : super._();
+  _$AdminUpdateUserDto._(
+      {this.name,
+      this.email,
+      this.phone,
+      this.language,
+      this.role,
+      this.title,
+      this.titleAr,
+      this.permissions,
+      this.isEmailVerified,
+      this.isPhoneVerified,
+      this.vendorId,
+      this.vendorRole,
+      this.password})
+      : super._();
   @override
   AdminUpdateUserDto rebuild(
-    void Function(AdminUpdateUserDtoBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+          void Function(AdminUpdateUserDtoBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   AdminUpdateUserDtoBuilder toBuilder() =>
@@ -377,7 +431,8 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
         isEmailVerified == other.isEmailVerified &&
         isPhoneVerified == other.isPhoneVerified &&
         vendorId == other.vendorId &&
-        vendorRole == other.vendorRole;
+        vendorRole == other.vendorRole &&
+        password == other.password;
   }
 
   @override
@@ -395,6 +450,7 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
     _$hash = $jc(_$hash, isPhoneVerified.hashCode);
     _$hash = $jc(_$hash, vendorId.hashCode);
     _$hash = $jc(_$hash, vendorRole.hashCode);
+    _$hash = $jc(_$hash, password.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -413,7 +469,8 @@ class _$AdminUpdateUserDto extends AdminUpdateUserDto {
           ..add('isEmailVerified', isEmailVerified)
           ..add('isPhoneVerified', isPhoneVerified)
           ..add('vendorId', vendorId)
-          ..add('vendorRole', vendorRole))
+          ..add('vendorRole', vendorRole)
+          ..add('password', password))
         .toString();
   }
 }
@@ -455,8 +512,8 @@ class AdminUpdateUserDtoBuilder
   ListBuilder<AdminUpdateUserDtoPermissionsEnum> get permissions =>
       _$this._permissions ??= ListBuilder<AdminUpdateUserDtoPermissionsEnum>();
   set permissions(
-    ListBuilder<AdminUpdateUserDtoPermissionsEnum>? permissions,
-  ) => _$this._permissions = permissions;
+          ListBuilder<AdminUpdateUserDtoPermissionsEnum>? permissions) =>
+      _$this._permissions = permissions;
 
   bool? _isEmailVerified;
   bool? get isEmailVerified => _$this._isEmailVerified;
@@ -472,9 +529,14 @@ class AdminUpdateUserDtoBuilder
   String? get vendorId => _$this._vendorId;
   set vendorId(String? vendorId) => _$this._vendorId = vendorId;
 
-  String? _vendorRole;
-  String? get vendorRole => _$this._vendorRole;
-  set vendorRole(String? vendorRole) => _$this._vendorRole = vendorRole;
+  AdminUpdateUserDtoVendorRoleEnum? _vendorRole;
+  AdminUpdateUserDtoVendorRoleEnum? get vendorRole => _$this._vendorRole;
+  set vendorRole(AdminUpdateUserDtoVendorRoleEnum? vendorRole) =>
+      _$this._vendorRole = vendorRole;
+
+  String? _password;
+  String? get password => _$this._password;
+  set password(String? password) => _$this._password = password;
 
   AdminUpdateUserDtoBuilder() {
     AdminUpdateUserDto._defaults(this);
@@ -495,6 +557,7 @@ class AdminUpdateUserDtoBuilder
       _isPhoneVerified = $v.isPhoneVerified;
       _vendorId = $v.vendorId;
       _vendorRole = $v.vendorRole;
+      _password = $v.password;
       _$v = null;
     }
     return this;
@@ -516,8 +579,7 @@ class AdminUpdateUserDtoBuilder
   _$AdminUpdateUserDto _build() {
     _$AdminUpdateUserDto _$result;
     try {
-      _$result =
-          _$v ??
+      _$result = _$v ??
           _$AdminUpdateUserDto._(
             name: name,
             email: email,
@@ -531,6 +593,7 @@ class AdminUpdateUserDtoBuilder
             isPhoneVerified: isPhoneVerified,
             vendorId: vendorId,
             vendorRole: vendorRole,
+            password: password,
           );
     } catch (_) {
       late String _$failedField;
@@ -539,10 +602,7 @@ class AdminUpdateUserDtoBuilder
         _permissions?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
-          r'AdminUpdateUserDto',
-          _$failedField,
-          e.toString(),
-        );
+            r'AdminUpdateUserDto', _$failedField, e.toString());
       }
       rethrow;
     }

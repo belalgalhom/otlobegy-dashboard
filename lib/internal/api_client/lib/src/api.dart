@@ -10,16 +10,22 @@ import 'package:otlob_api/src/auth/basic_auth.dart';
 import 'package:otlob_api/src/auth/bearer_auth.dart';
 import 'package:otlob_api/src/auth/oauth.dart';
 import 'package:otlob_api/src/api/authentication_api.dart';
+import 'package:otlob_api/src/api/cart_api.dart';
 import 'package:otlob_api/src/api/chat_conversations_api.dart';
 import 'package:otlob_api/src/api/chat_media_api.dart';
 import 'package:otlob_api/src/api/chat_messages_api.dart';
 import 'package:otlob_api/src/api/customers_api.dart';
 import 'package:otlob_api/src/api/devices_push_notifications_api.dart';
+import 'package:otlob_api/src/api/drivers_api.dart';
 import 'package:otlob_api/src/api/health_system_api.dart';
 import 'package:otlob_api/src/api/inbox_summary_counts_api.dart';
 import 'package:otlob_api/src/api/logistics_zones_api.dart';
 import 'package:otlob_api/src/api/notifications_api.dart';
+import 'package:otlob_api/src/api/offers_api.dart';
+import 'package:otlob_api/src/api/orders_api.dart';
 import 'package:otlob_api/src/api/platform_settings_versioning_api.dart';
+import 'package:otlob_api/src/api/promotions_api.dart';
+import 'package:otlob_api/src/api/statistics_api.dart';
 import 'package:otlob_api/src/api/support_tickets_api.dart';
 import 'package:otlob_api/src/api/users_api.dart';
 import 'package:otlob_api/src/api/vendors_branches_api.dart';
@@ -130,6 +136,12 @@ class OtlobApi {
     return AuthenticationApi(dio, serializers);
   }
 
+  /// Get CartApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  CartApi getCartApi() {
+    return CartApi(dio, serializers);
+  }
+
   /// Get ChatConversationsApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   ChatConversationsApi getChatConversationsApi() {
@@ -160,6 +172,12 @@ class OtlobApi {
     return DevicesPushNotificationsApi(dio, serializers);
   }
 
+  /// Get DriversApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  DriversApi getDriversApi() {
+    return DriversApi(dio, serializers);
+  }
+
   /// Get HealthSystemApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   HealthSystemApi getHealthSystemApi() {
@@ -184,10 +202,34 @@ class OtlobApi {
     return NotificationsApi(dio, serializers);
   }
 
+  /// Get OffersApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  OffersApi getOffersApi() {
+    return OffersApi(dio, serializers);
+  }
+
+  /// Get OrdersApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  OrdersApi getOrdersApi() {
+    return OrdersApi(dio, serializers);
+  }
+
   /// Get PlatformSettingsVersioningApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   PlatformSettingsVersioningApi getPlatformSettingsVersioningApi() {
     return PlatformSettingsVersioningApi(dio, serializers);
+  }
+
+  /// Get PromotionsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  PromotionsApi getPromotionsApi() {
+    return PromotionsApi(dio, serializers);
+  }
+
+  /// Get StatisticsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  StatisticsApi getStatisticsApi() {
+    return StatisticsApi(dio, serializers);
   }
 
   /// Get SupportTicketsApi instance, base route and serializer can be overridden by a given but be careful,

@@ -13,6 +13,8 @@ Method | HTTP request | Description
 [**messagesControllerList**](ChatMessagesApi.md#messagescontrollerlist) | **GET** /chat/conversations/{conversationId}/messages | List messages in a conversation
 [**messagesControllerMarkRead**](ChatMessagesApi.md#messagescontrollermarkread) | **PATCH** /chat/conversations/{conversationId}/messages/read | Mark messages as read
 [**messagesControllerSend**](ChatMessagesApi.md#messagescontrollersend) | **POST** /chat/conversations/{conversationId}/messages | Send a message in a conversation
+[**messagesControllerUpdate**](ChatMessagesApi.md#messagescontrollerupdate) | **PATCH** /chat/conversations/{conversationId}/messages/{messageId} | Update a message
+[**messagesControllerUpload**](ChatMessagesApi.md#messagescontrollerupload) | **POST** /chat/conversations/{conversationId}/messages/upload | Upload a media file for chat
 
 
 # **messagesControllerDelete**
@@ -181,6 +183,88 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **messagesControllerUpdate**
+> messagesControllerUpdate(conversationId, messageId)
+
+Update a message
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getChatMessagesApi();
+final String conversationId = 123e4567-e89b-12d3-a456-426614174000; // String | The unique identifier of the conversation
+final String messageId = messageId_example; // String | The unique identifier of the message
+
+try {
+    api.messagesControllerUpdate(conversationId, messageId);
+} on DioException catch (e) {
+    print('Exception when calling ChatMessagesApi->messagesControllerUpdate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **conversationId** | **String**| The unique identifier of the conversation | 
+ **messageId** | **String**| The unique identifier of the message | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **messagesControllerUpload**
+> messagesControllerUpload(conversationId)
+
+Upload a media file for chat
+
+### Example
+```dart
+import 'package:otlob_api/api.dart';
+
+final api = OtlobApi().getChatMessagesApi();
+final String conversationId = 123e4567-e89b-12d3-a456-426614174000; // String | The unique identifier of the conversation
+
+try {
+    api.messagesControllerUpload(conversationId);
+} on DioException catch (e) {
+    print('Exception when calling ChatMessagesApi->messagesControllerUpload: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **conversationId** | **String**| The unique identifier of the conversation | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

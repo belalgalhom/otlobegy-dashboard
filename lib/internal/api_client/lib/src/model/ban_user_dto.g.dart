@@ -37,9 +37,8 @@ class _$BanUserDto extends BanUserDto {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(
-      r'BanUserDto',
-    )..add('reason', reason)).toString();
+    return (newBuiltValueToStringHelper(r'BanUserDto')..add('reason', reason))
+        .toString();
   }
 }
 
@@ -77,7 +76,10 @@ class BanUserDtoBuilder implements Builder<BanUserDto, BanUserDtoBuilder> {
   BanUserDto build() => _build();
 
   _$BanUserDto _build() {
-    final _$result = _$v ?? _$BanUserDto._(reason: reason);
+    final _$result = _$v ??
+        _$BanUserDto._(
+          reason: reason,
+        );
     replace(_$result);
     return _$result;
   }
