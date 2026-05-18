@@ -12,6 +12,11 @@ class ErrorUtils {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) return message;
 
+    final lowerMessage = message.trim().toLowerCase();
+    if (lowerMessage == 'forbidden resource' || lowerMessage == 'forbidden' || lowerMessage == 'access denied') {
+      return l10n.common_error_forbidden;
+    }
+
     // Convert backend key (dot separated) to ARB key (underscore separated)
     // e.g. 'auth.error.user_exists' -> 'auth_error_user_exists'
     final arbKey = message.replaceAll('.', '_').toLowerCase();
@@ -46,6 +51,9 @@ class ErrorUtils {
       case 'user_error_avatar_upload_failed': return l10n.user_error_avatar_upload_failed;
       case 'user_error_invalid_password': return l10n.user_error_invalid_password;
       case 'user_error_password_same_as_old': return l10n.user_error_password_same_as_old;
+      case 'user_error_only_drivers_allowed': return l10n.user_error_only_drivers_allowed;
+      case 'user_error_only_driver_creation_allowed': return l10n.user_error_only_driver_creation_allowed;
+      case 'user_error_only_driver_role_allowed': return l10n.user_error_only_driver_role_allowed;
 
       case 'vendor_error_not_found': return l10n.vendor_error_not_found;
       case 'vendor_error_slug_taken': return l10n.vendor_error_slug_taken;

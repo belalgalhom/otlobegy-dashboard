@@ -283,30 +283,47 @@ class _AddOfferDialogState extends State<AddOfferDialog> {
     );
   }
 
-  Widget _buildDatePicker(AppLocalizations l10n, String label, DateTime? date, Function(DateTime) onSelect) {
-    return InkWell(
-      onTap: () async {
-        final d = await showDatePicker(
-          context: context, 
-          initialDate: date ?? DateTime.now(), 
-          firstDate: DateTime.now().subtract(const Duration(days: 365)), 
-          lastDate: DateTime.now().add(const Duration(days: 365))
-        );
-        if (d != null && mounted) {
-          final t = await showTimePicker(
+  Widget _buildDatePicker(AppLocalizations l10n, String label, DateTime? date, Function(DateTime?) onSelect) {
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: const Icon(LucideIcons.calendar, size: 18),
+        suffixIcon: date != null
+            ? IconButton(
+                icon: const Icon(LucideIcons.x, size: 16),
+                onPressed: () => onSelect(null),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              )
+            : null,
+      ),
+      child: InkWell(
+        onTap: () async {
+          final d = await showDatePicker(
             context: context,
-            initialTime: TimeOfDay.fromDateTime(date ?? DateTime.now()),
+            initialDate: date ?? DateTime.now(),
+            firstDate: DateTime.now().subtract(const Duration(days: 365)),
+            lastDate: DateTime.now().add(const Duration(days: 365)),
           );
-          if (t != null) {
-            onSelect(DateTime(d.year, d.month, d.day, t.hour, t.minute));
+          if (d != null && mounted) {
+            final t = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.fromDateTime(date ?? DateTime.now()),
+            );
+            if (t != null) {
+              onSelect(DateTime(d.year, d.month, d.day, t.hour, t.minute));
+            }
           }
-        }
-      },
-      child: InputDecorator(
-        decoration: InputDecoration(labelText: label, prefixIcon: const Icon(LucideIcons.calendar, size: 18)),
-        child: Text(
-          date != null ? DateFormat('MMM dd, yyyy HH:mm').format(date) : l10n.noExpiry, 
-          style: const TextStyle(fontSize: 14)
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                date != null ? DateFormat('MMM dd, yyyy HH:mm').format(date) : l10n.noExpiry,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ],
         ),
       ),
     );

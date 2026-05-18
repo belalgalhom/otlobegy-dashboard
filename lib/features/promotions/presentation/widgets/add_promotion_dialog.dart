@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:otlob_admin/core/utils/image_utils.dart';
 import 'dart:io';
 import 'package:otlob_admin/core/theme/app_theme.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
@@ -186,7 +187,6 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
                               label: l10n.titleEn,
                               hint: 'Summer Sale',
                               icon: LucideIcons.type,
-                              validator: (v) => (v == null || v.isEmpty) ? l10n.fieldRequired : null,
                             )),
                             const SizedBox(width: 16),
                             Expanded(child: _buildTextField(
@@ -306,7 +306,7 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
             : widget.promotion?['imageUrl'] != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.network(widget.promotion['imageUrl'], fit: BoxFit.cover),
+                    child: Image.network(ImageUtils.formatImageUrl(widget.promotion['imageUrl']), fit: BoxFit.cover),
                   )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -418,20 +418,41 @@ class _AddPromotionDialogState extends State<AddPromotionDialog> {
     );
   }
 
-  Widget _buildDatePicker(String label, DateTime? date, Function(DateTime) onSelect) {
-    return InkWell(
-      onTap: () async {
-        final d = await showDatePicker(
-          context: context, 
-          initialDate: date ?? DateTime.now(), 
-          firstDate: DateTime.now().subtract(const Duration(days: 365)), 
-          lastDate: DateTime.now().add(const Duration(days: 365))
-        );
-        if (d != null) onSelect(d);
-      },
-      child: InputDecorator(
-        decoration: InputDecoration(labelText: label, prefixIcon: const Icon(LucideIcons.calendar, size: 18)),
-        child: Text(date != null ? DateFormat('MMM dd, yyyy').format(date) : 'Set date', style: const TextStyle(fontSize: 14)),
+  Widget _buildDatePicker(String label, DateTime? date, Function(DateTime?) onSelect) {
+    final l10n = AppLocalizations.of(context)!;
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: const Icon(LucideIcons.calendar, size: 18),
+        suffixIcon: date != null
+            ? IconButton(
+                icon: const Icon(LucideIcons.x, size: 16),
+                onPressed: () => onSelect(null),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              )
+            : null,
+      ),
+      child: InkWell(
+        onTap: () async {
+          final d = await showDatePicker(
+            context: context,
+            initialDate: date ?? DateTime.now(),
+            firstDate: DateTime.now().subtract(const Duration(days: 365)),
+            lastDate: DateTime.now().add(const Duration(days: 365)),
+          );
+          if (d != null) onSelect(d);
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                date != null ? DateFormat('MMM dd, yyyy').format(date) : l10n.noExpiry,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

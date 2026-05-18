@@ -287,7 +287,7 @@ abstract class AppLocalizations {
   /// No description provided for @admin.
   ///
   /// In en, this message translates to:
-  /// **'Admin'**
+  /// **'Driver Supervisor'**
   String get admin;
 
   /// No description provided for @superAdmin.
@@ -295,6 +295,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Super Admin'**
   String get superAdmin;
+
+  /// No description provided for @vendorPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Vendor Panel'**
+  String get vendorPanel;
+
+  /// No description provided for @vendorMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Vendor Member'**
+  String get vendorMember;
+
+  /// No description provided for @driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get driver;
+
+  /// No description provided for @customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get customer;
+
+  /// No description provided for @general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// No description provided for @variants.
+  ///
+  /// In en, this message translates to:
+  /// **'Variants'**
+  String get variants;
+
+  /// No description provided for @options.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get options;
+
+  /// No description provided for @addVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Variant'**
+  String get addVariant;
+
+  /// No description provided for @addOptionGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Option Group'**
+  String get addOptionGroup;
+
+  /// No description provided for @noVariantsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No variants added yet'**
+  String get noVariantsYet;
+
+  /// No description provided for @noOptionGroupsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No option groups added yet'**
+  String get noOptionGroupsYet;
+
+  /// No description provided for @editVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Variant'**
+  String get editVariant;
+
+  /// No description provided for @nameEn.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (EN)'**
+  String get nameEn;
+
+  /// No description provided for @nameAr.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (AR)'**
+  String get nameAr;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get stock;
+
+  /// No description provided for @sku.
+  ///
+  /// In en, this message translates to:
+  /// **'SKU'**
+  String get sku;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @deleteVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Variant'**
+  String get deleteVariant;
+
+  /// No description provided for @deleteConfirmVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this variant?'**
+  String get deleteConfirmVariant;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @editOptionGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Option Group'**
+  String get editOptionGroup;
+
+  /// No description provided for @groupNameEn.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Name (EN)'**
+  String get groupNameEn;
+
+  /// No description provided for @groupNameAr.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Name (AR)'**
+  String get groupNameAr;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get min;
+
+  /// No description provided for @max.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get max;
+
+  /// No description provided for @isRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Required'**
+  String get isRequired;
+
+  /// No description provided for @deleteOptionGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Option Group'**
+  String get deleteOptionGroup;
+
+  /// No description provided for @deleteConfirmOptionGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this group and all its options?'**
+  String get deleteConfirmOptionGroup;
+
+  /// No description provided for @addOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Option'**
+  String get addOption;
+
+  /// No description provided for @editOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Option'**
+  String get editOption;
+
+  /// No description provided for @optionNameEn.
+  ///
+  /// In en, this message translates to:
+  /// **'Option Name (EN)'**
+  String get optionNameEn;
+
+  /// No description provided for @optionNameAr.
+  ///
+  /// In en, this message translates to:
+  /// **'Option Name (AR)'**
+  String get optionNameAr;
+
+  /// No description provided for @additionalPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Price'**
+  String get additionalPrice;
+
+  /// No description provided for @deleteOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Option'**
+  String get deleteOption;
+
+  /// No description provided for @deleteConfirmOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this option?'**
+  String get deleteConfirmOption;
 
   /// No description provided for @comingSoon.
   ///
@@ -500,12 +728,6 @@ abstract class AppLocalizations {
   /// **'Required'**
   String get fieldRequired;
 
-  /// No description provided for @optional.
-  ///
-  /// In en, this message translates to:
-  /// **'Optional'**
-  String get optional;
-
   /// No description provided for @businessCategory.
   ///
   /// In en, this message translates to:
@@ -601,12 +823,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Compare Price'**
   String get comparePrice;
-
-  /// No description provided for @sku.
-  ///
-  /// In en, this message translates to:
-  /// **'SKU'**
-  String get sku;
 
   /// No description provided for @initialStock.
   ///
@@ -709,12 +925,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
-
-  /// No description provided for @delete.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
 
   /// No description provided for @edit.
   ///
@@ -841,12 +1051,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update Product'**
   String get updateProduct;
-
-  /// No description provided for @stock.
-  ///
-  /// In en, this message translates to:
-  /// **'Stock'**
-  String get stock;
 
   /// No description provided for @deleteProduct.
   ///
@@ -992,12 +1196,6 @@ abstract class AppLocalizations {
   /// **'Edit Category'**
   String get editCategory;
 
-  /// No description provided for @add.
-  ///
-  /// In en, this message translates to:
-  /// **'Add'**
-  String get add;
-
   /// No description provided for @categoryIcon.
   ///
   /// In en, this message translates to:
@@ -1015,18 +1213,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete \"{name}\"? This action cannot be undone.'**
   String deleteCategoryConfirm(String name);
-
-  /// No description provided for @nameEn.
-  ///
-  /// In en, this message translates to:
-  /// **'Name (EN)'**
-  String get nameEn;
-
-  /// No description provided for @nameAr.
-  ///
-  /// In en, this message translates to:
-  /// **'Name (AR)'**
-  String get nameAr;
 
   /// No description provided for @iconUrlOptional.
   ///
@@ -1063,12 +1249,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Visibility for vendors'**
   String get visibilityForVendors;
-
-  /// No description provided for @save.
-  ///
-  /// In en, this message translates to:
-  /// **'Save'**
-  String get save;
 
   /// No description provided for @deleteBranch.
   ///
@@ -1193,7 +1373,7 @@ abstract class AppLocalizations {
   /// No description provided for @platformAdmins.
   ///
   /// In en, this message translates to:
-  /// **'Platform Admins'**
+  /// **'Platform Driver Supervisors'**
   String get platformAdmins;
 
   /// No description provided for @activeAccounts.
@@ -1652,6 +1832,24 @@ abstract class AppLocalizations {
   /// **'New password cannot be the same as the old one.'**
   String get user_error_password_same_as_old;
 
+  /// No description provided for @user_error_only_drivers_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'You only have permission to access driver users.'**
+  String get user_error_only_drivers_allowed;
+
+  /// No description provided for @user_error_only_driver_creation_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'You only have permission to create driver users.'**
+  String get user_error_only_driver_creation_allowed;
+
+  /// No description provided for @user_error_only_driver_role_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'You only have permission to assign DRIVER role.'**
+  String get user_error_only_driver_role_allowed;
+
   /// No description provided for @vendor_error_not_found.
   ///
   /// In en, this message translates to:
@@ -1765,24 +1963,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Staff'**
   String get staff;
-
-  /// No description provided for @vendorMember.
-  ///
-  /// In en, this message translates to:
-  /// **'Vendor Member'**
-  String get vendorMember;
-
-  /// No description provided for @driver.
-  ///
-  /// In en, this message translates to:
-  /// **'Driver'**
-  String get driver;
-
-  /// No description provided for @customer.
-  ///
-  /// In en, this message translates to:
-  /// **'Customer'**
-  String get customer;
 
   /// No description provided for @myVendor.
   ///

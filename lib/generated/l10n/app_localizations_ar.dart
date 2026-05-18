@@ -102,10 +102,126 @@ class AppLocalizationsAr extends AppLocalizations {
   String get all => 'الكل';
 
   @override
-  String get admin => 'أدمن';
+  String get admin => 'مشرف السائقين';
 
   @override
   String get superAdmin => 'مدير عام';
+
+  @override
+  String get vendorPanel => 'لوحة التاجر';
+
+  @override
+  String get vendorMember => 'عضو تاجر';
+
+  @override
+  String get driver => 'سائق';
+
+  @override
+  String get customer => 'عميل';
+
+  @override
+  String get general => 'عام';
+
+  @override
+  String get variants => 'المتغيرات';
+
+  @override
+  String get options => 'الخيارات';
+
+  @override
+  String get addVariant => 'إضافة متغير';
+
+  @override
+  String get addOptionGroup => 'إضافة مجموعة خيارات';
+
+  @override
+  String get noVariantsYet => 'لم يتم إضافة متغيرات بعد';
+
+  @override
+  String get noOptionGroupsYet => 'لم يتم إضافة مجموعات خيارات بعد';
+
+  @override
+  String get editVariant => 'تعديل المتغير';
+
+  @override
+  String get nameEn => 'الاسم (EN)';
+
+  @override
+  String get nameAr => 'الاسم (AR)';
+
+  @override
+  String get price => 'السعر';
+
+  @override
+  String get stock => 'المخزون';
+
+  @override
+  String get sku => 'رمز التخزين';
+
+  @override
+  String get optional => 'اختياري';
+
+  @override
+  String get add => 'إضافة';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get deleteVariant => 'حذف المتغير';
+
+  @override
+  String get deleteConfirmVariant =>
+      'هل أنت متأكد من رغبتك في حذف هذا المتغير؟';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get editOptionGroup => 'تعديل مجموعة الخيارات';
+
+  @override
+  String get groupNameEn => 'اسم المجموعة (بالإنجليزي)';
+
+  @override
+  String get groupNameAr => 'اسم المجموعة (بالعربي)';
+
+  @override
+  String get min => 'الحد الأدنى';
+
+  @override
+  String get max => 'الحد الأقصى';
+
+  @override
+  String get isRequired => 'مطلوب';
+
+  @override
+  String get deleteOptionGroup => 'حذف مجموعة الخيارات';
+
+  @override
+  String get deleteConfirmOptionGroup =>
+      'هل أنت متأكد من رغبتك في حذف هذه المجموعة وجميع خياراتها؟';
+
+  @override
+  String get addOption => 'إضافة خيار';
+
+  @override
+  String get editOption => 'تعديل الخيار';
+
+  @override
+  String get optionNameEn => 'اسم الخيار (بالإنجليزي)';
+
+  @override
+  String get optionNameAr => 'اسم الخيار (بالعربي)';
+
+  @override
+  String get additionalPrice => 'سعر إضافي';
+
+  @override
+  String get deleteOption => 'حذف الخيار';
+
+  @override
+  String get deleteConfirmOption => 'هل أنت متأكد من رغبتك في حذف هذا الخيار؟';
 
   @override
   String get comingSoon => 'الصفحة ستتوفر قريباً';
@@ -210,9 +326,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fieldRequired => 'مطلوب';
 
   @override
-  String get optional => 'اختياري';
-
-  @override
   String get businessCategory => 'فئة العمل';
 
   @override
@@ -259,9 +372,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get comparePrice => 'سعر المقارنة';
-
-  @override
-  String get sku => 'رمز التخزين';
 
   @override
   String get initialStock => 'المخزون الأولي';
@@ -317,9 +427,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancel => 'إلغاء';
-
-  @override
-  String get delete => 'حذف';
 
   @override
   String get edit => 'تعديل';
@@ -385,9 +492,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateProduct => 'تحديث المنتج';
-
-  @override
-  String get stock => 'المخزون';
 
   @override
   String get deleteProduct => 'حذف المنتج؟';
@@ -467,9 +571,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editCategory => 'تعديل التصنيف';
 
   @override
-  String get add => 'إضافة';
-
-  @override
   String get categoryIcon => 'أيقونة القسم';
 
   @override
@@ -479,12 +580,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String deleteCategoryConfirm(String name) {
     return 'هل أنت متأكد من حذف \"$name\"؟ لا يمكن التراجع عن هذا الإجراء.';
   }
-
-  @override
-  String get nameEn => 'الاسم (EN)';
-
-  @override
-  String get nameAr => 'الاسم (AR)';
 
   @override
   String get iconUrlOptional => 'رابط الأيقونة (اختياري)';
@@ -503,9 +598,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get visibilityForVendors => 'الظهور للتجار';
-
-  @override
-  String get save => 'حفظ';
 
   @override
   String get deleteBranch => 'حذف الفرع؟';
@@ -571,7 +663,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allInquiriesResolved => 'لقد تم حل جميع استفسارات العملاء.';
 
   @override
-  String get platformAdmins => 'مدراء النظام';
+  String get platformAdmins => 'مشرفي السائقين';
 
   @override
   String get activeAccounts => 'حسابات نشطة';
@@ -819,6 +911,18 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا يمكن أن تكون كلمة المرور الجديدة هي نفسها القديمة.';
 
   @override
+  String get user_error_only_drivers_allowed =>
+      'لديك صلاحية الوصول إلى مستخدمي السائقين فقط.';
+
+  @override
+  String get user_error_only_driver_creation_allowed =>
+      'لديك صلاحية إنشاء مستخدمين سائقين فقط.';
+
+  @override
+  String get user_error_only_driver_role_allowed =>
+      'لديك صلاحية تعيين دور سائق فقط.';
+
+  @override
   String get vendor_error_not_found => 'التاجر غير موجود.';
 
   @override
@@ -874,15 +978,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get staff => 'موظف';
-
-  @override
-  String get vendorMember => 'عضو تاجر';
-
-  @override
-  String get driver => 'سائق';
-
-  @override
-  String get customer => 'عميل';
 
   @override
   String get myVendor => 'متجري';

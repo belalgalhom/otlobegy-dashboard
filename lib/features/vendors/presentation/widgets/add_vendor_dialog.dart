@@ -22,6 +22,7 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _nameArController;
+
   late TextEditingController _descriptionController;
   late TextEditingController _descriptionArController;
   late TextEditingController _taxIdController;
@@ -32,6 +33,8 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
   List<dynamic> _verticals = [];
   bool _isLoadingVerticals = true;
   XFile? _pickedImage;
+  bool _isContracted = false;
+  List<Map<String, dynamic>> _workingHours = [];
 
   @override
   void initState() {
@@ -42,8 +45,10 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     _descriptionArController = TextEditingController(text: widget.vendor?['descriptionAr'] ?? '');
     _taxIdController = TextEditingController(text: widget.vendor?['taxId'] ?? '');
     _commissionController = TextEditingController(text: widget.vendor?['commissionRate']?.toString() ?? '10');
-    _phoneController = TextEditingController(text: widget.vendor?['phone'] ?? '');
+     _phoneController = TextEditingController(text: widget.vendor?['phone'] ?? '');
     _selectedVerticalId = widget.vendor?['verticalId'];
+    _isContracted = widget.vendor?['isContracted'] ?? false;
+    _initWorkingHours();
     _loadVerticals();
   }
 
@@ -262,13 +267,49 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
                             ],
                           ),
                         const SizedBox(height: 16),
-                        _buildTextField(
+                         _buildTextField(
                           controller: _phoneController,
                           label: AppLocalizations.of(context)!.phone,
                           hint: '+201234567890',
                           icon: LucideIcons.phone,
                           keyboardType: TextInputType.phone,
                         ),
+                        const SizedBox(height: 24),
+                        _buildSectionHeader(
+                          LucideIcons.shieldCheck,
+                          Localizations.localeOf(context).languageCode == 'ar' ? 'حالة الشراكة' : 'Partnership Status',
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.02),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white.withOpacity(0.08)),
+                          ),
+                          child: SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              Localizations.localeOf(context).languageCode == 'ar' ? 'متعاقد معنا' : 'Contracted with us',
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              Localizations.localeOf(context).languageCode == 'ar' 
+                                  ? 'تحديد هذا المتجر كشريك رسمي على المنصة' 
+                                  : 'Mark this vendor as officially contracted with our platform',
+                              style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6)),
+                            ),
+                            value: _isContracted,
+                            activeColor: AppColors.primary,
+                            onChanged: (val) {
+                              setState(() {
+                                _isContracted = val;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildWorkingHoursSection(Localizations.localeOf(context).languageCode == 'ar'),
                         const SizedBox(height: 24),
                         _buildSectionHeader(LucideIcons.image, AppLocalizations.of(context)!.storeAppearance),
                         const SizedBox(height: 12),
@@ -517,6 +558,325 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
     }
   }
 
+  void _initWorkingHours() {
+    final rawHours = widget.vendor?['workingHours'];
+    if (rawHours != null && rawHours is List && rawHours.isNotEmpty) {
+      _workingHours = List<Map<String, dynamic>>.from(
+        rawHours.map((h) => Map<String, dynamic>.from(h as Map)),
+      );
+    } else {
+      _workingHours = [];
+    }
+  }
+
+  String _getDayName(int day, bool isArabic) {
+    switch (day) {
+      case 0: return isArabic ? 'الأحد' : 'Sunday';
+      case 1: return isArabic ? 'الإثنين' : 'Monday';
+      case 2: return isArabic ? 'الثلاثاء' : 'Tuesday';
+      case 3: return isArabic ? 'الأربعاء' : 'Wednesday';
+      case 4: return isArabic ? 'الخميس' : 'Thursday';
+      case 5: return isArabic ? 'الجمعة' : 'Friday';
+      case 6: return isArabic ? 'السبت' : 'Saturday';
+      default: return '';
+    }
+  }
+
+  String _formatTimeTo12Hour(String timeStr, bool isArabic) {
+    try {
+      final parts = timeStr.split(':');
+      if (parts.length < 2) return timeStr;
+      final hour = int.tryParse(parts[0]) ?? 0;
+      final min = int.tryParse(parts[1]) ?? 0;
+      
+      final period = hour >= 12 ? (isArabic ? 'م' : 'PM') : (isArabic ? 'ص' : 'AM');
+      var displayHour = hour % 12;
+      if (displayHour == 0) displayHour = 12;
+      
+      final minStr = min.toString().padLeft(2, '0');
+      final hourStr = displayHour.toString().padLeft(2, '0');
+      
+      return '$hourStr:$minStr $period';
+    } catch (e) {
+      return timeStr;
+    }
+  }
+
+  void _applyFirstDayToAll() {
+    if (_workingHours.isEmpty) return;
+    final first = _workingHours.first;
+    setState(() {
+      for (var i = 1; i < _workingHours.length; i++) {
+        _workingHours[i]['openTime'] = first['openTime'];
+        _workingHours[i]['closeTime'] = first['closeTime'];
+        _workingHours[i]['isClosed'] = first['isClosed'];
+      }
+    });
+  }
+
+  Widget _buildWorkingHoursSection(bool isArabic) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionHeader(
+              LucideIcons.calendarClock,
+              isArabic ? 'ساعات العمل الأسبوعية' : 'Weekly Working Hours',
+            ),
+            if (_workingHours.isNotEmpty)
+              TextButton.icon(
+                onPressed: _applyFirstDayToAll,
+                icon: const Icon(LucideIcons.copy, size: 14),
+                label: Text(
+                  isArabic ? 'تطبيق الأول على الكل' : 'Apply First to All',
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (_workingHours.length < 7) ...[
+          Text(
+            isArabic ? 'اضغط على اليوم لإضافته لمواعيد العمل:' : 'Tap a day to add to working hours:',
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(7, (i) {
+              final isAdded = _workingHours.any((h) => h['day'] == i);
+              if (isAdded) return const SizedBox.shrink();
+              return ActionChip(
+                backgroundColor: AppColors.primary.withOpacity(0.08),
+                side: const BorderSide(color: AppColors.primary, width: 1),
+                label: Text(
+                  _getDayName(i, isArabic),
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _workingHours.add({
+                      'day': i,
+                      'openTime': '09:00',
+                      'closeTime': '22:00',
+                      'isClosed': false,
+                    });
+                    _workingHours.sort((a, b) => (a['day'] as int).compareTo(b['day'] as int));
+                  });
+                },
+              );
+            }),
+          ),
+          const SizedBox(height: 16),
+        ],
+        ...List.generate(_workingHours.length, (index) {
+          final schedule = _workingHours[index];
+          final dayNum = schedule['day'] as int;
+          final isClosed = schedule['isClosed'] as bool? ?? false;
+          final openTime = schedule['openTime'] as String? ?? '09:00';
+          final closeTime = schedule['closeTime'] as String? ?? '22:00';
+          
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: isClosed 
+                  ? Colors.white.withOpacity(0.01) 
+                  : AppColors.primary.withOpacity(0.02),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isClosed 
+                    ? Colors.white.withOpacity(0.04) 
+                    : AppColors.primary.withOpacity(0.12),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Row 1: Header (Day Name, Switch, Delete Button)
+                Row(
+                  children: [
+                    Icon(
+                      LucideIcons.calendar,
+                      size: 16,
+                      color: isClosed ? AppColors.textSecondary : AppColors.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      _getDayName(dayNum, isArabic),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: isClosed ? AppColors.textSecondary : Colors.white,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      isClosed 
+                          ? (isArabic ? 'إجازة' : 'Day Off') 
+                          : (isArabic ? 'مفتوح' : 'Open'),
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: isClosed ? Colors.red.shade300 : AppColors.success,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Switch(
+                      value: !isClosed,
+                      activeColor: AppColors.primary,
+                      onChanged: (val) {
+                        setState(() {
+                          schedule['isClosed'] = !val;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 4),
+                    IconButton(
+                      icon: const Icon(LucideIcons.trash2, size: 16, color: Colors.redAccent),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () {
+                        setState(() {
+                          _workingHours.removeAt(index);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                
+                // Row 2: Time Settings / Closed Indicator
+                if (!isClosed) ...[
+                  const SizedBox(height: 8),
+                  const Divider(color: Colors.white10, height: 1),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: _timePickerButton(
+                          context,
+                          timeStr: openTime,
+                          label: isArabic ? 'من' : 'From',
+                          onTimeSelected: (newTime) {
+                            setState(() {
+                              schedule['openTime'] = newTime;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        isArabic ? LucideIcons.arrowLeft : LucideIcons.arrowRight,
+                        size: 14,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _timePickerButton(
+                          context,
+                          timeStr: closeTime,
+                          label: isArabic ? 'إلى' : 'To',
+                          onTimeSelected: (newTime) {
+                            setState(() {
+                              schedule['closeTime'] = newTime;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    isArabic ? 'مغلق طوال اليوم' : 'Closed all day',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _timePickerButton(
+    BuildContext context, {
+    required String timeStr,
+    required String label,
+    required ValueChanged<String> onTimeSelected,
+  }) {
+    return InkWell(
+      onTap: () async {
+        final parts = timeStr.split(':');
+        final currentHour = int.tryParse(parts[0]) ?? 9;
+        final currentMin = int.tryParse(parts[1]) ?? 0;
+        
+        final selectedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay(hour: currentHour, minute: currentMin),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.dark(
+                  primary: AppColors.primary,
+                  onPrimary: Colors.white,
+                  surface: Color(0xFF1E1E1E),
+                  onSurface: Colors.white,
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+        
+        if (selectedTime != null) {
+          final hh = selectedTime.hour.toString().padLeft(2, '0');
+          final mm = selectedTime.minute.toString().padLeft(2, '0');
+          onTimeSelected('$hh:$mm');
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.04),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white.withOpacity(0.08)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '$label: ',
+              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+            ),
+            Text(
+              _formatTimeTo12Hour(timeStr, Localizations.localeOf(context).languageCode == 'ar'),
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedVerticalId == null) {
@@ -526,7 +886,22 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
         return;
       }
       
-      final data = {
+      if (_workingHours.isEmpty) {
+        final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              isArabic 
+                  ? 'برجاء تحديد مواعيد العمل الأسبوعية للمتجر!' 
+                  : 'Please set weekly working hours for the store!',
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+        return;
+      }
+      
+       final data = {
         'storeName': _nameController.text,
         'storeNameAr': _nameArController.text,
         'description': _descriptionController.text,
@@ -536,6 +911,8 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
         'verticalId': _selectedVerticalId,
         'phone': _phoneController.text,
         'coverImage': _pickedImage,
+        'isContracted': _isContracted,
+        'workingHours': _workingHours,
       };
 
       Navigator.pop(context, data);

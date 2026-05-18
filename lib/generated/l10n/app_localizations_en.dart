@@ -102,10 +102,127 @@ class AppLocalizationsEn extends AppLocalizations {
   String get all => 'All';
 
   @override
-  String get admin => 'Admin';
+  String get admin => 'Driver Supervisor';
 
   @override
   String get superAdmin => 'Super Admin';
+
+  @override
+  String get vendorPanel => 'Vendor Panel';
+
+  @override
+  String get vendorMember => 'Vendor Member';
+
+  @override
+  String get driver => 'Driver';
+
+  @override
+  String get customer => 'Customer';
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get variants => 'Variants';
+
+  @override
+  String get options => 'Options';
+
+  @override
+  String get addVariant => 'Add Variant';
+
+  @override
+  String get addOptionGroup => 'Add Option Group';
+
+  @override
+  String get noVariantsYet => 'No variants added yet';
+
+  @override
+  String get noOptionGroupsYet => 'No option groups added yet';
+
+  @override
+  String get editVariant => 'Edit Variant';
+
+  @override
+  String get nameEn => 'Name (EN)';
+
+  @override
+  String get nameAr => 'Name (AR)';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get stock => 'Stock';
+
+  @override
+  String get sku => 'SKU';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get deleteVariant => 'Delete Variant';
+
+  @override
+  String get deleteConfirmVariant =>
+      'Are you sure you want to delete this variant?';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get editOptionGroup => 'Edit Option Group';
+
+  @override
+  String get groupNameEn => 'Group Name (EN)';
+
+  @override
+  String get groupNameAr => 'Group Name (AR)';
+
+  @override
+  String get min => 'Min';
+
+  @override
+  String get max => 'Max';
+
+  @override
+  String get isRequired => 'Is Required';
+
+  @override
+  String get deleteOptionGroup => 'Delete Option Group';
+
+  @override
+  String get deleteConfirmOptionGroup =>
+      'Are you sure you want to delete this group and all its options?';
+
+  @override
+  String get addOption => 'Add Option';
+
+  @override
+  String get editOption => 'Edit Option';
+
+  @override
+  String get optionNameEn => 'Option Name (EN)';
+
+  @override
+  String get optionNameAr => 'Option Name (AR)';
+
+  @override
+  String get additionalPrice => 'Additional Price';
+
+  @override
+  String get deleteOption => 'Delete Option';
+
+  @override
+  String get deleteConfirmOption =>
+      'Are you sure you want to delete this option?';
 
   @override
   String get comingSoon => 'Page Coming Soon';
@@ -210,9 +327,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldRequired => 'Required';
 
   @override
-  String get optional => 'Optional';
-
-  @override
   String get businessCategory => 'Business Category';
 
   @override
@@ -259,9 +373,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comparePrice => 'Compare Price';
-
-  @override
-  String get sku => 'SKU';
 
   @override
   String get initialStock => 'Initial Stock';
@@ -318,9 +429,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancel => 'Cancel';
-
-  @override
-  String get delete => 'Delete';
 
   @override
   String get edit => 'Edit';
@@ -388,9 +496,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateProduct => 'Update Product';
-
-  @override
-  String get stock => 'Stock';
 
   @override
   String get deleteProduct => 'Delete Product?';
@@ -472,9 +577,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editCategory => 'Edit Category';
 
   @override
-  String get add => 'Add';
-
-  @override
   String get categoryIcon => 'Category Icon';
 
   @override
@@ -484,12 +586,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteCategoryConfirm(String name) {
     return 'Are you sure you want to delete \"$name\"? This action cannot be undone.';
   }
-
-  @override
-  String get nameEn => 'Name (EN)';
-
-  @override
-  String get nameAr => 'Name (AR)';
 
   @override
   String get iconUrlOptional => 'Icon URL (Optional)';
@@ -508,9 +604,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visibilityForVendors => 'Visibility for vendors';
-
-  @override
-  String get save => 'Save';
 
   @override
   String get deleteBranch => 'Delete Branch?';
@@ -577,7 +670,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'All customer inquiries have been resolved.';
 
   @override
-  String get platformAdmins => 'Platform Admins';
+  String get platformAdmins => 'Platform Driver Supervisors';
 
   @override
   String get activeAccounts => 'Active Accounts';
@@ -824,6 +917,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'New password cannot be the same as the old one.';
 
   @override
+  String get user_error_only_drivers_allowed =>
+      'You only have permission to access driver users.';
+
+  @override
+  String get user_error_only_driver_creation_allowed =>
+      'You only have permission to create driver users.';
+
+  @override
+  String get user_error_only_driver_role_allowed =>
+      'You only have permission to assign DRIVER role.';
+
+  @override
   String get vendor_error_not_found => 'Vendor not found.';
 
   @override
@@ -880,15 +985,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get staff => 'Staff';
-
-  @override
-  String get vendorMember => 'Vendor Member';
-
-  @override
-  String get driver => 'Driver';
-
-  @override
-  String get customer => 'Customer';
 
   @override
   String get myVendor => 'My Vendor';

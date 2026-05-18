@@ -122,7 +122,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                       icon: const Icon(LucideIcons.tag, size: 18),
                       label: Text(l10n.addOffer),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange.shade700,
+                        backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
                           horizontal: isMobile ? 16 : 24, 
@@ -130,7 +130,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         ),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         elevation: 8,
-                        shadowColor: Colors.orange.withOpacity(0.4),
+                        shadowColor: AppColors.primary.withOpacity(0.4),
                       ),
                     ),
                     ElevatedButton.icon(

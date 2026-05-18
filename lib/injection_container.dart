@@ -22,6 +22,8 @@ import 'package:otlob_admin/features/chat/presentation/chat_bloc.dart';
 import 'package:otlob_admin/features/tickets/data/ticket_repository.dart';
 import 'package:otlob_admin/features/tickets/presentation/ticket_bloc.dart';
 import 'package:otlob_admin/core/services/socket_service.dart';
+import 'package:otlob_admin/features/orders/data/orders_repository.dart';
+import 'package:otlob_admin/features/orders/presentation/orders_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -36,8 +38,9 @@ Future<void> init() async {
     dio.options.receiveTimeout = const Duration(seconds: 15);
     
     dio.interceptors.add(TokenInterceptor(sl(), dio));
-    return OtlobApi(dio: dio, basePathOverride: 'https://api.otlob-egy.online');
+    return dio;
   });
+  sl.registerLazySingleton(() => OtlobApi(dio: sl(), basePathOverride: 'https://api.otlob-egy.online'));
 
   // Repositories
   sl.registerLazySingleton(() => AuthRepository(sl(), sl()));
@@ -47,6 +50,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SettingsRepository(sl()));
   sl.registerLazySingleton(() => ChatRepository(sl()));
   sl.registerLazySingleton(() => TicketRepository(sl()));
+  sl.registerLazySingleton(() => OrdersRepository(sl(), sl()));
 
   // Blocs
   sl.registerFactory(() => AuthBloc(sl()));
@@ -58,6 +62,7 @@ Future<void> init() async {
   sl.registerFactory(() => PromotionBloc(sl()));
   sl.registerFactory(() => ChatBloc(sl()));
   sl.registerFactory(() => TicketBloc(sl()));
+  sl.registerFactory(() => OrdersBloc(sl()));
   sl.registerLazySingleton(() => LanguageCubit(sl()));
   sl.registerLazySingleton(() => ThemeCubit(sl()));
 }

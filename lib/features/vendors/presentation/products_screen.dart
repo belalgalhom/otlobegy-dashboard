@@ -16,11 +16,13 @@ import 'package:otlob_admin/core/widgets/dashboard_search_bar.dart';
 class ProductsScreen extends StatefulWidget {
   final String vendorId;
   final String vendorName;
+  final String? vendorType;
 
   const ProductsScreen({
     super.key,
     required this.vendorId,
     required this.vendorName,
+    this.vendorType,
   });
 
   @override
@@ -366,6 +368,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       builder: (context) => AddProductDialog(
         vendorId: widget.vendorId,
         vendorName: widget.vendorName,
+        vendorType: widget.vendorType,
         product: product,
       ),
     );

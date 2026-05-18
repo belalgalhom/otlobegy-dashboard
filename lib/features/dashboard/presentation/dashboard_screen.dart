@@ -38,6 +38,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
   bool _isStatsExpanded = false;
   String? _userRole;
+  String? _userName;
   String? _vendorId;
   String? _vendorRole;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -63,23 +64,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
       
       // Administrative data only for admins
       if (!isVendor) {
-        context.read<VerticalBloc>().add(FetchVerticals());
-        context.read<UserBloc>().add(FetchUsers());
-        context.read<ZoneBloc>().add(FetchZones());
-        context.read<PromotionBloc>().add(FetchPromotions());
+        if (_userRole == 'ADMIN') {
+          context.read<UserBloc>().add(FetchUsers(role: 'DRIVER'));
+        } else {
+          context.read<VerticalBloc>().add(FetchVerticals());
+          context.read<UserBloc>().add(FetchUsers());
+          context.read<ZoneBloc>().add(FetchZones());
+          context.read<PromotionBloc>().add(FetchPromotions());
+        }
       }
     }
   }
 
   Future<void> _loadUserInfo() async {
     final role = await sl<AuthRepository>().getUserRole();
+    final name = await sl<AuthRepository>().getUserName();
     final vId = await sl<AuthRepository>().getVendorId();
     final vRole = await sl<AuthRepository>().getVendorRole();
     if (mounted) {
       setState(() {
         _userRole = role;
+        _userName = name;
         _vendorId = vId;
         _vendorRole = vRole;
+        if (role == 'ADMIN') {
+          _selectedIndex = 1;
+        }
       });
     }
   }
@@ -218,19 +228,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildMenuItem(0, LucideIcons.layoutDashboard, AppLocalizations.of(context)!.dashboard, isMobile),
-                  _buildMenuItem(1, LucideIcons.shoppingBag, AppLocalizations.of(context)!.orders, isMobile),
-                  _buildMenuItem(2, LucideIcons.store, _userRole == 'VENDOR_MEMBER' ? AppLocalizations.of(context)!.myVendor : AppLocalizations.of(context)!.vendors, isMobile),
-                  
-                  if (_userRole != 'VENDOR_MEMBER') ...[
-                    _buildMenuItem(9, LucideIcons.layers, AppLocalizations.of(context)!.businessTypes, isMobile),
+                  if (_userRole == 'ADMIN') ...[
+                    _buildMenuItem(1, LucideIcons.shoppingBag, AppLocalizations.of(context)!.orders, isMobile),
                     _buildMenuItem(3, LucideIcons.truck, AppLocalizations.of(context)!.drivers, isMobile),
                     _buildMenuItem(4, LucideIcons.userPlus, AppLocalizations.of(context)!.users, isMobile),
-                    _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile),
                     _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
-                    _buildMenuItem(10, LucideIcons.megaphone, AppLocalizations.of(context)!.promotions, isMobile),
+                    _buildMenuItem(6, LucideIcons.messageSquare, AppLocalizations.of(context)!.inbox, isMobile),
+                  ] else ...[
+                    _buildMenuItem(0, LucideIcons.layoutDashboard, AppLocalizations.of(context)!.dashboard, isMobile),
+                    _buildMenuItem(1, LucideIcons.shoppingBag, AppLocalizations.of(context)!.orders, isMobile),
+                    _buildMenuItem(2, LucideIcons.store, _userRole == 'VENDOR_MEMBER' ? AppLocalizations.of(context)!.myVendor : AppLocalizations.of(context)!.vendors, isMobile),
+                    
+                    if (_userRole != 'VENDOR_MEMBER') ...[
+                      _buildMenuItem(9, LucideIcons.layers, AppLocalizations.of(context)!.businessTypes, isMobile),
+                      _buildMenuItem(3, LucideIcons.truck, AppLocalizations.of(context)!.drivers, isMobile),
+                      _buildMenuItem(4, LucideIcons.userPlus, AppLocalizations.of(context)!.users, isMobile),
+                      _buildMenuItem(8, LucideIcons.map, AppLocalizations.of(context)!.zones, isMobile),
+                      _buildMenuItem(10, LucideIcons.megaphone, AppLocalizations.of(context)!.promotions, isMobile),
+                    ],
+                    _buildMenuItem(5, LucideIcons.helpCircle, AppLocalizations.of(context)!.tickets, isMobile),
+                    _buildMenuItem(6, LucideIcons.messageSquare, AppLocalizations.of(context)!.inbox, isMobile),
                   ],
-                  _buildMenuItem(6, LucideIcons.messageSquare, AppLocalizations.of(context)!.inbox, isMobile),
                 ],
               ),
             ),
@@ -238,7 +256,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Column(
             children: [
               const Divider(color: Colors.white10),
-              _buildMenuItem(7, LucideIcons.settings, AppLocalizations.of(context)!.settings, isMobile),
+              if (_userRole != 'ADMIN')
+                _buildMenuItem(7, LucideIcons.settings, AppLocalizations.of(context)!.settings, isMobile),
               _buildUserProfile(context),
               const SizedBox(height: 16),
             ],
@@ -250,6 +269,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildUserProfile(BuildContext context) {
     bool isDesktop = MediaQuery.of(context).size.width >= 1100;
+    final l10n = AppLocalizations.of(context);
+
+    String initials = 'AD';
+    if (_userName != null && _userName!.trim().isNotEmpty) {
+      final parts = _userName!.trim().split(' ');
+      if (parts.length > 1 && parts[0].isNotEmpty && parts[1].isNotEmpty) {
+        initials = (parts[0][0] + parts[1][0]).toUpperCase();
+      } else if (parts[0].isNotEmpty) {
+        initials = parts[0].substring(0, parts[0].length > 1 ? 2 : 1).toUpperCase();
+      }
+    } else if (_userRole != null && _userRole!.isNotEmpty) {
+      initials = _userRole!.substring(0, _userRole!.length > 1 ? 2 : 1).toUpperCase();
+    }
+
+    String translatedRole = _userRole?.replaceAll('_', ' ') ?? 'User';
+    if (l10n != null) {
+      if (_userRole == 'SUPER_ADMIN') {
+        translatedRole = l10n.superAdmin;
+      } else if (_userRole == 'ADMIN') {
+        translatedRole = l10n.admin;
+      } else if (_userRole == 'VENDOR_MEMBER') {
+        translatedRole = l10n.vendorMember;
+      } else if (_userRole == 'DRIVER') {
+        translatedRole = l10n.driver;
+      } else if (_userRole == 'CUSTOMER') {
+        translatedRole = l10n.customer;
+      }
+    }
     
     return Container(
       padding: const EdgeInsets.all(12),
@@ -262,10 +309,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ? Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 18,
                 backgroundColor: AppColors.primary,
-                child: Text('AD', style: TextStyle(fontSize: 12)),
+                child: Text(initials, style: const TextStyle(fontSize: 12)),
               ),
               const SizedBox(height: 8),
               IconButton(
@@ -281,10 +328,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           )
         : Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 18,
                 backgroundColor: AppColors.primary,
-                child: Text('AD', style: TextStyle(fontSize: 12)),
+                child: Text(initials, style: const TextStyle(fontSize: 12)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -292,8 +339,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(_userRole == 'VENDOR_MEMBER' ? 'Vendor Panel' : AppLocalizations.of(context)!.admin, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                    Text(_userRole?.replaceAll('_', ' ') ?? 'User', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11)),
+                    Text(
+                      _userName ?? '', 
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), 
+                      overflow: TextOverflow.ellipsis
+                    ),
+                    Text(
+                      translatedRole, 
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 11),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),

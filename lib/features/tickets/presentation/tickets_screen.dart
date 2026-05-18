@@ -232,7 +232,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 vendorId: ticket['vendorId'],
               ),
             ),
-          );
+          ).then((_) => _fetchTickets());
         }
       },
         borderRadius: BorderRadius.circular(12),

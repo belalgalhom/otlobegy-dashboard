@@ -23,6 +23,7 @@ class UsersScreen extends StatefulWidget {
 
 class _UsersScreenState extends State<UsersScreen> {
   String? _currentUserId;
+  String? _currentUserRole;
   List<dynamic> _vendors = [];
   final TextEditingController _searchController = TextEditingController();
   String? _selectedRole;
@@ -41,11 +42,16 @@ class _UsersScreenState extends State<UsersScreen> {
 
   Future<void> _loadCurrentUserId() async {
     final id = await sl<AuthRepository>().getUserId();
+    final role = await sl<AuthRepository>().getUserRole();
     final vendorsResult = await sl<VendorRepository>().getVendors(limit: 50);
     if (mounted) {
       setState(() {
         _currentUserId = id;
+        _currentUserRole = role;
         _vendors = vendorsResult.items;
+        if (role == 'ADMIN') {
+          _selectedRole = 'DRIVER';
+        }
       });
     }
   }
@@ -176,68 +182,70 @@ class _UsersScreenState extends State<UsersScreen> {
                         context.read<UserBloc>().add(FetchUsers(role: _selectedRole));
                       },
                     ),
-                    const SizedBox(height: 16),
-                    // Role Filter Chips
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _buildFilterChip(
-                            label: AppLocalizations.of(context)!.all,
-                            isSelected: _selectedRole == null,
-                            onSelected: (selected) {
-                              setState(() => _selectedRole = null);
-                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text));
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          _buildFilterChip(
-                            label: AppLocalizations.of(context)!.superAdmin,
-                            isSelected: _selectedRole == 'SUPER_ADMIN',
-                            onSelected: (selected) {
-                              setState(() => _selectedRole = selected ? 'SUPER_ADMIN' : null);
-                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          _buildFilterChip(
-                            label: AppLocalizations.of(context)!.admin,
-                            isSelected: _selectedRole == 'ADMIN',
-                            onSelected: (selected) {
-                              setState(() => _selectedRole = selected ? 'ADMIN' : null);
-                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          _buildFilterChip(
-                            label: AppLocalizations.of(context)!.vendorMember,
-                            isSelected: _selectedRole == 'VENDOR_MEMBER',
-                            onSelected: (selected) {
-                              setState(() => _selectedRole = selected ? 'VENDOR_MEMBER' : null);
-                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          _buildFilterChip(
-                            label: AppLocalizations.of(context)!.driver,
-                            isSelected: _selectedRole == 'DRIVER',
-                            onSelected: (selected) {
-                              setState(() => _selectedRole = selected ? 'DRIVER' : null);
-                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          _buildFilterChip(
-                            label: AppLocalizations.of(context)!.customer,
-                            isSelected: _selectedRole == 'CUSTOMER',
-                            onSelected: (selected) {
-                              setState(() => _selectedRole = selected ? 'CUSTOMER' : null);
-                              context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
-                            },
-                          ),
-                        ],
+                    if (_currentUserRole != 'ADMIN') ...[
+                      const SizedBox(height: 16),
+                      // Role Filter Chips
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _buildFilterChip(
+                              label: AppLocalizations.of(context)!.all,
+                              isSelected: _selectedRole == null,
+                              onSelected: (selected) {
+                                setState(() => _selectedRole = null);
+                                context.read<UserBloc>().add(FetchUsers(search: _searchController.text));
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            _buildFilterChip(
+                              label: AppLocalizations.of(context)!.superAdmin,
+                              isSelected: _selectedRole == 'SUPER_ADMIN',
+                              onSelected: (selected) {
+                                setState(() => _selectedRole = selected ? 'SUPER_ADMIN' : null);
+                                context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            _buildFilterChip(
+                              label: AppLocalizations.of(context)!.admin,
+                              isSelected: _selectedRole == 'ADMIN',
+                              onSelected: (selected) {
+                                setState(() => _selectedRole = selected ? 'ADMIN' : null);
+                                context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            _buildFilterChip(
+                              label: AppLocalizations.of(context)!.vendorMember,
+                              isSelected: _selectedRole == 'VENDOR_MEMBER',
+                              onSelected: (selected) {
+                                setState(() => _selectedRole = selected ? 'VENDOR_MEMBER' : null);
+                                context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            _buildFilterChip(
+                              label: AppLocalizations.of(context)!.driver,
+                              isSelected: _selectedRole == 'DRIVER',
+                              onSelected: (selected) {
+                                setState(() => _selectedRole = selected ? 'DRIVER' : null);
+                                context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            _buildFilterChip(
+                              label: AppLocalizations.of(context)!.customer,
+                              isSelected: _selectedRole == 'CUSTOMER',
+                              onSelected: (selected) {
+                                setState(() => _selectedRole = selected ? 'CUSTOMER' : null);
+                                context.read<UserBloc>().add(FetchUsers(search: _searchController.text, role: _selectedRole));
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                     const SizedBox(height: 24),
                     BlocBuilder<UserBloc, UserState>(
                       buildWhen: (previous, current) => current is! UserError || previous is UserInitial,
@@ -504,10 +512,22 @@ class _UsersScreenState extends State<UsersScreen> {
 
   Widget _buildRoleChip(String role) {
     Color color = role.contains('ADMIN') ? AppColors.accent : AppColors.primary;
+    String displayRole = role;
+    if (role == 'ADMIN') {
+      displayRole = AppLocalizations.of(context)!.admin;
+    } else if (role == 'SUPER_ADMIN') {
+      displayRole = AppLocalizations.of(context)!.superAdmin;
+    } else if (role == 'VENDOR_MEMBER') {
+      displayRole = AppLocalizations.of(context)!.vendorMember;
+    } else if (role == 'DRIVER') {
+      displayRole = AppLocalizations.of(context)!.driver;
+    } else if (role == 'CUSTOMER') {
+      displayRole = AppLocalizations.of(context)!.customer;
+    }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-      child: Text(role, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+      child: Text(displayRole, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -526,7 +546,7 @@ class _UsersScreenState extends State<UsersScreen> {
     final emailController = TextEditingController(text: user?['email']);
     final phoneController = TextEditingController(text: user?['phone']);
     final passwordController = TextEditingController();
-    String selectedRole = user?['role'] ?? 'ADMIN';
+    String selectedRole = user?['role'] ?? (_currentUserRole == 'ADMIN' ? 'DRIVER' : 'ADMIN');
     String? selectedVendorId;
     String selectedVendorRole = 'STAFF';
 
@@ -578,29 +598,31 @@ class _UsersScreenState extends State<UsersScreen> {
                     user == null ? '••••••••' : (Localizations.localeOf(context).languageCode == 'ar' ? 'اتركها فارغة للإبقاء على الحالية' : 'Leave blank to keep current'), 
                     obscure: true
                   ),
-                  const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.accountRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    value: selectedRole,
-                    dropdownColor: Theme.of(context).colorScheme.surface,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(LucideIcons.shield, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  if (_currentUserRole != 'ADMIN') ...[
+                    const SizedBox(height: 16),
+                    Text(AppLocalizations.of(context)!.accountRole, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: selectedRole,
+                      dropdownColor: Theme.of(context).colorScheme.surface,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(LucideIcons.shield, size: 18),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      items: [
+                        DropdownMenuItem(value: 'SUPER_ADMIN', child: Text(AppLocalizations.of(context)!.superAdmin)),
+                        DropdownMenuItem(value: 'ADMIN', child: Text(AppLocalizations.of(context)!.admin)),
+                        DropdownMenuItem(value: 'VENDOR_MEMBER', child: Text(AppLocalizations.of(context)!.vendorMember)),
+                        DropdownMenuItem(value: 'DRIVER', child: Text(AppLocalizations.of(context)!.driver)),
+                        DropdownMenuItem(value: 'CUSTOMER', child: Text(AppLocalizations.of(context)!.customer)),
+                      ],
+                      onChanged: (v) {
+                        setDialogState(() {
+                          selectedRole = v!;
+                        });
+                      },
                     ),
-                    items: [
-                      DropdownMenuItem(value: 'SUPER_ADMIN', child: Text(AppLocalizations.of(context)!.superAdmin)),
-                      DropdownMenuItem(value: 'ADMIN', child: Text(AppLocalizations.of(context)!.admin)),
-                      DropdownMenuItem(value: 'VENDOR_MEMBER', child: Text(AppLocalizations.of(context)!.vendorMember)),
-                      DropdownMenuItem(value: 'DRIVER', child: Text(AppLocalizations.of(context)!.driver)),
-                      DropdownMenuItem(value: 'CUSTOMER', child: Text(AppLocalizations.of(context)!.customer)),
-                    ],
-                    onChanged: (v) {
-                      setDialogState(() {
-                        selectedRole = v!;
-                      });
-                    },
-                  ),
+                  ],
                   if (selectedRole == 'VENDOR_MEMBER' || (user != null && user['vendorMemberships'] != null && (user['vendorMemberships'] as List).isNotEmpty)) ...[
                     const SizedBox(height: 16),
                     Text(AppLocalizations.of(context)!.assignToVendor, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),

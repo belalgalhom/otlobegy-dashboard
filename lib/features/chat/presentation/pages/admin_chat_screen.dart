@@ -11,6 +11,7 @@ import 'package:otlob_admin/core/services/socket_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:otlob_admin/features/chat/presentation/widgets/add_product_in_chat_dialog.dart';
 import 'package:otlob_admin/features/vendors/data/vendor_repository.dart';
+import 'package:otlob_admin/features/tickets/data/ticket_repository.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
@@ -60,6 +61,11 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
   StreamSubscription? _recordingSubscription;
   Duration _recordingDuration = Duration.zero;
 
+  Map<String, dynamic>? _activeTicket;
+  Map<String, dynamic>? _orderDetails;
+  bool _isLoadingOrder = false;
+  bool _isOrderExpanded = false;
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +73,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
     _setupSocket();
     _loadMessages();
     _initRecorder();
+    _loadTicketAndOrderDetails();
     _controller.addListener(() {
       if (mounted) setState(() {});
     });
@@ -212,6 +219,691 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
         if (mounted) setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _escalateTicket() async {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          isAr ? 'تصعيد الشكوى' : 'Escalate Complaint',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          isAr 
+              ? 'هل تريد تصعيد هذه الشكوى للإدارة العليا؟' 
+              : 'Do you want to escalate this complaint to Senior Management?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(isAr ? 'إلغاء' : 'Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber.shade800,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: Text(isAr ? 'تأكيد التصعيد' : 'Confirm Escalation'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+    );
+
+    try {
+      // 1. Fetch active ticket details
+      final ticketRepo = sl<TicketRepository>();
+      final result = await ticketRepo.getTickets(limit: 50);
+      final tickets = result['tickets'] as List? ?? [];
+      final activeTicket = tickets.firstWhere(
+        (t) => t['conversationId'] == widget.conversationId,
+        orElse: () => null,
+      );
+
+      if (activeTicket == null) {
+        if (mounted) {
+          Navigator.pop(context); // Close loading
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(isAr ? 'خطأ: لم يتم العثور على التذكرة النشطة!' : 'Error: Active ticket not found!'), backgroundColor: Colors.red),
+          );
+        }
+        return;
+      }
+
+      final ticketId = activeTicket['id'].toString();
+
+      // Update status on backend to ESCALATED
+      await ticketRepo.updateTicketStatus(ticketId, 'ESCALATED');
+
+      _loadMessages();
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(isAr ? 'تم تصعيد الشكوى للإدارة بنجاح!' : 'Complaint escalated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _transferTicket() async {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    
+    // 1. Fetch active ticket to get the ticket ID
+    setState(() => _isLoading = true);
+    dynamic activeTicket;
+    try {
+      final ticketRepo = sl<TicketRepository>();
+      final result = await ticketRepo.getTickets(limit: 50);
+      final tickets = result['tickets'] as List? ?? [];
+      activeTicket = tickets.firstWhere(
+        (t) => t['conversationId'] == widget.conversationId,
+        orElse: () => null,
+      );
+    } catch (e) {
+      print('Error fetching ticket: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+
+    if (activeTicket == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(isAr ? 'لم يتم العثور على التذكرة النشطة لهذه المحادثة!' : 'Active ticket not found for this conversation!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final ticketId = activeTicket['id'].toString();
+
+    // 2. Show Category Selection Dialog
+    final selectedCategory = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          isAr ? 'تحويل الشكوى إلى' : 'Transfer Ticket To',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(LucideIcons.truck, color: Colors.blue),
+              title: Text(isAr ? 'التوصيل والمناديب' : 'Delivery'),
+              onTap: () => Navigator.pop(ctx, 'DELIVERY'),
+            ),
+            ListTile(
+              leading: const Icon(LucideIcons.store, color: AppColors.primary),
+              title: Text(isAr ? 'المطاعم والشركاء' : 'Vendors'),
+              onTap: () => Navigator.pop(ctx, 'VENDOR'),
+            ),
+            ListTile(
+              leading: const Icon(LucideIcons.creditCard, color: Colors.teal),
+              title: Text(isAr ? 'الدفع والحسابات' : 'Payment'),
+              onTap: () => Navigator.pop(ctx, 'PAYMENT'),
+            ),
+            ListTile(
+              leading: const Icon(LucideIcons.userCheck, color: Colors.orange),
+              title: Text(isAr ? 'إدارة الحساب' : 'Account'),
+              onTap: () => Navigator.pop(ctx, 'ACCOUNT'),
+            ),
+            ListTile(
+              leading: const Icon(LucideIcons.rotateCcw, color: Colors.purple),
+              title: Text(isAr ? 'المرتجعات والشكاوى' : 'Return / Complaint'),
+              onTap: () => Navigator.pop(ctx, 'RETURN_COMPLAINT'),
+            ),
+            ListTile(
+              leading: const Icon(LucideIcons.helpCircle, color: Colors.grey),
+              title: Text(isAr ? 'أخرى' : 'Other'),
+              onTap: () => Navigator.pop(ctx, 'OTHER'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (selectedCategory == null) return;
+
+    // 3. Confirm Transfer Dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          isAr ? 'تأكيد التحويل' : 'Confirm Transfer',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          isAr 
+              ? 'هل أنت متأكد من تحويل هذه الشكوى؟ سيتم إلغاء تعيينك وخروجك من المحادثة.' 
+              : 'Are you sure you want to transfer this ticket? You will be unassigned and kicked from this conversation.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(isAr ? 'إلغاء' : 'Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: Text(isAr ? 'تأكيد' : 'Confirm'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    // 4. Perform Transfer API Call
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+    );
+
+    try {
+      final ticketRepo = sl<TicketRepository>();
+      
+      // Perform PATCH update on backend
+      final success = await ticketRepo.updateTicket(ticketId, {
+        'category': selectedCategory,
+      });
+
+      if (success) {
+        if (mounted) {
+          Navigator.pop(context); // Close loading dialog
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(isAr ? 'تم تحويل الشكوى بنجاح!' : 'Ticket transferred successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context); // Kick and go back to ticket list!
+        }
+      } else {
+        throw Exception("Failed to update ticket category");
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _changeTicketStatus() async {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    
+    // 1. Fetch active ticket to get the ticket ID and current status
+    setState(() => _isLoading = true);
+    dynamic activeTicket;
+    try {
+      final ticketRepo = sl<TicketRepository>();
+      final result = await ticketRepo.getTickets(limit: 50);
+      final tickets = result['tickets'] as List? ?? [];
+      activeTicket = tickets.firstWhere(
+        (t) => t['conversationId'] == widget.conversationId,
+        orElse: () => null,
+      );
+    } catch (e) {
+      print('Error fetching ticket: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+
+    if (activeTicket == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(isAr ? 'لم يتم العثور على التذكرة النشطة لهذه المحادثة!' : 'Active ticket not found for this conversation!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final ticketId = activeTicket['id'].toString();
+    final currentStatus = activeTicket['status']?.toString() ?? 'OPEN';
+
+    // 2. Show Status Selection Dialog
+    final selectedStatus = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          isAr ? 'تغيير حالة الشكوى' : 'Change Ticket Status',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildStatusTile(ctx, 'OPEN', isAr ? 'مفتوح' : 'Open', currentStatus, Colors.blue),
+            _buildStatusTile(ctx, 'IN_PROGRESS', isAr ? 'قيد المعالجة' : 'In Progress', currentStatus, Colors.orange),
+            _buildStatusTile(ctx, 'WAITING_ON_USER', isAr ? 'بانتظار العميل' : 'Waiting on User', currentStatus, Colors.purple),
+            _buildStatusTile(ctx, 'ESCALATED', isAr ? 'تم التصعيد' : 'Escalated', currentStatus, Colors.amber),
+            _buildStatusTile(ctx, 'RESOLVED', isAr ? 'تم الحل' : 'Resolved', currentStatus, Colors.green),
+            _buildStatusTile(ctx, 'CLOSED', isAr ? 'مغلق' : 'Closed', currentStatus, Colors.grey),
+          ],
+        ),
+      ),
+    );
+
+    if (selectedStatus == null || selectedStatus == currentStatus) return;
+
+    // 3. Perform Status Change API Call
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+    );
+
+    try {
+      final ticketRepo = sl<TicketRepository>();
+      final success = await ticketRepo.updateTicket(ticketId, {
+        'status': selectedStatus,
+      });
+
+      if (success) {
+        if (mounted) {
+          Navigator.pop(context); // Close loading dialog
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(isAr ? 'تم تحديث حالة الشكوى بنجاح!' : 'Ticket status updated successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          _loadMessages();
+        }
+      } else {
+        throw Exception("Failed to update ticket status");
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Widget _buildStatusTile(BuildContext ctx, String value, String label, String currentStatus, Color color) {
+    final isSelected = currentStatus == value;
+    return ListTile(
+      leading: Icon(
+        isSelected ? LucideIcons.checkCircle : LucideIcons.circle,
+        color: isSelected ? color : Colors.grey,
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          color: isSelected ? color : null,
+        ),
+      ),
+      onTap: () => Navigator.pop(ctx, value),
+    );
+  }
+
+  Future<void> _loadTicketAndOrderDetails() async {
+    if (widget.type != 'SUPPORT') return;
+    
+    setState(() {
+      _isLoadingOrder = true;
+    });
+
+    try {
+      final ticketRepo = sl<TicketRepository>();
+      final result = await ticketRepo.getTickets(limit: 50);
+      final tickets = result['tickets'] as List? ?? [];
+      final active = tickets.firstWhere(
+        (t) => t['conversationId'] == widget.conversationId,
+        orElse: () => null,
+      );
+
+      if (active != null) {
+        setState(() {
+          _activeTicket = active;
+        });
+
+        final orderId = active['order']?['id'] ?? active['orderId'];
+        if (orderId != null) {
+          final details = await ticketRepo.getOrderDetails(orderId.toString());
+          if (details != null && mounted) {
+            setState(() {
+              _orderDetails = details;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error loading ticket/order details: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingOrder = false;
+        });
+      }
+    }
+  }
+
+  Widget _buildOrderBanner() {
+    if (widget.type != 'SUPPORT' || _orderDetails == null) return const SizedBox();
+
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final orderNum = _orderDetails!['orderNumber'] ?? 'N/A';
+    final status = _orderDetails!['status']?.toString() ?? 'PENDING';
+    final total = _orderDetails!['grandTotal']?.toString() ?? '0';
+    final payment = _orderDetails!['paymentMethod']?.toString() ?? 'CASH';
+    final address = _orderDetails!['deliveryAddress']?.toString() ?? '';
+    final customer = _orderDetails!['customer']?['user'] ?? {};
+    final customerName = customer['name'] ?? '';
+    final customerPhone = customer['phone'] ?? '';
+    final vendor = _orderDetails!['vendor'] ?? {};
+    final vendorName = vendor['storeName'] ?? '';
+    final items = _orderDetails!['items'] as List? ?? [];
+
+    Color statusColor;
+    String statusText;
+    switch (status.toUpperCase()) {
+      case 'PENDING':
+        statusColor = Colors.orange;
+        statusText = isAr ? 'قيد الانتظار' : 'Pending';
+        break;
+      case 'ACCEPTED':
+        statusColor = Colors.blue;
+        statusText = isAr ? 'مقبول' : 'Accepted';
+        break;
+      case 'PREPARING':
+        statusColor = Colors.indigo;
+        statusText = isAr ? 'قيد التحضير' : 'Preparing';
+        break;
+      case 'READY_FOR_PICKUP':
+        statusColor = Colors.purple;
+        statusText = isAr ? 'جاهز للاستلام' : 'Ready';
+        break;
+      case 'DRIVER_ASSIGNED':
+        statusColor = Colors.teal;
+        statusText = isAr ? 'تم تعيين المندوب' : 'Driver Assigned';
+        break;
+      case 'PICKED_UP':
+        statusColor = Colors.cyan;
+        statusText = isAr ? 'في الطريق' : 'Picked Up';
+        break;
+      case 'DELIVERED':
+        statusColor = Colors.green;
+        statusText = isAr ? 'تم التوصيل' : 'Delivered';
+        break;
+      case 'CANCELLED':
+        statusColor = Colors.red;
+        statusText = isAr ? 'ملغي' : 'Cancelled';
+        break;
+      default:
+        statusColor = Colors.grey;
+        statusText = status;
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.surface.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header Toggle Bar
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _isOrderExpanded = !_isOrderExpanded;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(LucideIcons.shoppingBag, color: AppColors.primary, size: 18),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${isAr ? 'طلب' : 'Order'} $orderNum',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '$total ${isAr ? 'ج.م' : 'EGP'} • $vendorName',
+                            style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: statusColor.withOpacity(0.3), width: 1),
+                      ),
+                      child: Text(
+                        statusText,
+                        style: TextStyle(
+                          color: statusColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      _isOrderExpanded ? LucideIcons.chevronUp : LucideIcons.chevronDown,
+                      color: Colors.white.withOpacity(0.4),
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Expanded content
+            if (_isOrderExpanded) ...[
+              Container(
+                height: 1,
+                color: Colors.white.withOpacity(0.05),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Delivery Details
+                    if (customerName.isNotEmpty || customerPhone.isNotEmpty) ...[
+                      Row(
+                        children: [
+                          const Icon(LucideIcons.user, size: 14, color: AppColors.primary),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              customerName,
+                              style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.85)),
+                            ),
+                          ),
+                          if (customerPhone.isNotEmpty)
+                            InkWell(
+                              onTap: () async {
+                                final Uri launchUri = Uri(
+                                  scheme: 'tel',
+                                  path: customerPhone,
+                                );
+                                await launchUrl(launchUri);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.withOpacity(0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  LucideIcons.phone,
+                                  size: 14,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    if (address.isNotEmpty) ...[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(LucideIcons.mapPin, size: 14, color: Colors.redAccent),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              address,
+                              style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    Row(
+                      children: [
+                        const Icon(LucideIcons.creditCard, size: 14, color: Colors.green),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${isAr ? 'طريقة الدفع:' : 'Payment:'} ${payment.toUpperCase()}',
+                          style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7)),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 12),
+                    Text(
+                      isAr ? 'المنتجات المطلوبة:' : 'Items Ordered:',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primary),
+                    ),
+                    const SizedBox(height: 6),
+                    
+                    // Products List
+                    ...items.map((item) {
+                      final productName = item['productName'] ?? '';
+                      final variantName = item['variantName'] ?? '';
+                      final quantity = item['quantity'] ?? 1;
+                      final itemPrice = item['unitPrice'] ?? '0';
+                      final selectedOpts = item['selectedOptions'] as List? ?? [];
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 6),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.02),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '$quantity x $productName${variantName.isNotEmpty ? ' ($variantName)' : ''}',
+                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
+                                  ),
+                                ),
+                                Text(
+                                  '$itemPrice ${isAr ? 'ج.م' : 'EGP'}',
+                                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.7)),
+                                ),
+                              ],
+                            ),
+                            if (selectedOpts.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              ...selectedOpts.map((opt) => Padding(
+                                padding: const EdgeInsets.only(left: 12, top: 2),
+                                child: Text(
+                                  '+ ${opt['optionName']} (+${opt['priceAdded']} ${isAr ? 'ج.م' : 'EGP'})',
+                                  style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5)),
+                                ),
+                              )),
+                            ],
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _pickFile() async {
@@ -534,6 +1226,23 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
                 await launchUrl(launchUri);
               },
             ),
+          if (widget.type == 'SUPPORT') ...[
+            IconButton(
+              icon: const Icon(LucideIcons.clipboardCheck, size: 20),
+              tooltip: Localizations.localeOf(context).languageCode == 'ar' ? 'تغيير حالة الشكوى' : 'Change Status',
+              onPressed: _changeTicketStatus,
+            ),
+            IconButton(
+              icon: const Icon(LucideIcons.arrowRightLeft, size: 20),
+              tooltip: Localizations.localeOf(context).languageCode == 'ar' ? 'تحويل الشكوى' : 'Transfer Ticket',
+              onPressed: _transferTicket,
+            ),
+            IconButton(
+              icon: const Icon(LucideIcons.chevronsUp, size: 20, color: Colors.amber),
+              tooltip: Localizations.localeOf(context).languageCode == 'ar' ? 'تصعيد عاجل' : 'Escalate',
+              onPressed: _escalateTicket,
+            ),
+          ],
           if (widget.type != 'SUPPORT')
             IconButton(
               icon: const Icon(LucideIcons.plus, size: 20),
@@ -553,6 +1262,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
         ),
         child: Column(
           children: [
+            _buildOrderBanner(),
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())

@@ -245,6 +245,50 @@ class _VendorsScreenState extends State<VendorsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (v['isContracted'] == true) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            margin: const EdgeInsets.only(bottom: 6),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  AppColors.primary,
+                                  Color(0xFFE5A93B),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.primary.withOpacity(0.3),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  LucideIcons.shieldCheck,
+                                  size: 10,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  isArabic ? 'شريك متعاقد' : 'Contracted Partner',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         Text(
                           isArabic
                               ? (v['storeNameAr']?.toString().isNotEmpty == true ? v['storeNameAr'] : v['storeName']) ?? AppLocalizations.of(context)!.unnamedStore
@@ -481,6 +525,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
         builder: (context) => ProductsScreen(
           vendorId: v['id'] ?? '',
           vendorName: v['storeName'] ?? 'Vendor',
+          vendorType: (v['vertical']?['slug'] ?? v['type'])?.toString(),
         ),
       ),
     );
@@ -492,6 +537,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
       builder: (context) => AddProductDialog(
         vendorId: v['id'] ?? '',
         vendorName: v['storeName'] ?? 'Vendor',
+        vendorType: (v['vertical']?['slug'] ?? v['type'])?.toString(),
       ),
     );
     if (result != null && context.mounted) {

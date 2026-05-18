@@ -201,17 +201,21 @@ class VendorRepository {
 
   Future<bool> createVendor(Map<String, dynamic> data) async {
     try {
-      final dto = CreateVendorDto((b) => b
-        ..storeName = data['storeName'] ?? ''
-        ..storeNameAr = data['storeNameAr'] ?? ''
-        ..description = data['description'] ?? ''
-        ..descriptionAr = data['descriptionAr'] ?? ''
-        ..verticalId = data['verticalId'] ?? ''
-        ..taxId = data['taxId'] ?? ''
-        ..commissionRate = data['commissionRate'] ?? 10
-        ..phone = data['phone']
+      final response = await _apiClient.dio.post(
+        '/vendors',
+        data: {
+          'storeName': data['storeName'] ?? '',
+          'storeNameAr': data['storeNameAr'] ?? '',
+          'description': data['description'] ?? '',
+          'descriptionAr': data['descriptionAr'] ?? '',
+          'verticalId': data['verticalId'] ?? '',
+          'taxId': data['taxId'] ?? '',
+          'commissionRate': data['commissionRate'] ?? 10,
+          'phone': data['phone'],
+          'isContracted': data['isContracted'] ?? false,
+          'workingHours': data['workingHours'],
+        },
       );
-      final response = await _apiClient.getVendorsCoreManagementApi().vendorsControllerCreate(createVendorDto: dto);
       
       // If we have a cover image, upload it
       if (data['coverImage'] != null) {
@@ -246,17 +250,21 @@ class VendorRepository {
 
   Future<bool> updateVendor(String id, Map<String, dynamic> data) async {
     try {
-      final dto = UpdateVendorDto((b) => b
-        ..storeName = data['storeName']
-        ..storeNameAr = data['storeNameAr']
-        ..description = data['description']
-        ..descriptionAr = data['descriptionAr']
-        ..verticalId = data['verticalId']
-        ..taxId = data['taxId']
-        ..commissionRate = data['commissionRate']
-        ..phone = data['phone']
+      await _apiClient.dio.patch(
+        '/vendors/$id',
+        data: {
+          if (data['storeName'] != null) 'storeName': data['storeName'],
+          if (data['storeNameAr'] != null) 'storeNameAr': data['storeNameAr'],
+          if (data['description'] != null) 'description': data['description'],
+          if (data['descriptionAr'] != null) 'descriptionAr': data['descriptionAr'],
+          if (data['verticalId'] != null) 'verticalId': data['verticalId'],
+          if (data['taxId'] != null) 'taxId': data['taxId'],
+          if (data['commissionRate'] != null) 'commissionRate': data['commissionRate'],
+          if (data['phone'] != null) 'phone': data['phone'],
+          if (data['isContracted'] != null) 'isContracted': data['isContracted'],
+          if (data['workingHours'] != null) 'workingHours': data['workingHours'],
+        },
       );
-      await _apiClient.getVendorsCoreManagementApi().vendorsControllerUpdate(vendorId: id, updateVendorDto: dto);
       
       // If we have a cover image, upload it
       if (data['coverImage'] != null) {
@@ -315,6 +323,50 @@ class VendorRepository {
   Future<String?> createProduct(Map<String, dynamic> data) async {
     try {
       print('VendorRepository: Creating product with data: $data');
+
+      // Map frontend option group list to backend CreateOptionGroupDto
+      List<Map<String, dynamic>> mapOptionGroups(List<dynamic> groups) {
+        return groups.map((g) {
+          final options = (g['options'] as List? ?? []).map((o) {
+            return {
+              'name': o['name'],
+              'nameAr': o['nameAr'],
+              'priceAdded': (o['price'] as num?)?.toDouble() ?? 0.0,
+              'isActive': o['isActive'] ?? true,
+            };
+          }).toList();
+
+          return {
+            'name': g['name'],
+            'nameAr': g['nameAr'],
+            'isRequired': g['isRequired'] ?? false,
+            'minSelect': (g['minOptions'] as num?)?.toInt() ?? 0,
+            'maxSelect': (g['maxOptions'] as num?)?.toInt() ?? 1,
+            'options': options,
+          };
+        }).toList();
+      }
+
+      final List<dynamic>? rawVariants = data['variants'];
+      final List<Map<String, dynamic>> variants = [];
+      if (rawVariants != null) {
+        for (var v in rawVariants) {
+          final ogs = mapOptionGroups(v['optionGroups'] ?? []);
+          variants.add({
+            'name': v['name'],
+            'nameAr': v['nameAr'],
+            'sku': v['sku'],
+            'basePrice': (v['price'] as num?)?.toDouble() ?? 0.0,
+            'comparePrice': (v['comparePrice'] as num?)?.toDouble(),
+            'stock': (v['stock'] as num?)?.toInt() ?? 0,
+            'isActive': v['isActive'] ?? true,
+            'optionGroups': ogs,
+          });
+        }
+      }
+
+      final optionGroups = mapOptionGroups(data['optionGroups'] ?? []);
+
       final Map<String, dynamic> body = {
         'categoryId': data['categoryId'],
         'name': data['name'],
@@ -329,6 +381,9 @@ class VendorRepository {
         'isFeatured': data['isFeatured'] ?? false,
         'sellByStrip': data['sellByStrip'] ?? false,
         'stripsPerPackage': data['stripsPerPackage'],
+        'hasVariants': variants.isNotEmpty,
+        if (variants.isNotEmpty) 'variants': variants,
+        if (optionGroups.isNotEmpty) 'optionGroups': optionGroups,
       };
       
       dynamic response;
@@ -974,22 +1029,24 @@ class VendorRepository {
 
   Future<String?> createPromotion(Map<String, dynamic> data) async {
     try {
-      final response = await _apiClient.dio.post('/promotions/admin', data: {
+      final payload = {
         'title': data['title'],
-        'titleAr': data['titleAr'],
-        'description': data['description'],
-        'descriptionAr': data['descriptionAr'],
+        'titleAr': data['titleAr']?.toString().trim().isEmpty == true ? null : data['titleAr'],
+        'description': data['description']?.toString().trim().isEmpty == true ? null : data['description'],
+        'descriptionAr': data['descriptionAr']?.toString().trim().isEmpty == true ? null : data['descriptionAr'],
         'type': data['type'] ?? 'BANNER',
-        'vendorId': data['vendorId'],
-        'productId': data['productId'],
-        'externalUrl': data['externalUrl'],
+        'vendorId': data['vendorId']?.toString().trim().isEmpty == true ? null : data['vendorId'],
+        'productId': data['productId']?.toString().trim().isEmpty == true ? null : data['productId'],
+        'externalUrl': data['externalUrl']?.toString().trim().isEmpty == true ? null : data['externalUrl'],
         'isActive': data['isActive'] ?? true,
         'sortOrder': data['sortOrder'] ?? 0,
         'offerPrice': data['offerPrice'],
         'originalPrice': data['originalPrice'],
         'startDate': data['startDate'],
         'endDate': data['endDate'],
-      });
+      };
+
+      final response = await _apiClient.dio.post('/promotions/admin', data: payload);
       
       final resData = response.data;
       if (resData is Map) {
@@ -1008,22 +1065,24 @@ class VendorRepository {
 
   Future<bool> updatePromotion(String id, Map<String, dynamic> data) async {
     try {
-      await _apiClient.dio.patch('/promotions/admin/$id', data: {
+      final payload = {
         'title': data['title'],
-        'titleAr': data['titleAr'],
-        'description': data['description'],
-        'descriptionAr': data['descriptionAr'],
+        'titleAr': data['titleAr']?.toString().trim().isEmpty == true ? null : data['titleAr'],
+        'description': data['description']?.toString().trim().isEmpty == true ? null : data['description'],
+        'descriptionAr': data['descriptionAr']?.toString().trim().isEmpty == true ? null : data['descriptionAr'],
         'type': data['type'],
-        'vendorId': data['vendorId'],
-        'productId': data['productId'],
-        'externalUrl': data['externalUrl'],
+        'vendorId': data['vendorId']?.toString().trim().isEmpty == true ? null : data['vendorId'],
+        'productId': data['productId']?.toString().trim().isEmpty == true ? null : data['productId'],
+        'externalUrl': data['externalUrl']?.toString().trim().isEmpty == true ? null : data['externalUrl'],
         'isActive': data['isActive'],
         'sortOrder': data['sortOrder'],
         'offerPrice': data['offerPrice'],
         'originalPrice': data['originalPrice'],
         'startDate': data['startDate'],
         'endDate': data['endDate'],
-      });
+      };
+
+      await _apiClient.dio.patch('/promotions/admin/$id', data: payload);
       return true;
     } catch (e) {
       if (e is dio.DioException && e.response?.data != null) {

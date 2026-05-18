@@ -32,6 +32,7 @@ class AuthRepository {
         await _storage.write(key: 'refresh_token', value: data['refresh_token']);
         await _storage.write(key: 'user_id', value: userData['id']?.toString());
         await _storage.write(key: 'user_role', value: role);
+        await _storage.write(key: 'user_name', value: userData['name']?.toString());
         
         if (userData['vendorMemberships'] != null && (userData['vendorMemberships'] as List).isNotEmpty) {
           final membership = userData['vendorMemberships'][0];
@@ -111,6 +112,28 @@ class AuthRepository {
 
   Future<String?> getUserRole() async {
     return await _storage.read(key: 'user_role');
+  }
+
+  Future<String?> getUserName() async {
+    final cached = await _storage.read(key: 'user_name');
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+    try {
+      final response = await _apiClient.getUsersApi().usersControllerGetUser();
+      final dynamic responseMap = (response as dynamic).data;
+      if (responseMap is Map && responseMap['data'] != null) {
+        final data = responseMap['data'] as Map<String, dynamic>;
+        final name = data['name']?.toString();
+        if (name != null) {
+          await _storage.write(key: 'user_name', value: name);
+          return name;
+        }
+      }
+    } catch (e) {
+      print('AuthRepository getUserName live fetch error: $e');
+    }
+    return null;
   }
 
   Future<String?> getVendorId() async {

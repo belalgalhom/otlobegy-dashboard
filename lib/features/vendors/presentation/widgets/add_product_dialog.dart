@@ -11,12 +11,14 @@ import 'package:otlob_admin/generated/l10n/app_localizations.dart';
 class AddProductDialog extends StatefulWidget {
   final String vendorId;
   final String vendorName;
+  final String? vendorType;
   final dynamic product; // Null for add, not null for edit
 
   const AddProductDialog({
     super.key,
     required this.vendorId,
     required this.vendorName,
+    this.vendorType,
     this.product,
   });
 
@@ -50,6 +52,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
   XFile? _imageFile;
   bool _isPickingImage = false;
 
+  // Vendor state
+  bool _isLoadingVendor = true;
+  dynamic _vendor;
+  bool _isRestaurant = false;
+
   // Variants and Options state
   List<dynamic> _variants = [];
   List<dynamic> _optionGroups = [];
@@ -74,13 +81,42 @@ class _AddProductDialogState extends State<AddProductDialog> {
     _stripPriceController = TextEditingController();
     _selectedCategoryId = p?['categoryId']?.toString();
 
+    // Synchronously set _isRestaurant if vendorType is provided
+    final type = widget.vendorType?.toLowerCase() ?? '';
+    _isRestaurant = type == 'restaurant' || type == 'restaurants' || type.startsWith('restaurant');
+
     _updateStripPrice();
     _priceController.addListener(_updateStripPrice);
     _stripsCountController.addListener(_updateStripPrice);
 
     _fetchCategories();
+    if (widget.vendorType == null) {
+      _fetchVendor();
+    } else {
+      _isLoadingVendor = false;
+    }
     if (isEdit) {
       _fetchProductDetails();
+    }
+  }
+
+  Future<void> _fetchVendor() async {
+    setState(() => _isLoadingVendor = true);
+    try {
+      final vendor = await sl<VendorRepository>().getVendor(widget.vendorId);
+      if (mounted && vendor != null) {
+        setState(() {
+          _vendor = vendor;
+          final slug = (vendor['vertical']?['slug'] ?? vendor['type'])?.toString().toLowerCase();
+          _isRestaurant = slug == 'restaurant' || slug == 'restaurants' || slug?.startsWith('restaurant') == true;
+          _isLoadingVendor = false;
+        });
+      } else {
+        if (mounted) setState(() => _isLoadingVendor = false);
+      }
+    } catch (e) {
+      print('AddProductDialog fetchVendor Error: $e');
+      if (mounted) setState(() => _isLoadingVendor = false);
     }
   }
 
@@ -90,8 +126,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
       final product = await sl<VendorRepository>().getVendorProduct(widget.vendorId, widget.product['id']);
       if (mounted && product != null) {
         setState(() {
-          _variants = product['variants'] ?? [];
-          _optionGroups = product['optionGroups'] ?? [];
+          _variants = List<dynamic>.from(product['variants'] ?? []);
+          _optionGroups = List<dynamic>.from(product['optionGroups'] ?? []);
           _isLoadingDetails = false;
         });
       }
@@ -193,7 +229,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
           ],
         ),
         child: DefaultTabController(
-          length: isEdit ? 3 : 1,
+          key: ValueKey('tab_controller_${_isRestaurant}'),
+          length: _isRestaurant ? 3 : 1,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -255,12 +292,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ),
               ),
 
-              if (isEdit)
-                const TabBar(
+              if (_isRestaurant)
+                TabBar(
                   tabs: [
-                    Tab(text: 'General'),
-                    Tab(text: 'Variants'),
-                    Tab(text: 'Options'),
+                    Tab(text: AppLocalizations.of(context)!.general),
+                    Tab(text: AppLocalizations.of(context)!.variants),
+                    Tab(text: AppLocalizations.of(context)!.options),
                   ],
                   labelColor: AppColors.primary,
                   unselectedLabelColor: AppColors.textSecondary,
@@ -268,7 +305,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ),
 
               Flexible(
-                child: isEdit 
+                child: _isRestaurant 
                   ? TabBarView(
                       children: [
                         _buildGeneralTab(isMobile),
@@ -608,7 +645,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           child: ElevatedButton.icon(
             onPressed: () => _showAddVariantDialog(),
             icon: const Icon(LucideIcons.plus, size: 18),
-            label: const Text('Add Variant'),
+            label: Text(AppLocalizations.of(context)!.addVariant),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -618,7 +655,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         ),
         Expanded(
           child: _variants.isEmpty
-              ? Center(child: Text('No variants added yet', style: TextStyle(color: AppColors.textSecondary)))
+              ? Center(child: Text(AppLocalizations.of(context)!.noVariantsYet, style: TextStyle(color: AppColors.textSecondary)))
               : ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: _variants.length,
@@ -659,7 +696,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           child: ElevatedButton.icon(
             onPressed: () => _showAddOptionGroupDialog(),
             icon: const Icon(LucideIcons.plus, size: 18),
-            label: const Text('Add Option Group'),
+            label: Text(AppLocalizations.of(context)!.addOptionGroup),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -669,7 +706,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         ),
         Expanded(
           child: _optionGroups.isEmpty
-              ? Center(child: Text('No option groups added yet', style: TextStyle(color: AppColors.textSecondary)))
+              ? Center(child: Text(AppLocalizations.of(context)!.noOptionGroupsYet, style: TextStyle(color: AppColors.textSecondary)))
               : ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: _optionGroups.length,
@@ -740,27 +777,29 @@ class _AddProductDialogState extends State<AddProductDialog> {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(variant == null ? 'Add Variant' : 'Edit Variant'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildTextField(controller: nameController, label: 'Name (EN)', hint: 'e.g. Small', icon: LucideIcons.type),
-            const SizedBox(height: 12),
-            _buildTextField(controller: nameArController, label: 'Name (AR)', hint: 'مثال: صغير', icon: LucideIcons.languages, textAlign: TextAlign.right),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(child: _buildTextField(controller: priceController, label: 'Price', hint: '0.00', icon: LucideIcons.dollarSign, keyboardType: TextInputType.number)),
-                const SizedBox(width: 12),
-                Expanded(child: _buildTextField(controller: stockController, label: 'Stock', hint: '0', icon: LucideIcons.box, keyboardType: TextInputType.number)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _buildTextField(controller: skuController, label: 'SKU', hint: 'Optional', icon: LucideIcons.hash),
-          ],
+        title: Text(variant == null ? AppLocalizations.of(context)!.addVariant : AppLocalizations.of(context)!.editVariant),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildTextField(controller: nameController, label: AppLocalizations.of(context)!.nameEn, hint: 'e.g. Small', icon: LucideIcons.type),
+              const SizedBox(height: 12),
+              _buildTextField(controller: nameArController, label: AppLocalizations.of(context)!.nameAr, hint: 'مثال: صغير', icon: LucideIcons.languages, textAlign: TextAlign.right),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(child: _buildTextField(controller: priceController, label: AppLocalizations.of(context)!.price, hint: '0.00', icon: LucideIcons.dollarSign, keyboardType: TextInputType.number)),
+                  const SizedBox(width: 12),
+                  Expanded(child: _buildTextField(controller: stockController, label: AppLocalizations.of(context)!.stock, hint: '0', icon: LucideIcons.box, keyboardType: TextInputType.number)),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildTextField(controller: skuController, label: AppLocalizations.of(context)!.sku, hint: AppLocalizations.of(context)!.optional, icon: LucideIcons.hash),
+            ],
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton(
             onPressed: () async {
               final data = {
@@ -772,37 +811,77 @@ class _AddProductDialogState extends State<AddProductDialog> {
               };
               bool success = false;
               if (variant == null) {
-                success = await sl<VendorRepository>().addVariant(widget.vendorId, widget.product['id'], data);
+                if (widget.product == null) {
+                  setState(() {
+                    _variants.add({
+                      'id': 'temp_${DateTime.now().millisecondsSinceEpoch}',
+                      'name': data['name'],
+                      'nameAr': data['nameAr'],
+                      'price': data['basePrice'],
+                      'stock': data['stock'],
+                      'sku': data['sku'],
+                      'optionGroups': [],
+                    });
+                  });
+                  success = true;
+                } else {
+                  success = await sl<VendorRepository>().addVariant(widget.vendorId, widget.product['id'], data);
+                }
               } else {
-                success = await sl<VendorRepository>().updateVariant(widget.vendorId, widget.product['id'], variant['id'], data);
+                if (widget.product == null) {
+                  setState(() {
+                    final idx = _variants.indexWhere((v) => v['id'] == variant['id']);
+                    if (idx != -1) {
+                      _variants[idx] = {
+                        ..._variants[idx],
+                        'name': data['name'],
+                        'nameAr': data['nameAr'],
+                        'price': data['basePrice'],
+                        'stock': data['stock'],
+                        'sku': data['sku'],
+                      };
+                    }
+                  });
+                  success = true;
+                } else {
+                  success = await sl<VendorRepository>().updateVariant(widget.vendorId, widget.product['id'], variant['id'], data);
+                }
               }
               if (mounted) Navigator.pop(context, success);
             },
-            child: Text(variant == null ? 'Add' : 'Save'),
+            child: Text(variant == null ? AppLocalizations.of(context)!.add : AppLocalizations.of(context)!.save),
           ),
         ],
       ),
     );
 
-    if (result == true) _fetchProductDetails();
+    if (result == true && widget.product != null) _fetchProductDetails();
   }
 
   void _deleteVariant(String variantId) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Variant'),
-        content: const Text('Are you sure you want to delete this variant?'),
+        title: Text(AppLocalizations.of(context)!.deleteVariant),
+        content: Text(AppLocalizations.of(context)!.deleteConfirmVariant),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: AppColors.error))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: AppColors.error))),
         ],
       ),
     );
 
     if (confirm == true) {
-      final success = await sl<VendorRepository>().deleteVariant(widget.vendorId, widget.product['id'], variantId);
-      if (success) _fetchProductDetails();
+      bool success = false;
+      if (widget.product == null) {
+        setState(() {
+          _variants.removeWhere((v) => v['id'] == variantId);
+        });
+        success = true;
+      } else {
+        success = await sl<VendorRepository>().deleteVariant(widget.vendorId, widget.product['id'], variantId);
+      }
+      if (success && widget.product != null) _fetchProductDetails();
     }
   }
 
@@ -817,32 +896,34 @@ class _AddProductDialogState extends State<AddProductDialog> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text(group == null ? 'Add Option Group' : 'Edit Option Group'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildTextField(controller: nameController, label: 'Group Name (EN)', hint: 'e.g. Extras', icon: LucideIcons.type),
-              const SizedBox(height: 12),
-              _buildTextField(controller: nameArController, label: 'Group Name (AR)', hint: 'مثال: إضافات', icon: LucideIcons.languages, textAlign: TextAlign.right),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(child: _buildTextField(controller: minController, label: 'Min', hint: '0', icon: LucideIcons.minus, keyboardType: TextInputType.number)),
-                  const SizedBox(width: 12),
-                  Expanded(child: _buildTextField(controller: maxController, label: 'Max', hint: '1', icon: LucideIcons.plus, keyboardType: TextInputType.number)),
-                ],
-              ),
-              const SizedBox(height: 12),
-              CheckboxListTile(
-                title: const Text('Is Required'),
-                value: isRequired,
-                onChanged: (v) => setState(() => isRequired = v ?? false),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ],
+          title: Text(group == null ? AppLocalizations.of(context)!.addOptionGroup : AppLocalizations.of(context)!.editOptionGroup),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTextField(controller: nameController, label: AppLocalizations.of(context)!.groupNameEn, hint: 'e.g. Extras', icon: LucideIcons.type),
+                const SizedBox(height: 12),
+                _buildTextField(controller: nameArController, label: AppLocalizations.of(context)!.groupNameAr, hint: 'مثال: إضافات', icon: LucideIcons.languages, textAlign: TextAlign.right),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(child: _buildTextField(controller: minController, label: AppLocalizations.of(context)!.min, hint: '0', icon: LucideIcons.minus, keyboardType: TextInputType.number)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildTextField(controller: maxController, label: AppLocalizations.of(context)!.max, hint: '1', icon: LucideIcons.plus, keyboardType: TextInputType.number)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                CheckboxListTile(
+                  title: Text(AppLocalizations.of(context)!.isRequired),
+                  value: isRequired,
+                  onChanged: (v) => setState(() => isRequired = v ?? false),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
+            ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
             ElevatedButton(
               onPressed: () async {
                 final data = {
@@ -854,38 +935,78 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 };
                 bool success = false;
                 if (group == null) {
-                  success = await sl<VendorRepository>().addOptionGroup(widget.vendorId, widget.product['id'], data);
+                  if (widget.product == null) {
+                    setState(() {
+                      _optionGroups.add({
+                        'id': 'temp_${DateTime.now().millisecondsSinceEpoch}',
+                        'name': data['name'],
+                        'nameAr': data['nameAr'],
+                        'minOptions': data['minOptions'],
+                        'maxOptions': data['maxOptions'],
+                        'isRequired': data['isRequired'],
+                        'options': [],
+                      });
+                    });
+                    success = true;
+                  } else {
+                    success = await sl<VendorRepository>().addOptionGroup(widget.vendorId, widget.product['id'], data);
+                  }
                 } else {
-                  success = await sl<VendorRepository>().updateOptionGroup(widget.vendorId, widget.product['id'], group['id'], data);
+                  if (widget.product == null) {
+                    setState(() {
+                      final idx = _optionGroups.indexWhere((g) => g['id'] == group['id']);
+                      if (idx != -1) {
+                        _optionGroups[idx] = {
+                          ..._optionGroups[idx],
+                          'name': data['name'],
+                          'nameAr': data['nameAr'],
+                          'minOptions': data['minOptions'],
+                          'maxOptions': data['maxOptions'],
+                          'isRequired': data['isRequired'],
+                        };
+                      }
+                    });
+                    success = true;
+                  } else {
+                    success = await sl<VendorRepository>().updateOptionGroup(widget.vendorId, widget.product['id'], group['id'], data);
+                  }
                 }
                 if (mounted) Navigator.pop(context, success);
               },
-              child: Text(group == null ? 'Add' : 'Save'),
+              child: Text(group == null ? AppLocalizations.of(context)!.add : AppLocalizations.of(context)!.save),
             ),
           ],
         ),
       ),
     );
 
-    if (result == true) _fetchProductDetails();
+    if (result == true && widget.product != null) _fetchProductDetails();
   }
 
   void _deleteOptionGroup(String groupId) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Option Group'),
-        content: const Text('Are you sure you want to delete this group and all its options?'),
+        title: Text(AppLocalizations.of(context)!.deleteOptionGroup),
+        content: Text(AppLocalizations.of(context)!.deleteConfirmOptionGroup),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: AppColors.error))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: AppColors.error))),
         ],
       ),
     );
 
     if (confirm == true) {
-      final success = await sl<VendorRepository>().deleteOptionGroup(widget.vendorId, widget.product['id'], groupId);
-      if (success) _fetchProductDetails();
+      bool success = false;
+      if (widget.product == null) {
+        setState(() {
+          _optionGroups.removeWhere((g) => g['id'] == groupId);
+        });
+        success = true;
+      } else {
+        success = await sl<VendorRepository>().deleteOptionGroup(widget.vendorId, widget.product['id'], groupId);
+      }
+      if (success && widget.product != null) _fetchProductDetails();
     }
   }
 
@@ -897,19 +1018,21 @@ class _AddProductDialogState extends State<AddProductDialog> {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(option == null ? 'Add Option' : 'Edit Option'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildTextField(controller: nameController, label: 'Option Name (EN)', hint: 'e.g. Cheese', icon: LucideIcons.type),
-            const SizedBox(height: 12),
-            _buildTextField(controller: nameArController, label: 'Option Name (AR)', hint: 'مثال: جبنة', icon: LucideIcons.languages, textAlign: TextAlign.right),
-            const SizedBox(height: 12),
-            _buildTextField(controller: priceController, label: 'Additional Price', hint: '0.00', icon: LucideIcons.dollarSign, keyboardType: TextInputType.number),
-          ],
+        title: Text(option == null ? AppLocalizations.of(context)!.addOption : AppLocalizations.of(context)!.editOption),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildTextField(controller: nameController, label: AppLocalizations.of(context)!.optionNameEn, hint: 'e.g. Cheese', icon: LucideIcons.type),
+              const SizedBox(height: 12),
+              _buildTextField(controller: nameArController, label: AppLocalizations.of(context)!.optionNameAr, hint: 'مثال: جبنة', icon: LucideIcons.languages, textAlign: TextAlign.right),
+              const SizedBox(height: 12),
+              _buildTextField(controller: priceController, label: AppLocalizations.of(context)!.additionalPrice, hint: '0.00', icon: LucideIcons.dollarSign, keyboardType: TextInputType.number),
+            ],
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton(
             onPressed: () async {
               final data = {
@@ -919,37 +1042,87 @@ class _AddProductDialogState extends State<AddProductDialog> {
               };
               bool success = false;
               if (option == null) {
-                success = await sl<VendorRepository>().addOption(widget.vendorId, widget.product['id'], groupId, data);
+                if (widget.product == null) {
+                  setState(() {
+                    final idx = _optionGroups.indexWhere((g) => g['id'] == groupId);
+                    if (idx != -1) {
+                      final options = List<dynamic>.from(_optionGroups[idx]['options'] ?? []);
+                      options.add({
+                        'id': 'temp_opt_${DateTime.now().millisecondsSinceEpoch}',
+                        'name': data['name'],
+                        'nameAr': data['nameAr'],
+                        'price': data['price'],
+                      });
+                      _optionGroups[idx]['options'] = options;
+                    }
+                  });
+                  success = true;
+                } else {
+                  success = await sl<VendorRepository>().addOption(widget.vendorId, widget.product['id'], groupId, data);
+                }
               } else {
-                success = await sl<VendorRepository>().updateOption(widget.vendorId, widget.product['id'], groupId, option['id'], data);
+                if (widget.product == null) {
+                  setState(() {
+                    final idx = _optionGroups.indexWhere((g) => g['id'] == groupId);
+                    if (idx != -1) {
+                      final options = List<dynamic>.from(_optionGroups[idx]['options'] ?? []);
+                      final optIdx = options.indexWhere((o) => o['id'] == option['id']);
+                      if (optIdx != -1) {
+                        options[optIdx] = {
+                          ...options[optIdx],
+                          'name': data['name'],
+                          'nameAr': data['nameAr'],
+                          'price': data['price'],
+                        };
+                      }
+                      _optionGroups[idx]['options'] = options;
+                    }
+                  });
+                  success = true;
+                } else {
+                  success = await sl<VendorRepository>().updateOption(widget.vendorId, widget.product['id'], groupId, option['id'], data);
+                }
               }
               if (mounted) Navigator.pop(context, success);
             },
-            child: Text(option == null ? 'Add' : 'Save'),
+            child: Text(option == null ? AppLocalizations.of(context)!.add : AppLocalizations.of(context)!.save),
           ),
         ],
       ),
     );
 
-    if (result == true) _fetchProductDetails();
+    if (result == true && widget.product != null) _fetchProductDetails();
   }
 
   void _deleteOption(String groupId, String optionId) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Option'),
-        content: const Text('Are you sure you want to delete this option?'),
+        title: Text(AppLocalizations.of(context)!.deleteOption),
+        content: Text(AppLocalizations.of(context)!.deleteConfirmOption),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: AppColors.error))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: AppColors.error))),
         ],
       ),
     );
 
     if (confirm == true) {
-      final success = await sl<VendorRepository>().deleteOption(widget.vendorId, widget.product['id'], groupId, optionId);
-      if (success) _fetchProductDetails();
+      bool success = false;
+      if (widget.product == null) {
+        setState(() {
+          final idx = _optionGroups.indexWhere((g) => g['id'] == groupId);
+          if (idx != -1) {
+            final options = List<dynamic>.from(_optionGroups[idx]['options'] ?? []);
+            options.removeWhere((o) => o['id'] == optionId);
+            _optionGroups[idx]['options'] = options;
+          }
+        });
+        success = true;
+      } else {
+        success = await sl<VendorRepository>().deleteOption(widget.vendorId, widget.product['id'], groupId, optionId);
+      }
+      if (success && widget.product != null) _fetchProductDetails();
     }
   }
 
@@ -1095,6 +1268,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
         'sellByStrip': _sellByStrip,
         'stripsPerPackage': int.tryParse(_stripsCountController.text),
         'imageFile': _imageFile,
+        'variants': _variants,
+        'optionGroups': _optionGroups,
       });
     }
   }

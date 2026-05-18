@@ -43,6 +43,16 @@ class TicketRepository {
     }
   }
 
+  Future<bool> updateTicket(String ticketId, Map<String, dynamic> data) async {
+    try {
+      await _apiClient.dio.patch('/tickets/$ticketId', data: data);
+      return true;
+    } catch (e) {
+      print('TicketRepository updateTicket Error: $e');
+      return false;
+    }
+  }
+
   Future<Map<String, dynamic>?> getTicketDetails(String ticketId) async {
     try {
       final response = await _apiClient.dio.get('/tickets/$ticketId');
@@ -53,6 +63,20 @@ class TicketRepository {
       return null;
     } catch (e) {
       print('TicketRepository getTicketDetails Error: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getOrderDetails(String orderId) async {
+    try {
+      final response = await _apiClient.dio.get('/orders/$orderId');
+      final data = response.data['data'];
+      if (data is Map<String, dynamic>) {
+        return data;
+      }
+      return null;
+    } catch (e) {
+      print('TicketRepository getOrderDetails Error: $e');
       return null;
     }
   }
